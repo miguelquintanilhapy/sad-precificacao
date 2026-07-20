@@ -17,7 +17,9 @@
 --    nome VARCHAR(255) NOT NULL,
 --    email VARCHAR(255) NOT NULL UNIQUE,
 --    senha VARCHAR(255) NOT NULL,
---    status VARCHAR(50) DEFAULT 'Ativo'
+--    status VARCHAR(50) DEFAULT 'Ativo',
+--    nivel VARCHAR(50) DEFAULT 'Operador'  
+--);
 --);
 
 --CREATE TABLE IF NOT EXISTS cliente (
@@ -149,8 +151,8 @@
 --(14, 10, 'Eduard Müller', NULL, 'Sênior', 'CLT', 'Ativo'), 
 --(15, 11, 'Marco Antônio Carvalho', NULL, 'Especialista', 'PJ', 'Ativo');
 
---INSERT IGNORE INTO usuario (id_usuario, nome, email, senha, status) VALUES 
---(1, 'Admin', 'admin@aeroconcepts.com', 'admin123', 'Ativo');
+--INSERT IGNORE INTO usuario (id_usuario, nome, email, senha, status, nivel) VALUES 
+--(1, 'Admin', 'admin@aeroconcepts.com', 'admin123', 'Ativo', 'Administrador');
 
 --INSERT IGNORE INTO cliente (id_cliente, nome, tipo, cidade, estado, contato) VALUES 
 --(1, 'Funcate', 'Jurídica', 'São José dos Campos', 'SP', 'Contato Comercial'), 

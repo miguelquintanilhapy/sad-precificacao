@@ -133,8 +133,7 @@ namespace magal.Data.Repositories
                                 cmd.Parameters.AddWithValue("@tipo", custo.tipo ?? "Direto");
                                 cmd.Parameters.AddWithValue("@valor", custo.valor);
                                 cmd.Parameters.AddWithValue("@unidade", custo.unidade ?? "Unitário");
-                                cmd.Parameters.AddWithValue("@idCatalogo", 1);
-
+                                cmd.Parameters.AddWithValue("@idCatalogo", custo.id_catalogo_custo);
                                 await cmd.ExecuteNonQueryAsync();
                             }
                         }
