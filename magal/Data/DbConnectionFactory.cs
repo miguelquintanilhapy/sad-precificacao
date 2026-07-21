@@ -11,8 +11,9 @@ namespace magal.Data
         {
             // Busca o appsettings.json
             IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.local.json", optional: true)
                 .Build();
 
             string connectionString = configuration.GetConnectionString("DefaultConnection");
