@@ -65,23 +65,37 @@ namespace magal.Data.Repositories
                             }
 
                             // LIMPAR TAREFAS E CUSTOS ANTIGOS (Convertidos para Execuções Assíncronas)
-                            using (var cmdDelTarefa = new MySqlCommand($"DELETE FROM tarefa WHERE id_projeto = {projeto.id_projeto}", conn, transaction))
+                            using (var cmdDelTarefa = new MySqlCommand("DELETE FROM tarefa WHERE id_projeto = @idProj", conn, transaction))
                             {
+                                cmdDelTarefa.Parameters.AddWithValue("@idProj", projeto.id_projeto);
                                 await cmdDelTarefa.ExecuteNonQueryAsync();
                             }
 
-                            using (var cmdDelCusto = new MySqlCommand($"DELETE FROM custo WHERE id_projeto = {projeto.id_projeto}", conn, transaction))
+                            using (var cmdDelCusto = new MySqlCommand("DELETE FROM custo WHERE id_projeto = @idProj", conn, transaction))
                             {
+                                cmdDelCusto.Parameters.AddWithValue("@idProj", projeto.id_projeto);
                                 await cmdDelCusto.ExecuteNonQueryAsync();
                             }
                         }
 
                         // INSERIR OU ATUALIZAR ORÇAMENTO
+                        // (ON DUPLICATE KEY UPDATE em vez de REPLACE INTO, para preservar id_orcamento e data_criacao)
                         using (var cmd = new MySqlCommand(@"
-                            REPLACE INTO orcamento
+                            INSERT INTO orcamento
                             (id_projeto, custo_base, percentual_impostos, margem_percentual, valor_margem, valor_impostos, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes)
                             VALUES
-                            (@idProj, @custo, @percImp, @margPerc, @vMarg, @vImp, @final, @validade, @formaPagamento, @prazoEntrega, @obs);
+                            (@idProj, @custo, @percImp, @margPerc, @vMarg, @vImp, @final, @validade, @formaPagamento, @prazoEntrega, @obs)
+                            ON DUPLICATE KEY UPDATE
+                                custo_base = VALUES(custo_base),
+                                percentual_impostos = VALUES(percentual_impostos),
+                                margem_percentual = VALUES(margem_percentual),
+                                valor_margem = VALUES(valor_margem),
+                                valor_impostos = VALUES(valor_impostos),
+                                valor_final = VALUES(valor_final),
+                                validade_dias = VALUES(validade_dias),
+                                forma_pagamento = VALUES(forma_pagamento),
+                                prazo_entrega = VALUES(prazo_entrega),
+                                observacoes = VALUES(observacoes);
                         ", conn, transaction))
                         {
                             cmd.Parameters.AddWithValue("@idProj", projeto.id_projeto);
@@ -146,7 +160,7 @@ namespace magal.Data.Repositories
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        throw new Exception("Erro ao processar transação no MySQL: " + ex.Message);
+                        throw new Exception("Erro ao processar transação no MySQL: " + ex.Message, ex);
                     }
                 }
             }

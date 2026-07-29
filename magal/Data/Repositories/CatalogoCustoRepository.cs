@@ -34,7 +34,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao listar categorias únicas do catálogo: " + ex.Message);
+                throw new Exception("Erro ao listar categorias únicas do catálogo: " + ex.Message, ex);
             }
             return lista;
         }
@@ -71,7 +71,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao filtrar itens por categoria: " + ex.Message);
+                throw new Exception("Erro ao filtrar itens por categoria: " + ex.Message, ex);
             }
             return lista;
         }
@@ -103,7 +103,7 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao listar catálogo: " + ex.Message); }
+            catch (Exception ex) { throw new Exception("Erro ao listar catálogo: " + ex.Message, ex); }
             return lista;
         }
 
@@ -124,7 +124,7 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao inserir no catálogo: " + ex.Message); }
+            catch (Exception ex) { throw new Exception("Erro ao inserir no catálogo: " + ex.Message, ex); }
         }
 
         public async Task Atualizar(CatalogoCusto custo)
@@ -145,7 +145,7 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao atualizar catálogo: " + ex.Message); }
+            catch (Exception ex) { throw new Exception("Erro ao atualizar catálogo: " + ex.Message, ex); }
         }
 
         public async Task Excluir(int idCatalogoCusto)
@@ -163,7 +163,7 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao excluir do catálogo: " + ex.Message); }
+            catch (Exception ex) { throw new Exception("Erro ao excluir do catálogo: " + ex.Message, ex); }
         }
     }
 }

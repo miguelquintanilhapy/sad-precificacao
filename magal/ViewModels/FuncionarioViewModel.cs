@@ -177,7 +177,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    _repository.Excluir(funcionario.id_funcionario);
+                    await _repository.Excluir(funcionario.id_funcionario);
                     Funcionarios.Remove(funcionario);
                     FuncionariosView?.Refresh();
                 }
@@ -206,7 +206,7 @@ namespace magal.ViewModels
                 await CarregarFuncionarios();
         }
 
-        private void ExecutarExportacaoPdf()
+        private async void ExecutarExportacaoPdf()
         {
             var funcionariosFiltrados = FuncionariosView.Cast<Funcionario>().ToList();
 
@@ -231,7 +231,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    _pdfService.GerarRelatorioTabelaFuncionarios(funcionariosFiltrados, saveFileDialog.FileName);
+                    await Task.Run(() => _pdfService.GerarRelatorioTabelaFuncionarios(funcionariosFiltrados, saveFileDialog.FileName));
 
                     MessageBox.Show("Relatório gerado com sucesso!", "Sucesso",
                         MessageBoxButton.OK, MessageBoxImage.Information);

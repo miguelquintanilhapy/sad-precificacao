@@ -63,7 +63,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no ClienteRepository: " + ex.Message);
+                throw new Exception("Erro no ClienteRepository: " + ex.Message, ex);
             }
 
             return lista;
@@ -111,7 +111,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao inserir cliente: " + ex.Message);
+                throw new Exception("Erro ao inserir cliente: " + ex.Message, ex);
             }
         }
 
@@ -150,7 +150,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar cliente: " + ex.Message);
+                throw new Exception("Erro ao atualizar cliente: " + ex.Message, ex);
             }
         }
 
@@ -174,7 +174,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir cliente: " + ex.Message);
+                throw new Exception("Erro ao excluir cliente: " + ex.Message, ex);
             }
         }
     }

@@ -41,7 +41,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no CargoRepository (Listar): " + ex.Message);
+                throw new Exception("Erro no CargoRepository (Listar): " + ex.Message, ex);
             }
 
             return lista;
@@ -78,7 +78,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao inserir cargo: " + ex.Message);
+                throw new Exception("Erro ao inserir cargo: " + ex.Message, ex);
             }
         }
 
@@ -110,7 +110,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar cargo: " + ex.Message);
+                throw new Exception("Erro ao atualizar cargo: " + ex.Message, ex);
             }
         }
 
@@ -135,7 +135,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir cargo: " + ex.Message);
+                throw new Exception("Erro ao excluir cargo: " + ex.Message, ex);
             }
         }
     }

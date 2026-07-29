@@ -265,7 +265,7 @@ namespace magal.ViewModels
         /// <summary>
         /// Pega os projetos atualmente visíveis na tela (aplicados os filtros) e gera um relatório tabular em PDF.
         /// </summary>
-        private void ExecutarExportacaoPdf()
+        private async void ExecutarExportacaoPdf()
         {
             var proyectosVisiveis = ProjetosView.Cast<Projeto>().ToList();
 
@@ -285,7 +285,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    new PdfService().GerarRelatorioTabelaProjetos(proyectosVisiveis, sfd.FileName);
+                    await Task.Run(() => new PdfService().GerarRelatorioTabelaProjetos(proyectosVisiveis, sfd.FileName));
                     MessageBox.Show("Relatório de listagem exportado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
@@ -298,7 +298,7 @@ namespace magal.ViewModels
         /// <summary>
         /// Solicita a confirmação do usuário e executa a exclusão física do projeto no banco de dados e na memória.
         /// </summary>
-        private void ExecutarExclusao(Projeto projeto)
+        private async void ExecutarExclusao(Projeto projeto)
         {
             if (projeto == null) return;
 
@@ -324,7 +324,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    _repository.ExcluirProjeto(projeto.id_projeto);
+                    await _repository.ExcluirProjeto(projeto.id_projeto);
                     Projetos.Remove(projeto);
                     AtualizarIndicadores();
                 }
@@ -361,6 +361,10 @@ namespace magal.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao carregar edição: {ex.Message}", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

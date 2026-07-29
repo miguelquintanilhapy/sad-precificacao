@@ -59,14 +59,14 @@ namespace magal.Data.Repositories
                                     id_cargo = reader.GetInt32(
                                         reader.GetOrdinal("id_cargo")),
 
-                                    nivel = reader.GetString(
-                                        reader.GetOrdinal("nivel")),
+                                    nivel = reader.IsDBNull(reader.GetOrdinal("nivel"))
+                                        ? "" : reader.GetString(reader.GetOrdinal("nivel")),
 
-                                    tipo_vinculo = reader.GetString(
-                                        reader.GetOrdinal("tipo_vinculo")),
+                                    tipo_vinculo = reader.IsDBNull(reader.GetOrdinal("tipo_vinculo"))
+                                        ? "" : reader.GetString(reader.GetOrdinal("tipo_vinculo")),
 
-                                    status = reader.GetString(
-                                        reader.GetOrdinal("status")),
+                                    status = reader.IsDBNull(reader.GetOrdinal("status"))
+                                        ? "Ativo" : reader.GetString(reader.GetOrdinal("status")),
 
                                     Cargo = new Cargo
                                     {
@@ -91,7 +91,7 @@ namespace magal.Data.Repositories
             catch (Exception ex)
             {
                 throw new Exception(
-                    "Erro no FuncionarioRepository: " + ex.Message);
+                    "Erro no FuncionarioRepository: " + ex.Message, ex);
             }
 
             return lista;

@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Editar Usuário"
-        Height="680"
+        Height="620"
         Width="460"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
@@ -131,13 +131,7 @@
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,14"/>
 
-        <TextBlock Text="SENHA ATUAL (OBRIGATÓRIA PARA SALVAR)"
-                   Style="{StaticResource LabelStyle}"/>
-        <PasswordBox x:Name="TxtSenhaAtual"
-                     Style="{StaticResource PasswordInputStyle}"
-                     Margin="0,0,0,14"/>
-
-        <TextBlock Text="NOVA SENHA (DEIXE EM BRANCO PARA NÃO ALTERAR)"
+        <TextBlock Text="REDEFINIR SENHA (DEIXE EM BRANCO PARA NÃO ALTERAR)"
                    Style="{StaticResource LabelStyle}"/>
         <PasswordBox x:Name="TxtSenhaNova"
                      Style="{StaticResource PasswordInputStyle}"

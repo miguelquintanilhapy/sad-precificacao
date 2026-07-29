@@ -60,7 +60,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no UsuarioRepository ao listar: " + ex.Message);
+                throw new Exception("Erro no UsuarioRepository ao listar: " + ex.Message, ex);
             }
 
             return lista;
@@ -105,7 +105,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao inserir usuário: " + ex.Message);
+                throw new Exception("Erro ao inserir usuário: " + ex.Message, ex);
             }
         }
 
@@ -142,7 +142,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar usuário: " + ex.Message);
+                throw new Exception("Erro ao atualizar usuário: " + ex.Message, ex);
             }
         }
 
@@ -192,7 +192,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no UsuarioRepository ao buscar por e-mail: " + ex.Message);
+                throw new Exception("Erro no UsuarioRepository ao buscar por e-mail: " + ex.Message, ex);
             }
         }
 
@@ -217,7 +217,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar senha do usuário: " + ex.Message);
+                throw new Exception("Erro ao atualizar senha do usuário: " + ex.Message, ex);
             }
         }
 
@@ -241,7 +241,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir usuário: " + ex.Message);
+                throw new Exception("Erro ao excluir usuário: " + ex.Message, ex);
             }
         }
     }

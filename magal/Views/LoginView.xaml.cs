@@ -72,6 +72,16 @@ namespace magal.Views
                 return;
             }
 
+            if (LoginThrottle.EstaBloqueado(usuarioDigitado, out TimeSpan tempoRestante))
+            {
+                MessageBox.Show(
+                    $"Muitas tentativas de login incorretas.\nTente novamente em {Math.Ceiling(tempoRestante.TotalSeconds)} segundos.",
+                    "Acesso Temporariamente Bloqueado",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
                 Usuario usuarioLogado = await _repository.BuscarPorEmailAtivo(usuarioDigitado);
@@ -79,6 +89,8 @@ namespace magal.Views
                 // A senha é validada em código (hash), não mais comparada diretamente no SQL.
                 if (usuarioLogado != null && PasswordHasher.Verify(senhaDigitada, usuarioLogado.senha))
                 {
+                    LoginThrottle.RegistrarSucesso(usuarioDigitado);
+
                     // Migração transparente: se a senha ainda estava em texto puro, regrava como hash.
                     if (!PasswordHasher.EhHashV1(usuarioLogado.senha))
                     {
@@ -92,12 +104,18 @@ namespace magal.Views
                 }
                 else
                 {
+                    LoginThrottle.RegistrarFalha(usuarioDigitado);
                     MessageBox.Show("Usuário não encontrado ou senha incorreta.", "Erro de Acesso", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Falha na comunicação com o banco de dados:\n{ex.Message}", "Erro Crítico", MessageBoxButton.OK, MessageBoxImage.Stop);
+                System.Diagnostics.Debug.WriteLine($"Falha de login: {ex}");
+                MessageBox.Show(
+                    "Falha na comunicação com o banco de dados. Tente novamente em instantes ou contate o suporte de TI.",
+                    "Erro Crítico",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Stop);
             }
         }
 

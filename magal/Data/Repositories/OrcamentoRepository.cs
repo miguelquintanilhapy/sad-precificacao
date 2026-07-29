@@ -19,16 +19,27 @@ namespace magal.Data.Repositories
                 // Adicionado await no OpenAsync
                 await conn.OpenAsync();
 
-                // Usando REPLACE INTO igual à estratégia do seu repositório original
+                // ON DUPLICATE KEY UPDATE em vez de REPLACE INTO, para preservar id_orcamento e data_criacao
                 string sql = @"
-                    REPLACE INTO orcamento
-                    (id_projeto, custo_base, percentual_impostos, margem_percentual, 
-                     valor_margem, valor_impostos, valor_final, validade_dias, 
+                    INSERT INTO orcamento
+                    (id_projeto, custo_base, percentual_impostos, margem_percentual,
+                     valor_margem, valor_impostos, valor_final, validade_dias,
                      forma_pagamento, prazo_entrega, observacoes)
                     VALUES
-                    (@idProj, @custo, @percImp, @margPerc, 
-                     @vMarg, @vImp, @final, @validade, 
-                     @formaPagto, @prazoEntr, @obs);
+                    (@idProj, @custo, @percImp, @margPerc,
+                     @vMarg, @vImp, @final, @validade,
+                     @formaPagto, @prazoEntr, @obs)
+                    ON DUPLICATE KEY UPDATE
+                        custo_base = VALUES(custo_base),
+                        percentual_impostos = VALUES(percentual_impostos),
+                        margem_percentual = VALUES(margem_percentual),
+                        valor_margem = VALUES(valor_margem),
+                        valor_impostos = VALUES(valor_impostos),
+                        valor_final = VALUES(valor_final),
+                        validade_dias = VALUES(validade_dias),
+                        forma_pagamento = VALUES(forma_pagamento),
+                        prazo_entrega = VALUES(prazo_entrega),
+                        observacoes = VALUES(observacoes);
                 ";
 
                 using (var cmd = new MySqlCommand(sql, conn))

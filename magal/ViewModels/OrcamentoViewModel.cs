@@ -197,7 +197,6 @@ namespace magal.ViewModels
                 _totalHorasOriginal = projetoDoBanco.Tarefas?.Sum(t => t.horas_estimadas) ?? 0;
 
                 OnPropertyChanged(nameof(VisibilidadeBotaoDescartar));
-                AssinarEventosOrcamento();
 
                 if (this.ProjetoAtual.id_cliente > 0)
                     this.ProjetoAtual.Cliente = Clientes.FirstOrDefault(c => c.id_cliente == projetoDoBanco.id_cliente);
@@ -311,7 +310,7 @@ namespace magal.ViewModels
             }
         }
 
-        private void ExecutarFluxoFinal()
+        private async void ExecutarFluxoFinal()
         {
             if (_processando) return;
 
@@ -348,7 +347,7 @@ namespace magal.ViewModels
                 _processando = true;
                 OnPropertyChanged(nameof(BotaoAtivo));
 
-                if (SalvarNoBancoSilencioso())
+                if (await SalvarNoBancoAsync())
                 {
                     var respostaPdf = MessageBox.Show(
                         "Alterações gravadas no banco de dados com sucesso!\n\nDeseja gerar o relatório em PDF desta proposta?",
@@ -358,7 +357,7 @@ namespace magal.ViewModels
 
                     if (respostaPdf == MessageBoxResult.Yes)
                     {
-                        GerarRelatorioPdf();
+                        await GerarRelatorioPdfAsync();
                     }
 
                     MessageBox.Show("Projeto salvo com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -615,7 +614,7 @@ namespace magal.ViewModels
             }
         }
 
-        private bool SalvarNoBancoSilencioso()
+        private async Task<bool> SalvarNoBancoAsync()
         {
             try
             {
@@ -638,7 +637,7 @@ namespace magal.ViewModels
                     unidade = item.unidade
                 }).ToList();
 
-                repo.SalvarProjetoCompleto(ProjetoAtual, listaCustosBase);
+                await repo.SalvarProjetoCompleto(ProjetoAtual, listaCustosBase);
 
                 return true;
             }
@@ -648,7 +647,7 @@ namespace magal.ViewModels
                 return false;
             }
         }
-        private bool GerarRelatorioPdf()
+        private async Task<bool> GerarRelatorioPdfAsync()
         {
             var sfd = new SaveFileDialog { Filter = "PDF|*.pdf", FileName = $"Proposta_{ProjetoAtual.nome}" };
 
@@ -668,7 +667,7 @@ namespace magal.ViewModels
                         unidade = item.unidade
                     }).ToList();
 
-                    new PdfService().GerarPropostaTecnica(ProjetoAtual, listaCustosBase, sfd.FileName);
+                    await Task.Run(() => new PdfService().GerarPropostaTecnica(ProjetoAtual, listaCustosBase, sfd.FileName));
                     return true;
                 }
                 catch (Exception ex)

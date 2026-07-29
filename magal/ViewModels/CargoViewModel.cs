@@ -189,7 +189,7 @@ namespace magal.ViewModels
         /// <summary>
         /// Solicita a confirmação do usuário e executa a exclusão do cargo no banco de dados e na memória.
         /// </summary>
-        private void ExecutarExclusao(Cargo cargo)
+        private async void ExecutarExclusao(Cargo cargo)
         {
             if (cargo == null) return;
 
@@ -210,7 +210,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    _repository.Excluir(cargo.id_cargo);
+                    await _repository.Excluir(cargo.id_cargo);
                     Cargos.Remove(cargo);
                     CargosView?.Refresh();
                 }
@@ -273,7 +273,7 @@ namespace magal.ViewModels
         /// <summary>
         /// Abre a caixa de diálogo para salvar o arquivo e dispara a geração do PDF com os cargos filtrados na tela.
         /// </summary>
-        private void ExecutarExportacaoPdf()
+        private async void ExecutarExportacaoPdf()
         {
             var cargosFiltrados = CargosView.Cast<Cargo>().ToList();
 
@@ -298,7 +298,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    _pdfService.GerarRelatorioTabelaCargos(cargosFiltrados, saveFileDialog.FileName);
+                    await Task.Run(() => _pdfService.GerarRelatorioTabelaCargos(cargosFiltrados, saveFileDialog.FileName));
 
                     MessageBox.Show("Relatório de cargos gerado com sucesso!", "Sucesso",
                         MessageBoxButton.OK, MessageBoxImage.Information);

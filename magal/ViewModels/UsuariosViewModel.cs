@@ -220,7 +220,7 @@ namespace magal.ViewModels
                 await CarregarUsuariosAsync();
         }
 
-        private void ExecutarExportacaoPdf()
+        private async void ExecutarExportacaoPdf()
         {
             var usuariosFiltrados = UsuariosView.Cast<Usuario>().ToList();
 
@@ -246,7 +246,7 @@ namespace magal.ViewModels
                 try
                 {
                     // Lembre-se de adicionar esse método interno no seu PdfService para renderizar usuários
-                    _pdfService.GerarRelatorioTabelaUsuarios(usuariosFiltrados, saveFileDialog.FileName);
+                    await Task.Run(() => _pdfService.GerarRelatorioTabelaUsuarios(usuariosFiltrados, saveFileDialog.FileName));
 
                     MessageBox.Show("Relatório gerado com sucesso!", "Sucesso",
                         MessageBoxButton.OK, MessageBoxImage.Information);

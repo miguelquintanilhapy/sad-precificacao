@@ -141,7 +141,7 @@ namespace magal.ViewModels
                    (cli.tipo?.ToLower().Contains(busca) ?? false);
         }
 
-        private void ExecutarExclusao(Cliente cliente)
+        private async void ExecutarExclusao(Cliente cliente)
         {
             if (cliente == null) return;
 
@@ -162,7 +162,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    _repository.Excluir(cliente.id_cliente);
+                    await _repository.Excluir(cliente.id_cliente);
                     Clientes.Remove(cliente);
                 }
                 catch (Exception ex)
@@ -189,7 +189,7 @@ namespace magal.ViewModels
                 _ = CarregarClientes();
         }
 
-        private void ExecutarExportacaoPdf()
+        private async void ExecutarExportacaoPdf()
         {
             var clientesFiltrados = ClientesView.Cast<Cliente>().ToList();
 
@@ -214,7 +214,7 @@ namespace magal.ViewModels
             {
                 try
                 {
-                    _pdfService.GerarRelatorioTabelaClientes(clientesFiltrados, saveFileDialog.FileName);
+                    await Task.Run(() => _pdfService.GerarRelatorioTabelaClientes(clientesFiltrados, saveFileDialog.FileName));
 
                     MessageBox.Show("Relatório de clientes gerado com sucesso!", "Sucesso",
                         MessageBoxButton.OK, MessageBoxImage.Information);

@@ -49,12 +49,11 @@ namespace magal.Views
             }
         }
 
-        private void BtnSalvar_Click(object sender, RoutedEventArgs e)
+        private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             // Validação de todos os campos obrigatórios na tela
             if (string.IsNullOrWhiteSpace(TxtNome.Text) ||
                 string.IsNullOrWhiteSpace(TxtEmail.Text) ||
-                string.IsNullOrWhiteSpace(TxtSenhaAtual.Password) ||
                 ComboStatus.SelectedItem == null ||
                 ComboNivel.SelectedItem == null)
             {
@@ -63,18 +62,6 @@ namespace magal.Views
                     "Aero Concepts",
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
-
-                return;
-            }
-
-            // Validação de segurança: A senha digitada confere com a gravada no banco
-            if (!PasswordHasher.Verify(TxtSenhaAtual.Password, _usuario.senha))
-            {
-                MessageBox.Show(
-                    "A senha atual informada está incorreta.",
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
 
                 return;
             }
@@ -101,7 +88,7 @@ namespace magal.Views
 
                 // Persistência no banco de dados através do repositório
                 var repo = new UsuarioRepository();
-                repo.Atualizar(_usuario);
+                await repo.Atualizar(_usuario);
 
                 MessageBox.Show(
                     "Usuário atualizado com sucesso!",
