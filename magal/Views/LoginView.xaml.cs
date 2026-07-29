@@ -2,15 +2,16 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using MySql.Data.MySqlClient;
-using magal.Data;
+using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 using System.Linq;
 
 namespace magal.Views
 {
     public partial class LoginView : Window
     {
+        private readonly UsuarioRepository _repository = new UsuarioRepository();
         private bool senhaVisivel = false;
 
         public LoginView()
@@ -60,7 +61,7 @@ namespace magal.Views
 
         #region Lógica de Negócio (Autenticação)
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string usuarioDigitado = txtUsuario.Text.Trim();
             string senhaDigitada = senhaVisivel ? txtSenhaVisivel.Text : txtSenha.Password;
@@ -73,45 +74,25 @@ namespace magal.Views
 
             try
             {
-                using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
+                Usuario usuarioLogado = await _repository.BuscarPorEmailAtivo(usuarioDigitado);
+
+                // A senha é validada em código (hash), não mais comparada diretamente no SQL.
+                if (usuarioLogado != null && PasswordHasher.Verify(senhaDigitada, usuarioLogado.senha))
                 {
-                    conn.Open();
-
-                    // Adicionado 'senha' e 'nivel' no SELECT
-                    string sql = @"SELECT id_usuario, nome, email, senha, status, nivel 
-                                   FROM usuario 
-                                   WHERE email = @email AND senha = @pass AND status = 'Ativo'";
-
-                    using (var cmd = new MySqlCommand(sql, conn))
+                    // Migração transparente: se a senha ainda estava em texto puro, regrava como hash.
+                    if (!PasswordHasher.EhHashV1(usuarioLogado.senha))
                     {
-                        cmd.Parameters.AddWithValue("@email", usuarioDigitado);
-                        cmd.Parameters.AddWithValue("@pass", senhaDigitada);
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                var usuarioLogado = new Usuario
-                                {
-                                    id_usuario = Convert.ToInt32(reader["id_usuario"]),
-                                    nome = reader["nome"].ToString(),
-                                    email = reader["email"].ToString(),
-
-                                    // Mapeia os dados cruciais para a Sessão funcionar perfeitamente
-                                    senha = reader["senha"].ToString(),
-                                    status = reader["status"].ToString(),
-                                    nivel = reader["nivel"] == DBNull.Value ? "Operador" : reader["nivel"].ToString()
-                                };
-
-                                magal.Sessao.UsuarioLogado = usuarioLogado;
-                                ExecutarAnimacaoSaida();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Usuário não encontrado ou senha incorreta.", "Erro de Acesso", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                        }
+                        string novoHash = PasswordHasher.Hash(senhaDigitada);
+                        await _repository.AtualizarSenha(usuarioLogado.id_usuario, novoHash);
+                        usuarioLogado.senha = novoHash;
                     }
+
+                    magal.Sessao.UsuarioLogado = usuarioLogado;
+                    ExecutarAnimacaoSaida();
+                }
+                else
+                {
+                    MessageBox.Show("Usuário não encontrado ou senha incorreta.", "Erro de Acesso", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)

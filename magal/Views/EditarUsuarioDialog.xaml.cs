@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -67,7 +68,7 @@ namespace magal.Views
             }
 
             // Validação de segurança: A senha digitada confere com a gravada no banco
-            if (TxtSenhaAtual.Password != _usuario.senha)
+            if (!PasswordHasher.Verify(TxtSenhaAtual.Password, _usuario.senha))
             {
                 MessageBox.Show(
                     "A senha atual informada está incorreta.",
@@ -95,7 +96,7 @@ namespace magal.Views
                 // Se uma nova senha foi definida, atualiza o campo
                 if (!string.IsNullOrWhiteSpace(TxtSenhaNova.Password))
                 {
-                    _usuario.senha = TxtSenhaNova.Password;
+                    _usuario.senha = PasswordHasher.Hash(TxtSenhaNova.Password);
                 }
 
                 // Persistência no banco de dados através do repositório

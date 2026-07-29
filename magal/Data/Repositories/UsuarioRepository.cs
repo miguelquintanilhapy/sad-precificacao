@@ -146,6 +146,81 @@ namespace magal.Data.Repositories
             }
         }
 
+        public async Task<Usuario> BuscarPorEmailAtivo(string email)
+        {
+            try
+            {
+                using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
+                {
+                    await conn.OpenAsync();
+
+                    string sql = @"SELECT id_usuario, nome, email, senha, status, nivel
+                                   FROM usuario
+                                   WHERE email = @email AND status = 'Ativo'";
+
+                    using (var cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@email", email);
+
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (!await reader.ReadAsync())
+                                return null;
+
+                            return new Usuario
+                            {
+                                id_usuario = reader.GetInt32(reader.GetOrdinal("id_usuario")),
+
+                                nome = reader.IsDBNull(reader.GetOrdinal("nome"))
+                                       ? "" : reader.GetString(reader.GetOrdinal("nome")),
+
+                                email = reader.IsDBNull(reader.GetOrdinal("email"))
+                                        ? "" : reader.GetString(reader.GetOrdinal("email")),
+
+                                senha = reader.IsDBNull(reader.GetOrdinal("senha"))
+                                        ? "" : reader.GetString(reader.GetOrdinal("senha")),
+
+                                status = reader.IsDBNull(reader.GetOrdinal("status"))
+                                         ? "Ativo" : reader.GetString(reader.GetOrdinal("status")),
+
+                                nivel = reader.IsDBNull(reader.GetOrdinal("nivel"))
+                                         ? "Operador" : reader.GetString(reader.GetOrdinal("nivel"))
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro no UsuarioRepository ao buscar por e-mail: " + ex.Message);
+            }
+        }
+
+        public async Task AtualizarSenha(int idUsuario, string novoHashSenha)
+        {
+            try
+            {
+                using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
+                {
+                    await conn.OpenAsync();
+
+                    string sql = "UPDATE usuario SET senha = @senha WHERE id_usuario = @id";
+
+                    using (var cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@senha", novoHashSenha);
+                        cmd.Parameters.AddWithValue("@id", idUsuario);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao atualizar senha do usuário: " + ex.Message);
+            }
+        }
+
         public async Task Excluir(int idUsuario)
         {
             try
