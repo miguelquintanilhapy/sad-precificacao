@@ -148,6 +148,18 @@ namespace magal.ViewModels
         {
             if (usuario == null) return;
 
+            //Bloqueia a exclusão de usuários para quem não é Administrador
+            if (Sessao.UsuarioLogado == null || Sessao.UsuarioLogado.nivel != "Administrador")
+            {
+                MessageBox.Show(
+                    "Acesso Negado!\nApenas usuários com o nível 'Administrador' possuem permissão para excluir usuários.",
+                    "Aero Concepts - Segurança",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
             var msg = $"Tem certeza que deseja excluir o usuário '{usuario.nome}'?";
             if (MessageBox.Show(msg, "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
@@ -167,6 +179,18 @@ namespace magal.ViewModels
 
         private async void ExecutarCriar()
         {
+            //Bloqueia o cadastro de usuários para quem não é Administrador
+            if (Sessao.UsuarioLogado == null || Sessao.UsuarioLogado.nivel != "Administrador")
+            {
+                MessageBox.Show(
+                    "Acesso Negado!\nApenas usuários com o nível 'Administrador' possuem permissão para cadastrar novos usuários.",
+                    "Aero Concepts - Segurança",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
             var dialog = new magal.Views.CadastrarUsuarioDialog();
             dialog.Owner = Application.Current.Windows.OfType<magal.MainWindow>().FirstOrDefault();
             if (dialog.ShowDialog() == true)
@@ -176,6 +200,18 @@ namespace magal.ViewModels
         private async void ExecutarEdicao(Usuario usuario)
         {
             if (usuario == null) return;
+
+            //Bloqueia a edição de usuários para quem não é Administrador
+            if (Sessao.UsuarioLogado == null || Sessao.UsuarioLogado.nivel != "Administrador")
+            {
+                MessageBox.Show(
+                    "Acesso Negado!\nApenas usuários com o nível 'Administrador' possuem permissão para editar usuários.",
+                    "Aero Concepts - Segurança",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
 
             // Certifique-se de criar o construtor aceitando o objeto Usuario na sua janela de edição
             var dialog = new magal.Views.EditarUsuarioDialog(usuario);

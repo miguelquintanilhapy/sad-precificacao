@@ -152,6 +152,13 @@ namespace magal
             }
         }
 
+        private void MenuMeuPerfil_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new MeuPerfilDialog();
+            dialog.Owner = this;
+            dialog.ShowDialog();
+        }
+
         private void MenuCadastrarUsuario_Click(object sender, RoutedEventArgs e)
         {
             //Impede usuários comuns de cadastrarem novos usuários
