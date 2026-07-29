@@ -148,7 +148,11 @@ namespace magal.ViewModels
             {
                 IsLoading = true;
 
-                var projetos = await _repository.BuscarTodosPorUsuario(1) ?? new List<Projeto>();
+                bool ehAdministrador = Sessao.UsuarioLogado != null && Sessao.UsuarioLogado.nivel == "Administrador";
+
+                var projetos = (ehAdministrador
+                    ? await _repository.BuscarTodos()
+                    : await _repository.BuscarTodosPorUsuario(Sessao.UsuarioLogado?.id_usuario ?? 0)) ?? new List<Projeto>();
                 DateTime dataLimite = DateTime.MinValue;
 
                 switch (PeriodoSelecionado)

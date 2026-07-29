@@ -151,8 +151,9 @@ INSERT IGNORE INTO funcionario (id_funcionario, id_cargo, nome, custo_hora, nive
 (14, 10, 'Eduard Müller', NULL, 'Sênior', 'CLT', 'Ativo'), 
 (15, 11, 'Marco Antônio Carvalho', NULL, 'Especialista', 'PJ', 'Ativo');
 
-INSERT IGNORE INTO usuario (id_usuario, nome, email, senha, status, nivel) VALUES 
-(1, 'Admin', 'admin@aeroconcepts.com', 'admin123', 'Ativo', 'Administrador');
+-- Senha do seed: "admin123" (armazenada como hash PBKDF2/SHA256 via magal.Services.PasswordHasher)
+INSERT IGNORE INTO usuario (id_usuario, nome, email, senha, status, nivel) VALUES
+(1, 'Admin', 'admin@aeroconcepts.com', 'V1$100000$Q+O7xoYL7XQ+/mWMXogH5Q==$y+x5ikbjvH6ZKeEaCEXrHLgFuiHoKzXc1ttMgew/gU4=', 'Ativo', 'Administrador');
 
 INSERT IGNORE INTO cliente (id_cliente, nome, tipo, cidade, estado, contato) VALUES 
 (1, 'Funcate', 'Jurídica', 'São José dos Campos', 'SP', 'Contato Comercial'), 

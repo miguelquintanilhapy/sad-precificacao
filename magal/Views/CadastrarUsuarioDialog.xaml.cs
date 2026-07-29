@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -59,7 +60,7 @@ namespace magal.Views
                 {
                     nome = TxtNome.Text.Trim(),
                     email = TxtEmail.Text.Trim(),
-                    senha = TxtSenha.Password,
+                    senha = PasswordHasher.Hash(TxtSenha.Password),
                     status = "Ativo", // Todo usuário entra como ativo por padrão
                     nivel = ((ComboBoxItem)ComboNivel.SelectedItem).Content.ToString()
                 };

@@ -176,7 +176,11 @@ namespace magal.ViewModels
                 _filtroTexto = string.Empty;
                 OnPropertyChanged(nameof(FiltroTexto));
 
-                var lista = await _repository.BuscarTodosPorUsuario(1);
+                bool ehAdministrador = Sessao.UsuarioLogado != null && Sessao.UsuarioLogado.nivel == "Administrador";
+
+                var lista = ehAdministrador
+                    ? await _repository.BuscarTodos()
+                    : await _repository.BuscarTodosPorUsuario(Sessao.UsuarioLogado?.id_usuario ?? 0);
                 Projetos.Clear();
 
                 foreach (var p in lista)

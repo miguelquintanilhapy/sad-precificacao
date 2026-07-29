@@ -22,6 +22,9 @@ namespace magal.Data.Repositories
                     {
                         if (projeto.id_projeto == 0)
                         {
+                            if (projeto.id_usuario == 0)
+                                throw new InvalidOperationException("Não é possível salvar um projeto sem um usuário autor válido.");
+
                             // INSERIR NOVO PROJETO
                             using (var cmd = new MySqlCommand(@"
                                 INSERT INTO projeto
@@ -32,7 +35,7 @@ namespace magal.Data.Repositories
                             {
                                 cmd.Parameters.AddWithValue("@nome", projeto.nome);
                                 cmd.Parameters.AddWithValue("@idCliente", projeto.id_cliente);
-                                cmd.Parameters.AddWithValue("@idUsuario", projeto.id_usuario == 0 ? 1 : projeto.id_usuario);
+                                cmd.Parameters.AddWithValue("@idUsuario", projeto.id_usuario);
                                 cmd.Parameters.AddWithValue("@data", projeto.data_criacao == DateTime.MinValue ? DateTime.Now : projeto.data_criacao);
                                 cmd.Parameters.AddWithValue("@tipo", projeto.tipo ?? "Serviço");
                                 cmd.Parameters.AddWithValue("@status", projeto.status ?? "Rascunho");
@@ -273,7 +276,14 @@ namespace magal.Data.Repositories
             return projeto;
         }
 
-        public async Task<List<Projeto>> BuscarTodosPorUsuario(int idUsuario)
+        public Task<List<Projeto>> BuscarTodosPorUsuario(int idUsuario) => BuscarProjetos(idUsuario);
+
+        /// <summary>
+        /// Retorna os projetos de todos os usuários, sem filtro de autor (uso restrito a Administrador).
+        /// </summary>
+        public Task<List<Projeto>> BuscarTodos() => BuscarProjetos(null);
+
+        private async Task<List<Projeto>> BuscarProjetos(int? idUsuario)
         {
             var lista = new List<Projeto>();
 
@@ -300,13 +310,14 @@ namespace magal.Data.Repositories
                         ON p.id_cliente = c.id_cliente
                     LEFT JOIN orcamento o
                         ON p.id_projeto = o.id_projeto
-                    WHERE p.id_usuario = @idUser
+                    " + (idUsuario.HasValue ? "WHERE p.id_usuario = @idUser" : "") + @"
                     ORDER BY p.data_criacao DESC
                 ";
 
                 using (var cmd = new MySqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@idUser", idUsuario);
+                    if (idUsuario.HasValue)
+                        cmd.Parameters.AddWithValue("@idUser", idUsuario.Value);
 
                     // Adicionado await no ExecuteReaderAsync
                     using (var reader = await cmd.ExecuteReaderAsync())

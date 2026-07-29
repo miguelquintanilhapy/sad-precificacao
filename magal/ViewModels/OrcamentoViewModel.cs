@@ -389,7 +389,7 @@ namespace magal.ViewModels
                     observacoes = ""
                 },
                 Tarefas = new ObservableCollection<Tarefa>(),
-                id_usuario = 1,
+                id_usuario = Sessao.UsuarioLogado?.id_usuario ?? 0,
                 nome = "",
                 status = "Rascunho",
                 tipo = "Serviço",
