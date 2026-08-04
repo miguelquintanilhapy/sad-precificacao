@@ -182,7 +182,7 @@
             </DockPanel>
         </Grid>
 
-        <Grid Grid.Column="1" Margin="15">
+        <Grid Grid.Column="1">
             <ContentControl x:Name="MainContent"/>
         </Grid>
     </Grid>
