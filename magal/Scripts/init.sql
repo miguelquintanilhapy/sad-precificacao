@@ -18,8 +18,7 @@ CREATE TABLE IF NOT EXISTS usuario (
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
     status VARCHAR(50) DEFAULT 'Ativo',
-    nivel VARCHAR(50) DEFAULT 'Operador'  
-);
+    nivel VARCHAR(50) DEFAULT 'Operador'
 );
 
 CREATE TABLE IF NOT EXISTS cliente (
