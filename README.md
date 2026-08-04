@@ -1,4 +1,4 @@
-# ✈️ SAD 
+# ✈️ AERO Concepts - Sistema de Precificação e Gestão de Projetos
 
 Sistema desktop para apoio à elaboração de orçamentos, gestão de projetos e análise financeira, desenvolvido como Trabalho de Conclusão de Curso (TCC) do Curso Técnico em Informática.
 
