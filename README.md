@@ -1,258 +1,104 @@
 # ✈️ AERO Concepts
 
-Sistema desktop desenvolvido para apoio à elaboração de orçamentos, gestão de projetos e análise financeira, criado como Trabalho de Conclusão de Curso (TCC) do Curso Técnico em Informática.
+Sistema desktop para apoio à elaboração de orçamentos, gestão de projetos e análise financeira, desenvolvido como Trabalho de Conclusão de Curso (TCC) do Curso Técnico em Informática.
 
-O objetivo do sistema é centralizar o gerenciamento de projetos, clientes, funcionários e custos, permitindo a geração de orçamentos mais precisos e o acompanhamento de indicadores financeiros por meio de dashboards e relatórios.
+O objetivo é centralizar o gerenciamento de projetos, clientes, funcionários e custos, permitindo orçamentos mais precisos e o acompanhamento de indicadores financeiros por meio de dashboards e relatórios.
 
----
+## Índice
 
-## 📸 Visão Geral
-
-O AERO Concepts oferece:
-
-- Controle de usuários e autenticação
-- Cadastro de clientes
-- Cadastro de funcionários
-- Cadastro de cargos
-- Catálogo de custos
-- Elaboração de orçamentos
-- Histórico de projetos
-- Dashboard financeiro
-- Relatórios em PDF
-- Indicadores gerenciais
-- Gráficos analíticos
-
----
-
-## 🏗️ Arquitetura
-
-O projeto segue o padrão **MVVM (Model-View-ViewModel)**.
-
-```text
-AERO Concepts
-│
-├── Models
-├── Views
-├── ViewModels
-├── Data
-│   ├── Repositories
-│   └── Database
-├── Services
-└── Resources
-```
-
----
-
-## ⚙️ Tecnologias Utilizadas
-
-### Front-end
-
-- WPF (.NET)
-- XAML
-
-### Back-end
-
-- C#
-- .NET
-
-### Banco de Dados
-
-- MySQL
-
-### Bibliotecas
-
-- LiveCharts
-- MySql.Data
-- iTextSharp / PDF
-- MVVM Pattern
-
----
+- [Funcionalidades](#-funcionalidades)
+- [Tecnologias](#️-tecnologias)
+- [Arquitetura](#️-arquitetura)
+- [Como executar](#-como-executar)
+- [Status do projeto](#-status-do-projeto)
+- [Equipe](#-equipe)
 
 ## 🚀 Funcionalidades
 
-### 🔐 Login
+| Módulo | Recursos |
+|---|---|
+| 🔐 Login | Autenticação, controle de sessão, cadastro de usuários |
+| 📋 Orçamentos | Criação de projetos, seleção de clientes/funcionários, associação de custos, margem de lucro, impostos, geração de proposta |
+| 📚 Histórico | Consulta, filtros de pesquisa, edição de projetos existentes |
+| 👥 Clientes | Cadastro, edição, exclusão, pesquisa, exportação em PDF |
+| 👨‍💼 Funcionários | Cadastro, edição, exclusão, pesquisa, exportação em PDF |
+| 🏢 Cargos | Cadastro, edição, exclusão |
+| 💰 Custos | Catálogo, categorias, valores de referência, pesquisa, exportação em PDF |
+| 📊 Dashboard | Indicadores (projetos, faturamento, lucro estimado), gráficos (lucro x faturamento, projetos por status/tipo), filtros por período (7d, 30d, 6m, 1a, histórico completo) |
+| 📄 Relatórios | Exportação em PDF de clientes, funcionários, custos e projetos |
 
-- Autenticação de usuários
-- Controle de sessão
-- Cadastro de novos usuários
+## ⚙️ Tecnologias
 
----
+- **UI:** WPF (.NET) + XAML, padrão MVVM
+- **Linguagem/Runtime:** C# / .NET 10
+- **Banco de dados:** MySQL (`MySql.Data`)
+- **Gráficos:** LiveCharts.Wpf
+- **Relatórios:** QuestPDF
 
-### 📋 Orçamentos
-
-- Criação de projetos
-- Seleção de clientes
-- Seleção de funcionários
-- Associação de custos
-- Cálculo de margem de lucro
-- Definição de impostos
-- Geração de proposta financeira
-
----
-
-### 📚 Histórico
-
-- Consulta de projetos cadastrados
-- Pesquisa por filtros
-- Edição de projetos existentes
-- Visualização de informações completas
-
----
-
-### 👥 Gestão de Clientes
-
-- Cadastro
-- Edição
-- Exclusão
-- Pesquisa
-- Exportação para PDF
-
----
-
-### 👨‍💼 Gestão de Funcionários
-
-- Cadastro
-- Edição
-- Exclusão
-- Pesquisa
-- Exportação para PDF
-
----
-
-### 🏢 Gestão de Cargos
-
-- Cadastro
-- Edição
-- Exclusão
-
----
-
-### 💰 Gestão de Custos
-
-- Catálogo de custos
-- Categorias
-- Valores de referência
-- Pesquisa
-- Exportação para PDF
-
----
-
-### 📊 Dashboard Financeiro
-
-Indicadores:
-
-- Quantidade de projetos
-- Valor total das propostas
-- Lucro estimado
-
-Gráficos:
-
-- Lucro x Faturamento
-- Projetos por Status
-- Projetos por Tipo
-
-Filtros:
-
-- 7 dias
-- 30 dias
-- 6 meses
-- 1 ano
-- Histórico completo
-
----
-
-### 📄 Relatórios
-
-Exportação de relatórios em PDF para:
-
-- Clientes
-- Funcionários
-- Custos
-- Projetos
-
----
-
-## 🗄️ Estrutura Geral do Sistema
+## 🏗️ Arquitetura
 
 ```text
-Sistema AERO Concepts
-│
-├── Login
-│   ├── Autenticação
-│   └── Controle de Sessão
-│
-├── Home
-│
-├── Orçamentos
-│   ├── Clientes
-│   ├── Funcionários
-│   ├── Custos
-│   └── Cálculo Financeiro
-│
-├── Histórico
-│   ├── Consulta
-│   ├── Pesquisa
-│   └── Edição
-│
-├── Dashboard Financeiro
-│   ├── Indicadores
-│   ├── Gráficos
-│   └── Filtros
-│
-├── Gerenciamento
-│   ├── Clientes
-│   ├── Funcionários
-│   ├── Cargos
-│   ├── Custos
-│   └── Usuários
-│
-└── Relatórios
-    ├── PDF
-    ├── Financeiros
-    └── Projetos
+magal/
+├── Models
+├── Views          # XAML + code-behind
+├── ViewModels
+├── Data
+│   └── Repositories
+├── Services        # Hash de senha, throttle de login, geração de PDF...
+└── Scripts         # init.sql (schema + carga inicial)
 ```
 
----
+## 🖥️ Como executar
 
-## 🎯 Objetivo do Projeto
+### Pré-requisitos
 
-O AERO Concepts foi desenvolvido para auxiliar empresas na elaboração de propostas comerciais e no gerenciamento financeiro de projetos, reduzindo erros manuais e oferecendo suporte à tomada de decisão por meio de indicadores e análises visuais.
+- Windows com [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- MySQL Server acessível (local ou remoto)
 
----
+### 1. Banco de dados
+
+Execute `magal/Scripts/init.sql` em uma instância MySQL para criar o schema `sad_precificacao` e a carga inicial.
+
+### 2. Configuração da connection string
+
+O arquivo `magal/appsettings.json` fica versionado com a connection string vazia por padrão. Crie um `magal/appsettings.local.json` (ignorado pelo git) com suas credenciais reais — ele sobrescreve o `appsettings.json` em tempo de execução:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=SEU_HOST;Port=3306;Database=sad_precificacao;Uid=SEU_USUARIO;Pwd=SUA_SENHA;SslMode=Disabled;AllowPublicKeyRetrieval=True;"
+  }
+}
+```
+
+> ⚠️ Nunca commite credenciais reais — use sempre o `appsettings.local.json` para isso.
+
+### 3. Build e execução
+
+```bash
+dotnet build magal/magal.csproj
+dotnet run --project magal/magal.csproj
+```
+
+## 📌 Status do projeto
+
+Em desenvolvimento. Já implementado:
+
+- ✅ Autenticação com hash de senha e throttle de login
+- ✅ Gestão de clientes, funcionários, cargos e custos
+- ✅ Orçamentos e histórico de projetos
+- ✅ Dashboard financeiro e relatórios em PDF
+
+Próximas melhorias:
+
+- Recomendação inteligente de recursos
+- Indicadores avançados e dashboard executivo
+- Relatórios analíticos avançados
 
 ## 👨‍💻 Equipe
 
 Projeto desenvolvido como Trabalho de Conclusão de Curso (TCC).
 
-Autores:
-
 - João Guilherme Pereira Mendes
 - Vinícius Brisolla de Vasconcelos
 - Miguel Quintanilha
-
----
-
-## 📌 Status
-
-Projeto em desenvolvimento.
-
-Versão atual inclui:
-
-✅ Sistema de autenticação  
-✅ Gestão de clientes  
-✅ Gestão de funcionários  
-✅ Gestão de cargos  
-✅ Gestão de custos  
-✅ Orçamentos  
-✅ Histórico de projetos  
-✅ Dashboard financeiro  
-✅ Relatórios PDF
-
-Próximas melhorias:
-
-- Inteligência para recomendação de recursos
-- Indicadores avançados
-- Dashboard executivo
-- Relatórios analíticos avançados
-
----
