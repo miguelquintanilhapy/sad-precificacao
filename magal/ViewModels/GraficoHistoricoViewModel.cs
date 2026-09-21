@@ -334,30 +334,69 @@ namespace magal.ViewModels
             OnPropertyChanged(nameof(LabelsMeses));
         }
 
+        /// <summary>
+        /// Formata o rótulo exibido dentro da fatia dos gráficos de pizza (Status/Tipo)
+        /// como porcentagem de participação. O valor bruto continua disponível no hover,
+        /// via tooltip customizado (ContagemTooltip), que lê o ChartPoint.Y diretamente.
+        /// </summary>
+        private static string PontoPercentualFormatter(LiveCharts.ChartPoint ponto)
+            => ponto.Participation.ToString("P1", _ptBR);
+
+        /// <summary>
+        /// Cor fixa por status, seguindo o ciclo de vida do projeto: cinza (ainda não
+        /// iniciado) → âmbar (aguardando aprovação) → azul (confirmado) → laranja (em
+        /// andamento) → verde (sucesso) / vermelho (interrompido). Evita que a mesma
+        /// fatia mude de cor dependendo da ordem em que os status aparecem nos dados.
+        /// </summary>
+        private static readonly Dictionary<string, string> CoresPorStatus = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Rascunho"] = "#64748B",
+            ["Em Aberto"] = "#0891B2", // status legado (projetos antigos), ainda ativo mas fora do fluxo atual
+            ["Orçado"] = "#F59E0B",
+            ["Aprovado"] = "#2563EB",
+            ["Executando"] = "#EA580C",
+            ["Concluído"] = "#16A34A",
+            ["Cancelado"] = "#DC2626",
+        };
+
+        private static readonly string[] OrdemStatus =
+        {
+            "Rascunho", "Em Aberto", "Orçado", "Aprovado", "Executando", "Concluído", "Cancelado"
+        };
+
+        private const string CorStatusPadrao = "#334155";
+
         private void AtualizarGraficoStatus(List<Projeto> projetos)
         {
             var agrupado = projetos
                 .GroupBy(p => p.status ?? "Sem Status")
-                .Select(g => new { Nome = g.Key, Quantidade = g.Count() }).ToList();
+                .Select(g => new { Nome = g.Key, Quantidade = g.Count() })
+                .OrderBy(item =>
+                {
+                    int posicao = Array.IndexOf(OrdemStatus, item.Nome);
+                    return posicao >= 0 ? posicao : int.MaxValue;
+                })
+                .ThenBy(item => item.Nome)
+                .ToList();
 
             SeriesStatus = new SeriesCollection();
-            string[] cores = { "#1E3A8A", "#0F766E", "#7C3AED", "#EA580C", "#BE123C", "#0891B2", "#4D7C0F", "#475569" };
-            int index = 0;
 
             foreach (var item in agrupado)
             {
-                var cor = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(cores[index % cores.Length]);
+                string hex = CoresPorStatus.TryGetValue(item.Nome, out var corStatus) ? corStatus : CorStatusPadrao;
+                var cor = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hex);
+
                 SeriesStatus.Add(new PieSeries
                 {
                     Title = item.Nome,
                     Values = new ChartValues<double> { item.Quantidade },
                     DataLabels = true,
+                    LabelPoint = PontoPercentualFormatter,
                     Fill = new System.Windows.Media.SolidColorBrush(cor),
                     Foreground = System.Windows.Media.Brushes.White,
                     StrokeThickness = 2,
                     Stroke = System.Windows.Media.Brushes.White
                 });
-                index++;
             }
             OnPropertyChanged(nameof(SeriesStatus));
         }
@@ -380,6 +419,7 @@ namespace magal.ViewModels
                     Title = item.Nome,
                     Values = new ChartValues<double> { item.Quantidade },
                     DataLabels = true,
+                    LabelPoint = PontoPercentualFormatter,
                     Fill = new System.Windows.Media.SolidColorBrush(cor),
                     Foreground = System.Windows.Media.Brushes.White,
                     StrokeThickness = 2,

@@ -211,7 +211,7 @@
 
                         <DataGridTextColumn Header="E-MAIL DE ACESSO" Binding="{Binding email}" Width="1.5*" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AeroTextMuted}"/>
 
-                        <DataGridTextColumn Header="PERFIL DE SISTEMA" Binding="{Binding perfil}" Width="180" FontSize="14" FontWeight="Bold">
+                        <DataGridTextColumn Header="PERFIL DE SISTEMA" Binding="{Binding nivel}" Width="180" FontSize="14" FontWeight="Bold">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>

@@ -276,6 +276,7 @@ namespace magal.Data.Repositories
                             projeto.Custos.Add(new Custo
                             {
                                 id_custo = Convert.ToInt32(reader["id_custo"]),
+                                id_catalogo_custo = Convert.ToInt32(reader["id_catalogo_custo"]),
                                 nome = reader["nome"].ToString(),
                                 categoria = reader["categoria"].ToString(),
                                 tipo = reader["tipo"].ToString(),

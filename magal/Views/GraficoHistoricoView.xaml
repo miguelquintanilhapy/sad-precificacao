@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:views="clr-namespace:magal.Views"
              mc:Ignorable="d"
              Language="pt-BR"
              d:DesignHeight="1200"
@@ -175,6 +176,9 @@
                         <StackPanel>
                             <TextBlock Text="PROJETOS POR STATUS" FontSize="15" FontWeight="Bold" Foreground="{StaticResource AzulAero}" Margin="0,0,0,20"/>
                             <lvc:PieChart Series="{Binding SeriesStatus}" LegendLocation="Bottom" HoverPushOut="15" InnerRadius="40" Height="420" AnimationsSpeed="0">
+                                <lvc:PieChart.DataTooltip>
+                                    <views:ContagemTooltip/>
+                                </lvc:PieChart.DataTooltip>
                             </lvc:PieChart>
                         </StackPanel>
                     </Border>
@@ -182,7 +186,11 @@
                     <Border Grid.Column="2" Background="White" CornerRadius="16" BorderThickness="1" BorderBrush="{StaticResource AeroBorder}" Padding="20">
                         <StackPanel>
                             <TextBlock Text="PROJETOS POR TIPO" FontSize="15" FontWeight="Bold" Foreground="{StaticResource AzulAero}" Margin="0,0,0,20"/>
-                            <lvc:PieChart Series="{Binding SeriesTipo}" SeriesColors="{StaticResource PizzaCoresSchema}" LegendLocation="Bottom" HoverPushOut="15" InnerRadius="40" Height="420" AnimationsSpeed="0"/>
+                            <lvc:PieChart Series="{Binding SeriesTipo}" SeriesColors="{StaticResource PizzaCoresSchema}" LegendLocation="Bottom" HoverPushOut="15" InnerRadius="40" Height="420" AnimationsSpeed="0">
+                                <lvc:PieChart.DataTooltip>
+                                    <views:ContagemTooltip/>
+                                </lvc:PieChart.DataTooltip>
+                            </lvc:PieChart>
                         </StackPanel>
                     </Border>
                 </Grid>
