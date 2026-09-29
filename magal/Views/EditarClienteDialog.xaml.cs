@@ -13,6 +13,8 @@ namespace magal.Views
         public EditarClienteDialog(Cliente cliente)
         {
             InitializeComponent();
+            ContentRendered += (_, _) => _estadoInicial = CapturarEstado();
+            Closing += ConfirmarDescarteAlteracoes;
 
             _cliente = cliente;
 
@@ -89,6 +91,36 @@ namespace magal.Views
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+        }
+
+        // Estado dos campos ao abrir a janela, usado para detectar alterações não salvas
+        private string _estadoInicial;
+
+        private string CapturarEstado() => string.Join("\u001f", new[]
+        {
+                TxtNome.Text,
+                TxtCpfCnpj.Text,
+                TxtCidade.Text,
+                TxtEstado.Text,
+                TxtContato.Text,
+                ComboTipo.SelectedValue?.ToString(),
+                ComboTipo.Text
+        });
+
+        private void ConfirmarDescarteAlteracoes(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Salvo com sucesso (DialogResult = true) ou sem alterações: fecha sem perguntar
+            if (_estadoInicial == null || DialogResult == true || CapturarEstado() == _estadoInicial) return;
+
+            var resposta = MessageBox.Show(
+                "Existem alterações não salvas. Deseja descartá-las?",
+                "Descartar alterações",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.No);
+
+            if (resposta != MessageBoxResult.Yes)
+                e.Cancel = true;
         }
     }
 }

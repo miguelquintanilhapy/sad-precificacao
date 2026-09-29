@@ -55,10 +55,32 @@ namespace magal
         }
 
         // --- NAVEGAÇÃO ---
-        private void BtnHome_Click(object sender, RoutedEventArgs e) => AbrirHome();
-        private void BtnOrcamentos_Click(object sender, RoutedEventArgs e) => AbrirOrcamento();
-        private void BtnHistorico_Click(object sender, RoutedEventArgs e) => AbrirHistorico();
-        private void BtnGerenciamento_Click(object sender, RoutedEventArgs e) => AbrirGerenciamento();
+        private void BtnHome_Click(object sender, RoutedEventArgs e) { if (ConfirmarSaidaDaTela()) AbrirHome(); }
+        private void BtnOrcamentos_Click(object sender, RoutedEventArgs e) { if (ConfirmarSaidaDaTela()) AbrirOrcamento(); }
+        private void BtnHistorico_Click(object sender, RoutedEventArgs e) { if (ConfirmarSaidaDaTela()) AbrirHistorico(); }
+        private void BtnGerenciamento_Click(object sender, RoutedEventArgs e) { if (ConfirmarSaidaDaTela()) AbrirGerenciamento(); }
+
+        /// <summary>
+        /// Se a tela de orçamento/edição de projeto estiver aberta com alterações não salvas,
+        /// pergunta se o usuário deseja descartá-las antes de trocar de tela.
+        /// Retorna false quando o usuário optar por continuar editando.
+        /// </summary>
+        private bool ConfirmarSaidaDaTela()
+        {
+            if (MainContent.Content is OrcamentoView view && view.DataContext is OrcamentoViewModel vm && vm.TemAlteracoes())
+            {
+                var resposta = MessageBox.Show(
+                    "Existem alterações não salvas. Deseja descartá-las?",
+                    "Descartar alterações",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning,
+                    MessageBoxResult.No);
+
+                return resposta == MessageBoxResult.Yes;
+            }
+
+            return true;
+        }
 
         private void AtualizarBotaoAtivo(Button botaoAtivo)
         {
@@ -115,6 +137,8 @@ namespace magal
 
                 return; // Interrompe a execução aqui e não altera a tela
             }
+
+            if (!ConfirmarSaidaDaTela()) return;
 
             // Se for Admin, segue o fluxo normal
             MainContent.Content = new GraficoHistoricoView();
@@ -192,6 +216,8 @@ namespace magal
                 return; // Bloqueia a troca de tela
             }
 
+            if (!ConfirmarSaidaDaTela()) return;
+
             MainContent.Content = new UsuariosListaView();
             AtualizarBotaoAtivo(BtnGerenciamento);
         }
@@ -203,6 +229,8 @@ namespace magal
 
             if (resultado == MessageBoxResult.Yes)
             {
+                if (!ConfirmarSaidaDaTela()) return;
+
                 Sessao.UsuarioLogado = null; 
                 LoginView login = new LoginView();
                 login.Show();

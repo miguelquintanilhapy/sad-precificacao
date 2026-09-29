@@ -270,7 +270,7 @@ namespace magal.ViewModels
 
         #region Métodos Auxiliares / Privados
 
-        private bool TemAlteracoes()
+        public bool TemAlteracoes()
         {
             if (_projetoOriginal == null) return !string.IsNullOrWhiteSpace(ProjetoAtual.nome) || ProjetoAtual.Tarefas.Count > 0;
 

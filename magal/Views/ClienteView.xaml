@@ -213,42 +213,43 @@
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="10,0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
                         <DataGridTextColumn Header="TIPO" Binding="{Binding tipo}" Width="150" FontSize="14" FontWeight="SemiBold" />
                         <DataGridTextColumn Header="CPF / CNPJ" Binding="{Binding cpf_cnpj}" Width="160" FontSize="14" FontWeight="SemiBold" />
-                        <DataGridTextColumn Header="CIDADE" Binding="{Binding cidade}" Width="150" FontSize="14" FontWeight="SemiBold" />
+                        <DataGridTextColumn Header="CIDADE" Binding="{Binding cidade}" Width="220" FontSize="14" FontWeight="SemiBold" />
 
                         <DataGridTextColumn Header="UF" Binding="{Binding estado}" Width="70" FontSize="14" FontWeight="SemiBold" >
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="FontWeight" Value="SemiBold"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="CONTATO" Binding="{Binding contato}" Width="150" FontSize="14" FontWeight="SemiBold"/>
+                        <DataGridTextColumn Header="CONTATO" Binding="{Binding contato}" Width="240" FontSize="14" FontWeight="SemiBold"/>
 
                         <DataGridTemplateColumn Header="AÇÕES" Width="170">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Button Content="Editar" 
+                                        <Button Style="{StaticResource IconActionBtn}" ToolTip="Editar" Tag="#DBEAFE"
                                                 Command="{Binding DataContext.EditarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
-                                                FontSize="13" Foreground="{StaticResource AeroAccent}"
-                                                Background="Transparent" BorderThickness="0" Cursor="Hand" FontWeight="Bold" Margin="0,0,15,0"/>
+                                                Foreground="{StaticResource AeroAccent}" Margin="0,0,15,0">
+                                                    <Path Data="{StaticResource IconePencil}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="18" Height="18" Stretch="Uniform"/>
+                                                </Button>
 
-                                        <Button Content="Excluir" 
+                                        <Button Style="{StaticResource IconActionBtn}" ToolTip="Excluir" Tag="#FEE2E2"
                                                 Command="{Binding DataContext.ExcluirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
-                                                FontSize="13" Foreground="{StaticResource AeroDanger}"
-                                                Background="Transparent" BorderThickness="0" Cursor="Hand" FontWeight="Bold"/>
+                                                Foreground="{StaticResource AeroDanger}">
+                                                    <Path Data="{StaticResource IconeLixeira}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="18" Height="18" Stretch="Uniform"/>
+                                                </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

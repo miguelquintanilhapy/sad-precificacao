@@ -277,19 +277,19 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Button Content="Editar" 
+                                        <Button Style="{StaticResource IconActionBtn}" ToolTip="Editar" Tag="#DBEAFE"
                                                 Command="{Binding DataContext.EditarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
-                                                FontSize="13"
-                                                Foreground="{StaticResource AeroAccent}"
-                                                Background="Transparent" BorderThickness="0" Cursor="Hand" FontWeight="Bold" Margin="0,0,15,0"/>
+                                                Foreground="{StaticResource AeroAccent}" Margin="0,0,15,0">
+                                                    <Path Data="{StaticResource IconePencil}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="18" Height="18" Stretch="Uniform"/>
+                                                </Button>
 
-                                        <Button Content="Excluir" 
+                                        <Button Style="{StaticResource IconActionBtn}" ToolTip="Excluir" Tag="#FEE2E2"
                                                 Command="{Binding DataContext.ExcluirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
-                                                FontSize="13"
-                                                Foreground="{StaticResource AeroDanger}"
-                                                Background="Transparent" BorderThickness="0" Cursor="Hand" FontWeight="Bold"/>
+                                                Foreground="{StaticResource AeroDanger}">
+                                                    <Path Data="{StaticResource IconeLixeira}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="18" Height="18" Stretch="Uniform"/>
+                                                </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

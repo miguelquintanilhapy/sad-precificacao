@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:views="clr-namespace:magal.Views"
+             xmlns:vm="clr-namespace:magal.ViewModels"
              mc:Ignorable="d"
              Language="pt-BR"
              d:DesignHeight="1200"
@@ -13,6 +14,7 @@
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <vm:ValorCompactoConverter x:Key="ValorCompacto" />
 
         <SolidColorBrush x:Key="AzulAero" Color="#131C49"/>
         <SolidColorBrush x:Key="AeroAccent" Color="#3B82F6"/>
@@ -107,17 +109,43 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="220"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="LUCRO / FATURAMENTO" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="LUCRO / FATURAMENTO" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center"/>
+
+                                <!-- Legenda de cores das séries (empilhada) -->
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="48,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="12" Height="12" Fill="{StaticResource VerdeAero}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Lucro" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <Ellipse Width="12" Height="12" Fill="{StaticResource AzulAero}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Faturamento" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="PERÍODO" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextHint}" Margin="0,-4,0,6"/>
                                 <ComboBox ItemsSource="{Binding Periodos}" SelectedItem="{Binding PeriodoSelecionado}" Height="40" BorderThickness="0" VerticalContentAlignment="Center" FontWeight="SemiBold" Background="White" Foreground="{StaticResource AzulAero}"/>
                             </StackPanel>
                         </Grid>
 
-                        <lvc:CartesianChart Height="340" LegendLocation="Right" Margin="0,0,25,0" AnimationsSpeed="0">
+                        <lvc:CartesianChart Height="340" LegendLocation="None" Margin="0,0,25,0" AnimationsSpeed="0">
                             <lvc:CartesianChart.Series>
-                                <lvc:ColumnSeries Title="Lucro" Values="{Binding ValoresLucroMensal}" Fill="{StaticResource VerdeAero}" DataLabels="True"/>
-                                <lvc:ColumnSeries Title="Faturamento" Values="{Binding ValoresFaturamentoMensal}" Fill="{StaticResource AzulAero}" DataLabels="True"/>
+                                <lvc:ColumnSeries Title="Lucro" Values="{Binding ValoresLucroMensal}" Fill="{StaticResource VerdeAero}" DataLabels="True" LabelPoint="{Binding ValorCompletoFormatter}" FontSize="10" ColumnPadding="2" MaxColumnWidth="70">
+                                    <lvc:ColumnSeries.DataLabelsTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Point.Y, Converter={StaticResource ValorCompacto}}" FontSize="10" FontWeight="SemiBold" Foreground="#334155"/>
+                                        </DataTemplate>
+                                    </lvc:ColumnSeries.DataLabelsTemplate>
+                                </lvc:ColumnSeries>
+                                <lvc:ColumnSeries Title="Faturamento" Values="{Binding ValoresFaturamentoMensal}" Fill="{StaticResource AzulAero}" DataLabels="True" LabelPoint="{Binding ValorCompletoFormatter}" FontSize="10" ColumnPadding="2" MaxColumnWidth="70">
+                                    <lvc:ColumnSeries.DataLabelsTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Point.Y, Converter={StaticResource ValorCompacto}}" FontSize="10" FontWeight="SemiBold" Foreground="#334155"/>
+                                        </DataTemplate>
+                                    </lvc:ColumnSeries.DataLabelsTemplate>
+                                </lvc:ColumnSeries>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
                                 <lvc:Axis Labels="{Binding LabelsMeses}" FontSize="11" Foreground="#64748B">
@@ -140,7 +168,15 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="260"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="MARGEM DE LUCRO MÉDIA" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="MARGEM DE LUCRO MÉDIA" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center"/>
+
+                                <!-- Legenda de cores da série -->
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="48,0,0,0">
+                                    <Ellipse Width="12" Height="12" Fill="{StaticResource VerdeAero}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Margem Média" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="AGRUPAR POR" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextHint}" Margin="0,-4,0,6"/>
                                 <ComboBox ItemsSource="{Binding CategoriasMargem}" SelectedItem="{Binding CategoriaMargemSelecionada}" Height="40" BorderThickness="0" VerticalContentAlignment="Center" FontWeight="SemiBold" Background="White" Foreground="{StaticResource AzulAero}"/>
@@ -149,7 +185,7 @@
 
                         <lvc:CartesianChart Height="340" LegendLocation="None" Margin="0,0,25,0" AnimationsSpeed="0">
                             <lvc:CartesianChart.Series>
-                                <lvc:ColumnSeries Title="Margem Média" Values="{Binding ValoresMargemMedia}" Fill="{StaticResource VerdeAero}" DataLabels="True" LabelPoint="{Binding MargemPontoFormatter}"/>
+                                <lvc:ColumnSeries Title="Margem Média" Values="{Binding ValoresMargemMedia}" Fill="{StaticResource VerdeAero}" DataLabels="True" LabelPoint="{Binding MargemPontoFormatter}" ColumnPadding="2" MaxColumnWidth="70"/>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
                                 <lvc:Axis Labels="{Binding LabelsMargemX}" FontSize="11" Foreground="#64748B">

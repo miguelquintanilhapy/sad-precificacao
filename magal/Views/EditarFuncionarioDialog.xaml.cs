@@ -22,6 +22,15 @@ namespace magal.Views
         public EditarFuncionarioDialog(Funcionario funcionario)
         {
             InitializeComponent();
+            ContentRendered += (_, _) => _estadoInicial = CapturarEstado();
+            Closing += ConfirmarDescarteAlteracoes;
+            ComboCargo.SelectionChanged += (_, _) =>
+            {
+                // Cargos são carregados de forma assíncrona: o valor inicial é o primeiro não nulo
+                if (_cargoDefinido || ComboCargo.SelectedValue == null) return;
+                _cargoDefinido = true;
+                if (_estadoInicial != null) _estadoInicial = CapturarEstado();
+            };
 
             _funcionario = funcionario;
 
@@ -132,6 +141,38 @@ namespace magal.Views
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+        }
+
+        // Estado dos campos ao abrir a janela, usado para detectar alterações não salvas
+        private string _estadoInicial;
+        private bool _cargoDefinido;
+
+        private string CapturarEstado() => string.Join("\u001f", new[]
+        {
+                TxtNome.Text,
+                ComboNivel.SelectedValue?.ToString(),
+                ComboNivel.Text,
+                ComboTipoVinculo.SelectedValue?.ToString(),
+                ComboTipoVinculo.Text,
+                ComboStatus.SelectedValue?.ToString(),
+                ComboStatus.Text,
+                _cargoDefinido ? ComboCargo.SelectedValue?.ToString() : null
+        });
+
+        private void ConfirmarDescarteAlteracoes(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Salvo com sucesso (DialogResult = true) ou sem alterações: fecha sem perguntar
+            if (_estadoInicial == null || DialogResult == true || CapturarEstado() == _estadoInicial) return;
+
+            var resposta = MessageBox.Show(
+                "Existem alterações não salvas. Deseja descartá-las?",
+                "Descartar alterações",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.No);
+
+            if (resposta != MessageBoxResult.Yes)
+                e.Cancel = true;
         }
     }
 }

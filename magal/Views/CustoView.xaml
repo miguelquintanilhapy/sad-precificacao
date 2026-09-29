@@ -211,18 +211,16 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                         <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="Margin" Value="10,0"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="CATEGORIA" Binding="{Binding categoria}" Width="180" FontSize="14" FontWeight="SemiBold" />
+                            <DataGridTextColumn Header="CATEGORIA" Binding="{Binding categoria}" Width="260" FontSize="14" FontWeight="SemiBold" />
                             <DataGridTextColumn Header="VALOR" Binding="{Binding valor, StringFormat='{}{0:C}', ConverterCulture=pt-BR}" Width="160" FontSize="16" FontWeight="Bold">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
                                         <Setter Property="VerticalAlignment" Value="Center"/>
                                         <Setter Property="Foreground" Value="{StaticResource VerdeAero}"/>
-                                        <Setter Property="Padding" Value="0,0,30,0"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -231,17 +229,19 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Button Content="Editar" 
+                                            <Button Style="{StaticResource IconActionBtn}" ToolTip="Editar" Tag="#DBEAFE"
                                                     Command="{Binding DataContext.EditarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"
-                                                    FontSize="13" Foreground="{StaticResource AeroAccent}"
-                                                    Background="Transparent" BorderThickness="0" Cursor="Hand" FontWeight="Bold" Margin="0,0,15,0"/>
+                                                    Foreground="{StaticResource AeroAccent}" Margin="0,0,15,0">
+                                                        <Path Data="{StaticResource IconePencil}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="18" Height="18" Stretch="Uniform"/>
+                                                    </Button>
 
-                                            <Button Content="Excluir" 
+                                            <Button Style="{StaticResource IconActionBtn}" ToolTip="Excluir" Tag="#FEE2E2"
                                                     Command="{Binding DataContext.ExcluirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"
-                                                    FontSize="13" Foreground="{StaticResource AeroDanger}"
-                                                    Background="Transparent" BorderThickness="0" Cursor="Hand" FontWeight="Bold"/>
+                                                    Foreground="{StaticResource AeroDanger}">
+                                                        <Path Data="{StaticResource IconeLixeira}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="18" Height="18" Stretch="Uniform"/>
+                                                    </Button>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

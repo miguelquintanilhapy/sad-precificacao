@@ -1,8 +1,10 @@
 -- ==============================================================================
 -- SISTEMA: AERO CONCEPTS (SAD PRECIFICAÇÃO)
--- ESTRUTURA DO BANCO DE DADOS E CARGA INICIAL INTEGRAL (CORRIGIDA)
--- DATA: 26/05/2026
--- STATUS: 100% ALINHADO (CUSTOS VINCULADOS DIRETAMENTE AO CATÁLOGO MASTER)
+-- ESTRUTURA DO BANCO DE DADOS E CARGA INICIAL (ESPELHO DO BANCO sad_precificacao)
+-- DATA: 29/09/2026
+-- STATUS: ALINHADO COM O BANCO REAL (ESTRUTURA E DADOS). REEXECUTÁVEL (IF NOT EXISTS / INSERT IGNORE)
+-- OBS: custo/hora do funcionário é calculado no app: base do cargo (Pleno) x nível
+--      (Júnior /1,75 | Pleno x1 | Sênior x1,5 | Especialista x2). A coluna funcionario.custo_hora não é usada.
 -- ==============================================================================
 
 CREATE DATABASE IF NOT EXISTS sad_precificacao;
@@ -120,54 +122,56 @@ CREATE TABLE IF NOT EXISTS orcamento (
 -- 2. CARGA DE DADOS INICIAIS (CONFIGURAÇÕES DO SISTEMA E USUÁRIOS)
 -- ==============================================================================
 
-INSERT IGNORE INTO cargo (id_cargo, nome, custo_medio_hora) VALUES 
-(1, 'Engenheiro Elétrico', 160.00), 
-(2, 'Supervisor Eletroeletrônico', 130.00), 
-(3, 'Engenheiro Especialista Turbomáquinas', 220.00), 
-(4, 'Coordenador Técnico de Serviços', 145.00), 
-(5, 'Analista de Engenharia Industrial', 95.00), 
-(6, 'Coordenador de Engenharia Industrial', 155.00), 
-(7, 'Analista de PD&I', 105.00), 
-(8, 'Engenheiro de PD&I', 175.00), 
-(9, 'Gerente de Engenharia', 250.00), 
-(10, 'Gerente de Projetos', 230.00), 
-(11, 'Consultor Especialista PD&I/Eng', 300.00);
+INSERT IGNORE INTO cargo (id_cargo, nome, custo_medio_hora) VALUES
+(1, 'Engenheiro Elétrico', 110.00),
+(2, 'Supervisor Eletroeletrônico', 85.00),
+(3, 'Engenheiro Especialista Turbomáquinas', 120.00),
+(4, 'Coordenador Técnico de Serviços', 100.00),
+(5, 'Analista de Engenharia Industrial', 70.00),
+(6, 'Coordenador de Engenharia Industrial', 100.00),
+(7, 'Analista de PD&I', 75.00),
+(8, 'Engenheiro de PD&I', 120.00),
+(9, 'Gerente de Engenharia', 170.00),
+(10, 'Gerente de Projetos', 160.00),
+(11, 'Consultor Especialista PD&I/Eng', 160.00);
 
-INSERT IGNORE INTO funcionario (id_funcionario, id_cargo, nome, custo_hora, nivel, tipo_vinculo, status) VALUES 
-(1, 1, 'Paulino Rubião', NULL, 'Sênior', 'CLT', 'Ativo'), 
-(2, 2, 'Eduardo Sedano', NULL, 'Pleno', 'CLT', 'Ativo'), 
-(3, 3, 'Flavio Natal', NULL, 'Especialista', 'PJ', 'Ativo'), 
-(4, 4, 'Antonio Aguida', NULL, 'Sênior', 'CLT', 'Ativo'), 
-(5, 4, 'Roberto Souza Costa', NULL, 'Sênior', 'CLT', 'Ativo'), 
-(6, 5, 'Luiz Menezes', NULL, 'Pleno', 'CLT', 'Ativo'), 
-(7, 6, 'Evandro Lamberti', NULL, 'Sênior', 'CLT', 'Ativo'), 
-(8, 7, 'Clayton Sant''ana', NULL, 'Pleno', 'CLT', 'Ativo'), 
-(9, 7, 'Igor Alves', NULL, 'Pleno', 'CLT', 'Ativo'), 
-(10, 7, 'Victor Hugo Noronha', NULL, 'Pleno', 'CLT', 'Ativo'), 
-(11, 8, 'Lucilene Moraes', NULL, 'Sênior', 'CLT', 'Ativo'), 
-(12, 8, 'Gerhard Egwarth', NULL, 'Sênior', 'PJ', 'Ativo'), 
-(13, 9, 'Daniel Joaquim Pereira', NULL, 'Sênior', 'CLT', 'Ativo'), 
-(14, 10, 'Eduard Müller', NULL, 'Sênior', 'CLT', 'Ativo'), 
+INSERT IGNORE INTO funcionario (id_funcionario, id_cargo, nome, custo_hora, nivel, tipo_vinculo, status) VALUES
+(1, 1, 'Paulino Rubião', NULL, 'Sênior', 'CLT', 'Ativo'),
+(2, 2, 'Eduardo Sedano', NULL, 'Pleno', 'CLT', 'Ativo'),
+(3, 3, 'Flavio Natal', NULL, 'Especialista', 'PJ', 'Ativo'),
+(4, 4, 'Antonio Aguida', NULL, 'Sênior', 'CLT', 'Ativo'),
+(5, 4, 'Roberto Souza Costa', NULL, 'Sênior', 'CLT', 'Ativo'),
+(6, 5, 'Luiz Menezes', NULL, 'Pleno', 'CLT', 'Ativo'),
+(7, 6, 'Evandro Lamberti', NULL, 'Sênior', 'CLT', 'Ativo'),
+(8, 7, 'Clayton Sant''ana', NULL, 'Pleno', 'CLT', 'Ativo'),
+(9, 7, 'Igor Alves', NULL, 'Pleno', 'CLT', 'Ativo'),
+(10, 7, 'Victor Hugo Noronha', NULL, 'Pleno', 'CLT', 'Ativo'),
+(11, 8, 'Lucilene Moraes', NULL, 'Sênior', 'CLT', 'Ativo'),
+(12, 8, 'Gerhard Egwarth', NULL, 'Sênior', 'PJ', 'Ativo'),
+(13, 9, 'Daniel Joaquim Pereira', NULL, 'Sênior', 'CLT', 'Ativo'),
+(14, 10, 'Eduard Müller', NULL, 'Sênior', 'CLT', 'Ativo'),
 (15, 11, 'Marco Antônio Carvalho', NULL, 'Especialista', 'PJ', 'Ativo');
 
--- Senha do seed: "admin123" (armazenada como hash PBKDF2/SHA256 via magal.Services.PasswordHasher)
+-- Senhas armazenadas como hash PBKDF2/SHA256 via magal.Services.PasswordHasher
+-- Admin: "admin123"
 INSERT IGNORE INTO usuario (id_usuario, nome, email, senha, status, nivel) VALUES
-(1, 'Admin', 'admin@aeroconcepts.com', 'V1$100000$Q+O7xoYL7XQ+/mWMXogH5Q==$y+x5ikbjvH6ZKeEaCEXrHLgFuiHoKzXc1ttMgew/gU4=', 'Ativo', 'Administrador');
+(1, 'Admin', 'admin@aeroconcepts.com', 'V1$100000$TyFmxrsxrAKsWqUz/IgbIw==$roa4l0EWB/FXikE4tAuVnk2Vjf7ZQsOxTnq3N6fGzbg=', 'Ativo', 'Administrador'),
+(2, 'user', 'user@aeroconcepts.com', 'V1$100000$9KrS/J0T3FZv8zbhebhnjw==$HZDobUb/KEkqcrkw8Gnet6GBc6dW0et31aoIvx3e9Z4=', 'Ativo', 'Operador');
 
-INSERT IGNORE INTO cliente (id_cliente, nome, tipo, cidade, estado, contato) VALUES 
-(1, 'Funcate', 'Jurídica', 'São José dos Campos', 'SP', 'Contato Comercial'), 
-(2, 'Voith', 'Jurídica', 'São Paulo', 'SP', 'Departamento de Projetos'), 
-(3, 'Arauco', 'Jurídica', 'Curitiba', 'PR', 'Suprimentos'), 
-(4, 'EESC', 'Institucional', 'São Carlos', 'SP', 'Diretoria Técnica'), 
-(5, 'International Paper', 'Jurídica', 'Mogi Guaçu', 'SP', 'Engenharia'), 
-(6, 'Suzano', 'Jurídica', 'Salvador', 'BA', 'Gestão de Contratos'), 
-(7, 'Klabin', 'Jurídica', 'Telêmaco Borba', 'PR', 'Planejamento'), 
-(8, 'FAB', 'Governo', 'Brasília', 'DF', 'Comando da Aeronáutica'), 
-(9, 'IAE', 'Governo', 'São José dos Campos', 'SP', 'Diretoria IAE'), 
-(10, 'Birla Carbon', 'Jurídica', 'Cubatão', 'SP', 'Manutenção Industrial'), 
-(11, 'Rhodia', 'Jurídica', 'Paulínia', 'SP', 'Compras Técnicas'), 
-(12, 'Raizen', 'Jurídica', 'Piracicaba', 'SP', 'Projetos Estratégicos'), 
-(13, 'DCTA', 'Governo', 'São José dos Campos', 'SP', 'Secretaria de Tecnologia');
+INSERT IGNORE INTO cliente (id_cliente, nome, tipo, cpf_cnpj, cidade, estado, contato) VALUES
+(1, 'Funcate', 'Pessoa Jurídica', '51055403876', 'São José dos Campos', 'SP', 'Contato Comercial'),
+(2, 'Voith', 'Jurídica', NULL, 'São Paulo', 'SP', 'Departamento de Projetos'),
+(3, 'Arauco', 'Jurídica', NULL, 'Curitiba', 'PR', 'Suprimentos'),
+(4, 'EESC', 'Institucional', NULL, 'São Carlos', 'SP', 'Diretoria Técnica'),
+(5, 'International Paper', 'Jurídica', NULL, 'Mogi Guaçu', 'SP', 'Engenharia'),
+(6, 'Suzano', 'Jurídica', NULL, 'Salvador', 'BA', 'Gestão de Contratos'),
+(7, 'Klabin', 'Jurídica', NULL, 'Telêmaco Borba', 'PR', 'Planejamento'),
+(8, 'FAB', 'Governo', NULL, 'Brasília', 'DF', 'Comando da Aeronáutica'),
+(9, 'IAE', 'Governo', NULL, 'São José dos Campos', 'SP', 'Diretoria IAE'),
+(10, 'Birla Carbon', 'Jurídica', NULL, 'Cubatão', 'SP', 'Manutenção Industrial'),
+(11, 'Rhodia', 'Jurídica', NULL, 'Paulínia', 'SP', 'Compras Técnicas'),
+(12, 'Raizen', 'Jurídica', NULL, 'Piracicaba', 'SP', 'Projetos Estratégicos'),
+(13, 'DCTA', 'Governo', NULL, 'São José dos Campos', 'SP', 'Secretaria de Tecnologia');
 
 -- ==============================================================================
 -- 3. CARGA DO CATÁLOGO MASTER DE CUSTOS (A MATRIZ DOS PREÇOS)
@@ -210,306 +214,396 @@ INSERT IGNORE INTO catalogo_custo (id_catalogo_custo, nome, categoria, valor) VA
 (34, 'Deslocamento Terrestre e Combustível para Coleta em Campo', 'Transporte/Deslocamento', 1200.00);
 
 -- ==============================================================================
--- 4. HISTÓRICO E PROJETOS VINCULADOS AO CATÁLOGO MASTER
+-- 4. PROJETOS, CUSTOS, TAREFAS E ORÇAMENTOS (IDs EXPLÍCITOS: SCRIPT PODE SER REEXECUTADO SEM DUPLICAR)
 -- ==============================================================================
 
--- PROJETO 01: Funcate
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (1, 'Projeto Antigo Teste A', '2025-01-10', 'Em Aberto', 'Produto', 1, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(1, 1, 'Componentes Eletrônicos de Bancada', 'EPIs/Ferramentas', 'Direto', 1540.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(1, 6, 'Desenho preliminar de circuitos e placas', 20.00, 'Concluída'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (1, 3440.00, 0.00, 0.00, 43.6047, 1500.00, 4939.84, 30);
-
-
--- PROJETO 02: Funcate
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (2, 'Projeto Antigo Teste B', '2025-02-15', 'Em Aberto', 'Produto', 1, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(2, 2, 'Softwares de Simulação Numérica Estendida', 'Licenças de Software', 'Direto', 3200.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(2, 1, 'Engenharia Reversa e Mapeamento Elétrico', 24.00, 'Concluída'), 
-(2, 2, 'Supervisão técnica de bancada de testes', 6.22, 'Concluída');  
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (2, 9768.60, 0.00, 0.00, 40.9475, 4000.00, 13768.84, 15);
-
-
--- PROJETO 03: Funcate
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (3, 'Projeto Antigo Teste C', '2025-03-20', 'Em Aberto', 'Produto', 1, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(3, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(3, 8, 'Tabulação de dados e emissão de relatório inicial', 8.00, 'Concluída'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (3, 2360.00, 0.00, 0.00, 46.6102, 1100.00, 3460.00, 10);
-
-
--- PROJETO 04: Voith
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (4, 'Modernização de Turbina Hidrelétrica VT-01', '2026-05-22 09:00:00', 'Executando', 'Serviço', 2, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(4, 4, 'Locação de Andaimes e Estruturas Modulares', 'Aluguel/Estrutura', 'Direto', 15000.00, 'Mês'),
-(4, 5, 'Manutenção Corretiva em Gerador de Campo', 'Manutenção', 'Direto', 12150.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(4, 3, 'Análise de vibração e dinâmica de fluidos preliminar', 80.00, 'Executando'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (4, 62350.00, 12.00, 7482.00, 25.00, 15587.50, 87290.00, 40);
-
-
--- PROJETO 05: Suzano
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (5, 'Otimização de Linha de Celulose - Planta BA', '2026-05-06 14:30:00', 'Aprovado', 'Serviço', 6, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(5, 6, 'Passagens Aéreas e Estadia de Engenharia em Salvador', 'Transporte/Deslocamento', 'Direto', 12100.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(5, 7, 'Revisão de malhas de automação da planta industrial', 60.00, 'Concluída'), 
-(5, 6, 'Apoio técnico em levantamento de campo P&ID', 64.28, 'Concluída'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (5, 32156.60, 12.00, 3858.79, 20.00, 6431.32, 43218.47, 45);
-
-
--- PROJETO 06: Klabin
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (6, 'Desenvolvimento de Painel de Automação Industrial', '2026-05-18 10:15:00', 'Orçado', 'Produto', 7, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(6, 7, 'Controladores Lógicos Programáveis Dedicados', 'Equipamentos', 'Direto', 10100.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(6, 2, 'Desenvolvimento e teste das lógicas em CLP', 40.00, 'Pendente'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (6, 15300.00, 18.00, 2754.00, 30.00, 4590.00, 23470.20, 40);
-
-
--- PROJETO 07: FAB
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (7, 'Análise Estrutural Flaps Aeronave T-27', '2026-03-01 08:00:00', 'Executando', 'Serviço', 8, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(7, 8, 'Aquisição de Malhas de Deformação Alta Temperatura', 'EPIs/Ferramentas', 'Direto', 29200.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(7, 15, 'Modelagem matemática estrutural de fadiga aeroespacial', 180.00, 'Executando'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (7, 137200.00, 0.00, 0.00, 15.00, 20580.00, 157780.00, 60);
-
-
--- PROJETO 08: Arauco
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (8, 'Sistema de Exaustão de Resíduos Térmicos', '2026-03-12 16:45:00', 'Rascunho', 'Produto', 3, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(8, 9, 'Dutos Industriais de Exaustão Revestidos 800mm', 'Equipamentos', 'Direto', 15280.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(8, 4, 'Cálculo de dimensionamento de exaustão e fluxo', 27.03, 'Pendente'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (8, 21159.03, 18.00, 3808.63, 22.00, 4654.99, 30460.53, 15);
-
-
--- PROJETO 09: International Paper
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (9, 'Laudo Técnico de Conformidade NR-12', '2026-05-20 11:20:00', 'Concluído', 'Serviço', 5, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(9, 10, 'Locação de Analisadores de Segurança e Checklist', 'Aluguel/Estrutura', 'Direto', 2600.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(9, 5, 'Inspeção física in loco das conformidades da NR-12', 40.00, 'Concluída'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (9, 11300.00, 12.00, 1356.00, 35.00, 3955.00, 17085.60, 25);
-
-
--- PROJETO 10: DCTA
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (10, 'Consultoria em Dinâmica de Fluidos Computacional (CFD)', '2026-05-05 13:00:00', 'Aprovado', 'Serviço', 13, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(10, 11, 'Assinatura Anual de Licenças ANSYS Aero / Hydro', 'Licenças de Software', 'Direto', 64200.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(10, 15, 'Geração de malhas computacionais complexas e refinadas', 180.00, 'Pendente'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (10, 172200.00, 0.00, 0.00, 18.00, 30996.00, 203196.00, 45);
-
-
--- PROJETO 11: Raizen
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (11, 'Dimensionamento Elétrico Destilaria Setor Norte', '2026-04-19 10:00:00', 'Orçado', 'Serviço', 12, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(11, 12, 'Consumo Energético Dedicado de Gerador a Diesel Móvel', 'Energia Elétrica', 'Direto', 14200.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(11, 1, 'Estudos de seletividade elétrica e curtos-circuitos', 120.00, 'Pendente'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (11, 43000.00, 12.00, 5160.00, 25.00, 10750.00, 60200.00, 30);
-
-
--- PROJETO 12: Birla Carbon
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (12, 'Desenvolvimento de Dispositivo de Içamento Mecânico', '2026-05-22 15:30:00', 'Rascunho', 'Produto', 10, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(12, 13, 'Barras Metálicas Estruturais Gerdau Extra Rígidas', 'Equipamentos', 'Direto', 3880.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(12, 4, 'Cálculo analítico de elementos de máquina e olhais', 27.00, 'Pendente'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (12, 9752.50, 18.00, 1755.45, 28.00, 2730.70, 14730.18, 25);
-
-
--- PROJETO 13: Rhodia
-INSERT INTO projeto (id_projeto, nome, data_criacao, status, tipo, id_cliente, id_usuario) 
-VALUES (13, 'Estudo de Viabilidade Técnico - Planta Paulínia', '2026-05-15 08:45:00', 'Orçado', 'Serviço', 11, 1);
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(13, 14, 'Hospedagem Técnica continuada na Região de Paulínia', 'Transporte/Deslocamento', 'Direto', 22800.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(13, 14, 'Estudo detalhado de CAPEX/OPEX e restrições de layout', 120.00, 'Pendente'); 
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (13, 64200.00, 12.00, 7704.00, 22.00, 14124.00, 87722.88, 30);
-
-
--- ==============================================================================
--- 5. MASSA DE DADOS REALISTA (PROJETOS 14 AO 19 VINCULADOS)
--- ==============================================================================
-
--- PROJETO 14: Voith
-INSERT INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao) 
-VALUES (14, 1, 2, 'Modernização Real de Turbina VT-A1', 'Serviço', 'Executando', '2026-05-10 09:00:00');
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(14, 15, 'Kit de Vedação Industrial O-Ring', 'EPIs/Ferramentas', 'Direto', 4500.00, 'Unitário'),
-(14, 16, 'Aluguel de Guindaste Hidráulico', 'Aluguel/Estrutura', 'Direto', 8000.00, 'Dia'),
-(14, 17, 'Seguro de Risco de Engenharia', 'Aluguel/Estrutura', 'Indireto', 2500.00, 'Mês'),
-(14, 18, 'Calibração de Sensores de Vibração Fluke', 'Manutenção', 'Direto', 3200.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(14, 3, 'Análise de integridade estrutural e dinâmica de fluidos', 40.00, 'Concluída'), 
-(14, 1, 'Supervisão de montagem em campo e alinhamento do rotor', 50.00, 'Executando'), 
-(14, 2, 'Parametrização do módulo de proteção eletrônica', 20.00, 'Pendente');
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (14, 50400.00, 12.00, 6048.00, 25.00, 12600.00, 70560.00, 30);
-
-
--- PROJETO 15: Klabin
-INSERT INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao) 
-VALUES (15, 1, 7, 'Desenvolvimento de Painel de Automação K-Log', 'Produto', 'Orçado', '2026-05-12 14:00:00');
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(15, 19, 'CLP Siemens S7-1500 + Módulos I/O', 'Equipamentos', 'Direto', 12300.00, 'Unitário'),
-(15, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário'),
-(15, 21, 'Bornes de Conexão Push-In Phoenix Contact', 'EPIs/Ferramentas', 'Direto', 1150.00, 'Unitário'),
-(15, 22, 'Frete Expresso de Componentes Importados', 'Transporte/Deslocamento', 'Direto', 850.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(15, 2, 'Programação da lógica do CLP e telas do supervisório IHMs', 30.00, 'Pendente'), 
-(15, 6, 'Montagem interna do painel e chicotes elétricos', 25.00, 'Pendente'), 
-(15, 7, 'Validação de diagramas e testes de aceitação em fábrica (FAT)', 15.00, 'Pendente');
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (15, 28262.50, 18.00, 5087.25, 30.00, 8478.75, 43354.68, 15);
-
-
--- PROJETO 16: DCTA
-INSERT INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao) 
-VALUES (16, 1, 13, 'Análise Aerodinâmica Avançada CFD - Suborbital', 'Serviço', 'Aprovado', '2026-05-15 08:00:00');
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(16, 23, 'Licença de Software ANSYS Fluent (Uso Dedicado)', 'Licenças de Software', 'Direto', 15000.00, 'Mês'),
-(16, 24, 'Processamento em Cluster de Computação de Alto Performance (HPC)', 'Aluguel/Estrutura', 'Direto', 8500.00, 'Hora'),
-(16, 25, 'Consumo Adicional de Energia do Cluster de Processamento', 'Energia Elétrica', 'Direto', 2200.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(16, 15, 'Modelagem matemática e validação de malha computacional', 60.00, 'Pendente'), 
-(16, 11, 'Processamento de cenários e relatórios de arrasto', 40.00, 'Pendente'), 
-(16, 12, 'Revisão por par e validação cruzada dos coeficientes balísticos', 12.00, 'Pendente');
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (16, 75350.00, 0.00, 0.00, 20.00, 15070.00, 90420.00, 45);
-
-
--- PROJETO 17: Suzano
-INSERT INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao) 
-VALUES (17, 1, 6, 'Otimização de Caldeira de Recuperação - Unidade BA', 'Serviço', 'Rascunho', '2026-05-18 11:00:00');
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(17, 26, 'Termopares de Platina Industriais Tipo S', 'EPIs/Ferramentas', 'Direto', 6800.00, 'Unitário'),
-(17, 27, 'Hospedagem e Diárias da Equipe Técnica (Campo)', 'Transporte/Deslocamento', 'Direto', 4500.00, 'Dia'),
-(17, 28, 'Reparo Emergencial em Duto de Combustão', 'Manutenção', 'Direto', 1900.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(17, 1, 'Mapeamento térmico por termografia infravermelha', 24.00, 'Pendente'), 
-(17, 5, 'Cálculos de balanço de massa e eficiência energética da caldeira', 35.00, 'Pendente'), 
-(17, 8, 'Coleta de dados em CLP e consolidação de relatórios', 20.00, 'Pendente');
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (17, 28672.50, 12.00, 3440.70, 25.00, 7168.13, 40141.50, 20);
-
-
--- PROJETO 18: Arauco
-INSERT INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao) 
-VALUES (18, 1, 3, 'Sistema de Exaustão de Resíduos Térmicos AR-2', 'Produto', 'Orçado', '2026-05-20 09:15:00');
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(18, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário'),
-(18, 30, 'Dutos de Aço Galvanizado Revestidos 1200mm', 'Equipamentos', 'Direto', 14200.00, 'Unitário'),
-(18, 31, 'Estrutura Metálica de Suporte e Fixação Externa', 'Aluguel/Estrutura', 'Direto', 5500.00, 'Unitário'),
-(18, 32, 'Kits de EPI Rígido para Trabalho em Altura (NR-35)', 'EPIs/Ferramentas', 'Indireto', 3800.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(18, 4, 'Dimensionamento mecânico da rede de dutos e perda de carga', 32.00, 'Pendente'), 
-(18, 6, 'Desenho Técnico detalhado em CAD/BIM estrutural', 40.00, 'Pendente'), 
-(18, 9, 'Análise de dispersão e particulados na atmosfera', 15.00, 'Pendente');
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (18, 70635.00, 18.00, 12714.30, 22.00, 15539.70, 98231.11, 15);
-
-
--- PROJETO 19: Rhodia
-INSERT INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao) 
-VALUES (19, 1, 11, 'Estudo Integrado de Viabilidade e Layout Paulínia', 'Serviço', 'Concluído', '2026-05-22 10:00:00');
-
-INSERT INTO custo (id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade) VALUES
-(19, 33, 'Mapeamento Georreferenciado por Drone (Laser Scanning)', 'Equipamentos', 'Direto', 7500.00, 'Unitário'),
-(19, 34, 'Deslocamento Terrestre e Combustível para Coleta em Campo', 'Transporte/Deslocamento', 'Indireto', 1200.00, 'Unitário');
-
-INSERT INTO tarefa (id_projeto, id_funcionario, descricao, horas_estimadas, status) VALUES
-(19, 13, 'Gerenciamento de engenharia e otimização do fluxo de processos', 50.00, 'Concluída'), 
-(19, 14, 'Planejamento de cronograma, CAPEX/OPEX e restrições físicas', 40.00, 'Concluída'), 
-(19, 10, 'Modelagem 3D do arranjo físico de tubulações (Plot-Plan)', 60.00, 'Concluída');
-
-INSERT INTO orcamento (id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias) 
-VALUES (19, 47550.00, 12.00, 5706.00, 30.00, 14265.00, 69232.80, 30);
+-- PROJETO 01: Funcate - Projeto Antigo Teste A
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(1, 1, 1, 'Projeto Antigo Teste A', 'Produto', 'Em Aberto', '2025-01-10 00:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(89, 1, 1, 'Componentes Eletrônicos de Bancada', 'EPIs/Ferramentas', 'Direto', 1540.00, 'Unitário', '2026-09-29 16:49:23'),
+(90, 1, 13, 'Barras Metálicas Estruturais Gerdau Extra Rígidas', 'Equipamentos', 'Direto', 3880.00, 'Unitário', '2026-09-29 16:49:23'),
+(91, 1, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:49:23');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(77, 1, 6, 'Desenho preliminar de circuitos e placas', 20.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(1, 1, 39220.00, 0.00, 0.00, 43.60, 17099.92, 56319.92, 30, '', NULL, '', '2026-07-20 13:46:46');
+
+-- PROJETO 02: Funcate - Projeto Antigo Teste B
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(2, 1, 1, 'Projeto Antigo Teste B', 'Produto', 'Em Aberto', '2025-02-15 00:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(99, 2, 2, 'Softwares de Simulação Numérica Estendida', 'Licenças de Software', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:51:03'),
+(100, 2, 13, 'Barras Metálicas Estruturais Gerdau Extra Rígidas', 'Equipamentos', 'Direto', 3880.00, 'Unitário', '2026-09-29 16:51:03'),
+(101, 2, 25, 'Consumo Adicional de Energia do Cluster de Processamento', 'Energia Elétrica', 'Direto', 2200.00, 'Unitário', '2026-09-29 16:51:03'),
+(102, 2, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:51:03');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(83, 2, 1, 'Engenharia Reversa e Mapeamento Elétrico', 24.00, 0.00, 0.00, 'Concluída'),
+(84, 2, 2, 'Supervisão técnica de bancada de testes', 6.22, 0.00, 0.00, 'Concluída'),
+(85, 2, 6, 'Supervisão técnica de bancada de testes', 20.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(2, 2, 47568.70, 0.00, 0.00, 40.95, 19479.38, 67048.08, 15, '', NULL, '', '2026-07-20 13:46:46');
+
+-- PROJETO 03: Funcate - Projeto Antigo Teste C
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(3, 1, 1, 'Projeto Antigo Teste C', 'Produto', 'Em Aberto', '2025-03-20 00:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(87, 3, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário', '2026-09-29 16:49:10'),
+(88, 3, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:49:10');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(76, 3, 8, 'Tabulação de dados e emissão de relatório inicial', 8.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(3, 3, 34520.00, 0.00, 0.00, 46.61, 16089.77, 50609.77, 10, '', NULL, '', '2026-07-20 13:46:46');
+
+-- PROJETO 04: Voith - Modernização de Turbina Hidrelétrica VT-01
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(4, 1, 2, 'Modernização de Turbina Hidrelétrica VT-01', 'Serviço', 'Executando', '2026-05-22 09:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(123, 4, 5, 'Manutenção Corretiva em Gerador de Campo', 'Manutenção', 'Direto', 12150.00, 'Unitário', '2026-09-29 16:54:44');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(98, 4, 3, 'Análise de vibração e dinâmica de fluidos preliminar', 80.00, 0.00, 0.00, 'Executando');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(4, 4, 31350.00, 12.00, 4702.50, 25.00, 7837.50, 43890.00, 40, '', NULL, '', '2026-07-20 13:46:46');
+
+-- PROJETO 05: Suzano - Otimização de Linha de Celulose - Planta BA
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(5, 1, 6, 'Otimização de Linha de Celulose - Planta BA', 'Serviço', 'Aprovado', '2026-05-06 14:30:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(6, 5, 6, 'Passagens Aéreas e Estadia de Engenharia em Salvador', 'Transporte/Deslocamento', 'Direto', 12100.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(6, 5, 7, 'Revisão de malhas de automação da planta industrial', 60.00, 0.00, 0.00, 'Concluída'),
+(7, 5, 6, 'Apoio técnico em levantamento de campo P&ID', 64.28, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(5, 5, 25599.60, 12.00, 3686.34, 20.00, 5119.92, 34405.86, 45, NULL, NULL, NULL, '2026-07-20 13:46:46');
+
+-- PROJETO 06: Klabin - Desenvolvimento de Painel de Automação Industrial
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(6, 1, 7, 'Desenvolvimento de Painel de Automação Industrial', 'Produto', 'Orçado', '2026-05-18 10:15:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(7, 6, 7, 'Controladores Lógicos Programáveis Dedicados', 'Equipamentos', 'Direto', 10100.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(8, 6, 2, 'Desenvolvimento e teste das lógicas em CLP', 40.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(6, 6, 13500.00, 18.00, 3159.00, 30.00, 4050.00, 20709.00, 40, NULL, NULL, NULL, '2026-07-20 13:46:46');
+
+-- PROJETO 07: FAB - Análise Estrutural Flaps Aeronave T-27
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(7, 1, 8, 'Análise Estrutural Flaps Aeronave T-27', 'Serviço', 'Executando', '2026-03-01 08:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(8, 7, 8, 'Aquisição de Malhas de Deformação Alta Temperatura', 'EPIs/Ferramentas', 'Direto', 29200.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(9, 7, 15, 'Modelagem matemática estrutural de fadiga aeroespacial', 180.00, 0.00, 0.00, 'Executando');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(7, 7, 86800.00, 0.00, 0.00, 15.00, 13020.00, 99820.00, 60, NULL, NULL, NULL, '2026-07-20 13:46:46');
+
+-- PROJETO 08: Arauco - Sistema de Exaustão de Resíduos Térmicos
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(8, 1, 3, 'Sistema de Exaustão de Resíduos Térmicos', 'Produto', 'Rascunho', '2026-03-12 16:45:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(9, 8, 9, 'Dutos Industriais de Exaustão Revestidos 800mm', 'Equipamentos', 'Direto', 15280.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(10, 8, 4, 'Cálculo de dimensionamento de exaustão e fluxo', 27.03, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(8, 8, 19334.50, 18.00, 4245.86, 22.00, 4253.59, 27833.95, 15, NULL, NULL, NULL, '2026-07-20 13:46:46');
+
+-- PROJETO 09: International Paper - Laudo Técnico de Conformidade NR-12
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(9, 1, 5, 'Laudo Técnico de Conformidade NR-12', 'Serviço', 'Concluído', '2026-05-20 11:20:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(98, 9, 10, 'Locação de Analisadores de Segurança e Checklist', 'Aluguel/Estrutura', 'Direto', 2600.00, 'Unitário', '2026-09-29 16:50:33');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(81, 9, 5, 'Inspeção física in loco das conformidades da NR-12', 40.00, 0.00, 0.00, 'Concluída'),
+(82, 9, 2, 'Inspeção física in loco das conformidades da NR-12', 70.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(9, 9, 14550.00, 12.00, 2357.10, 35.00, 5092.50, 21999.60, 25, '', NULL, '', '2026-07-20 13:46:46');
+
+-- PROJETO 11: Raizen - Dimensionamento Elétrico Destilaria Setor Norte
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(11, 1, 12, 'Dimensionamento Elétrico Destilaria Setor Norte', 'Serviço', 'Orçado', '2026-04-19 10:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(12, 11, 12, 'Consumo Energético Dedicado de Gerador a Diesel Móvel', 'Energia Elétrica', 'Direto', 14200.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(13, 11, 1, 'Estudos de seletividade elétrica e curtos-circuitos', 120.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(11, 11, 34000.00, 12.00, 5100.00, 25.00, 8500.00, 47600.00, 30, NULL, NULL, NULL, '2026-07-20 13:46:46');
+
+-- PROJETO 14: Voith - Modernização Real de Turbina VT-A1
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(14, 1, 2, 'Modernização Real de Turbina VT-A1', 'Serviço', 'Executando', '2026-05-10 09:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(124, 14, 15, 'Kit de Vedação Industrial O-Ring', 'EPIs/Ferramentas', 'Direto', 4500.00, 'Unitário', '2026-09-29 16:55:09'),
+(125, 14, 17, 'Seguro de Risco de Engenharia', 'Aluguel/Estrutura', 'Indireto', 2500.00, 'Mês', '2026-09-29 16:55:09'),
+(126, 14, 18, 'Calibração de Sensores de Vibração Fluke', 'Manutenção', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:55:09');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(99, 14, 3, 'Análise de integridade estrutural e dinâmica de fluidos', 40.00, 0.00, 0.00, 'Concluída'),
+(100, 14, 1, 'Supervisão de montagem em campo e alinhamento do rotor', 50.00, 0.00, 0.00, 'Executando'),
+(101, 14, 2, 'Parametrização do módulo de proteção eletrônica', 20.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(14, 14, 29750.00, 12.00, 4284.00, 20.00, 5950.00, 39984.00, 30, '', NULL, '', '2026-07-20 13:46:46');
+
+-- PROJETO 15: Klabin - Desenvolvimento de Painel de Automação K-Log
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(15, 1, 7, 'Desenvolvimento de Painel de Automação K-Log', 'Produto', 'Orçado', '2026-05-12 14:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(19, 15, 19, 'CLP Siemens S7-1500 + Módulos I/O', 'Equipamentos', 'Direto', 12300.00, 'Unitário', '2026-07-20 13:46:46'),
+(20, 15, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário', '2026-07-20 13:46:46'),
+(21, 15, 21, 'Bornes de Conexão Push-In Phoenix Contact', 'EPIs/Ferramentas', 'Direto', 1150.00, 'Unitário', '2026-07-20 13:46:46'),
+(22, 15, 22, 'Frete Expresso de Componentes Importados', 'Transporte/Deslocamento', 'Direto', 850.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(19, 15, 2, 'Programação da lógica do CLP e telas do supervisório IHMs', 30.00, 0.00, 0.00, 'Pendente'),
+(20, 15, 6, 'Montagem interna do painel e chicotes elétricos', 25.00, 0.00, 0.00, 'Pendente'),
+(21, 15, 7, 'Validação de diagramas e testes de aceitação em fábrica (FAT)', 15.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(15, 15, 25050.00, 18.00, 5861.70, 30.00, 7515.00, 38426.70, 15, NULL, NULL, NULL, '2026-07-20 13:46:46');
+
+-- PROJETO 17: Suzano - Otimização de Caldeira de Recuperação - Unidade BA
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(17, 1, 6, 'Otimização de Caldeira de Recuperação - Unidade BA', 'Serviço', 'Rascunho', '2026-05-18 11:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(26, 17, 26, 'Termopares de Platina Industriais Tipo S', 'EPIs/Ferramentas', 'Direto', 6800.00, 'Unitário', '2026-07-20 13:46:46'),
+(27, 17, 27, 'Hospedagem e Diárias da Equipe Técnica (Campo)', 'Transporte/Deslocamento', 'Direto', 4500.00, 'Dia', '2026-07-20 13:46:46'),
+(28, 17, 28, 'Reparo Emergencial em Duto de Combustão', 'Manutenção', 'Direto', 1900.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(25, 17, 1, 'Mapeamento térmico por termografia infravermelha', 24.00, 0.00, 0.00, 'Pendente'),
+(26, 17, 5, 'Cálculos de balanço de massa e eficiência energética da caldeira', 35.00, 0.00, 0.00, 'Pendente'),
+(27, 17, 8, 'Coleta de dados em CLP e consolidação de relatórios', 20.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(17, 17, 23910.00, 12.00, 3586.50, 25.00, 5977.50, 33474.00, 20, NULL, NULL, NULL, '2026-07-20 13:46:46');
+
+-- PROJETO 19: Rhodia - Estudo Integrado de Viabilidade e Layout Paulínia
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(19, 1, 11, 'Estudo Integrado de Viabilidade e Layout Paulínia', 'Serviço', 'Concluído', '2026-05-22 10:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(33, 19, 33, 'Mapeamento Georreferenciado por Drone (Laser Scanning)', 'Equipamentos', 'Direto', 7500.00, 'Unitário', '2026-07-20 13:46:46'),
+(34, 19, 34, 'Deslocamento Terrestre e Combustível para Coleta em Campo', 'Transporte/Deslocamento', 'Indireto', 1200.00, 'Unitário', '2026-07-20 13:46:46');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(31, 19, 13, 'Gerenciamento de engenharia e otimização do fluxo de processos', 50.00, 0.00, 0.00, 'Concluída'),
+(32, 19, 14, 'Planejamento de cronograma, CAPEX/OPEX e restrições físicas', 40.00, 0.00, 0.00, 'Concluída'),
+(33, 19, 10, 'Modelagem 3D do arranjo físico de tubulações (Plot-Plan)', 60.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(19, 19, 35550.00, 12.00, 5545.80, 30.00, 10665.00, 51760.80, 30, NULL, NULL, NULL, '2026-07-20 13:46:47');
+
+-- PROJETO 20: EESC - Ensaio de Vibração em Bancada de Rotores
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(20, 1, 4, 'Ensaio de Vibração em Bancada de Rotores', 'Serviço', 'Concluído', '2025-04-08 09:30:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(38, 20, 18, 'Calibração de Sensores de Vibração Fluke', 'Manutenção', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:46:17'),
+(39, 20, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário', '2026-09-29 16:46:17'),
+(40, 20, 34, 'Deslocamento Terrestre e Combustível para Coleta em Campo', 'Transporte/Deslocamento', 'Indireto', 1200.00, 'Unitário', '2026-09-29 16:46:17');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(37, 20, 3, 'Ensaios de vibração e análise modal do rotor', 36.00, 0.00, 0.00, 'Concluída'),
+(38, 20, 6, 'Aquisição e tratamento de dados de bancada', 24.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(23, 20, 16240.00, 12.00, 2533.44, 30.00, 4872.00, 23645.44, 30, NULL, NULL, NULL, '2026-09-29 16:46:17');
+
+-- PROJETO 21: IAE - Análise Térmica de Câmara de Combustão
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(21, 1, 9, 'Análise Térmica de Câmara de Combustão', 'Serviço', 'Concluído', '2025-05-14 14:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(41, 21, 2, 'Softwares de Simulação Numérica Estendida', 'Licenças de Software', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:46:18'),
+(42, 21, 24, 'Processamento em Cluster de Computação de Alto Performance (HPC)', 'Aluguel/Estrutura', 'Direto', 8500.00, 'Hora', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(39, 21, 15, 'Modelagem térmica transiente da câmara', 90.00, 0.00, 0.00, 'Concluída'),
+(40, 21, 11, 'Simulação CFD acoplada e validação dos resultados', 60.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(24, 21, 51300.00, 0.00, 0.00, 22.00, 11286.00, 62586.00, 45, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 22: Arauco - Retrofit de Painel de Comando de Caldeira
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(22, 1, 3, 'Retrofit de Painel de Comando de Caldeira', 'Produto', 'Aprovado', '2025-06-03 10:15:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(43, 22, 19, 'CLP Siemens S7-1500 + Módulos I/O', 'Equipamentos', 'Direto', 12300.00, 'Unitário', '2026-09-29 16:46:18'),
+(44, 22, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário', '2026-09-29 16:46:18'),
+(45, 22, 21, 'Bornes de Conexão Push-In Phoenix Contact', 'EPIs/Ferramentas', 'Direto', 1150.00, 'Unitário', '2026-09-29 16:46:18'),
+(46, 22, 22, 'Frete Expresso de Componentes Importados', 'Transporte/Deslocamento', 'Direto', 850.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(41, 22, 2, 'Levantamento das instalações e diagramas existentes', 18.00, 0.00, 0.00, 'Concluída'),
+(42, 22, 1, 'Projeto elétrico do novo painel de comando', 44.00, 0.00, 0.00, 'Concluída'),
+(43, 22, 6, 'Montagem e cablagem do painel', 32.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(25, 22, 29530.00, 18.00, 6910.02, 30.00, 8859.00, 45299.02, 30, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 23: Voith - Inspeção e Reparo de Rotor de Turbina Francis
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(23, 1, 2, 'Inspeção e Reparo de Rotor de Turbina Francis', 'Serviço', 'Concluído', '2025-07-21 08:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(47, 23, 5, 'Manutenção Corretiva em Gerador de Campo', 'Manutenção', 'Direto', 12150.00, 'Unitário', '2026-09-29 16:46:18'),
+(48, 23, 16, 'Aluguel de Guindaste Hidráulico', 'Aluguel/Estrutura', 'Direto', 8000.00, 'Dia', '2026-09-29 16:46:18'),
+(49, 23, 17, 'Seguro de Risco de Engenharia', 'Aluguel/Estrutura', 'Indireto', 2500.00, 'Mês', '2026-09-29 16:46:18'),
+(50, 23, 32, 'Kits de EPI Rígido para Trabalho em Altura (NR-35)', 'EPIs/Ferramentas', 'Indireto', 3800.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(44, 23, 3, 'Inspeção dimensional e ensaios não destrutivos do rotor', 70.00, 0.00, 0.00, 'Concluída'),
+(45, 23, 4, 'Coordenação dos serviços de reparo em campo', 60.00, 0.00, 0.00, 'Concluída'),
+(46, 23, 5, 'Acompanhamento de montagem e comissionamento', 48.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(26, 23, 59450.00, 12.00, 8917.50, 25.00, 14862.50, 83230.00, 40, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 24: Suzano - Balanceamento Dinâmico de Ventiladores de Tiragem
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(24, 1, 6, 'Balanceamento Dinâmico de Ventiladores de Tiragem', 'Serviço', 'Concluído', '2025-08-11 13:45:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(51, 24, 18, 'Calibração de Sensores de Vibração Fluke', 'Manutenção', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:46:18'),
+(52, 24, 27, 'Hospedagem e Diárias da Equipe Técnica (Campo)', 'Transporte/Deslocamento', 'Direto', 4500.00, 'Dia', '2026-09-29 16:46:18'),
+(53, 24, 34, 'Deslocamento Terrestre e Combustível para Coleta em Campo', 'Transporte/Deslocamento', 'Indireto', 1200.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(47, 24, 4, 'Medição de vibração e balanceamento em campo', 40.00, 0.00, 0.00, 'Concluída'),
+(48, 24, 8, 'Análise espectral e relatório técnico', 24.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(27, 24, 16700.00, 12.00, 2565.12, 28.00, 4676.00, 23941.12, 20, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 25: FAB - Qualificação de Sistema Aviônico de Teste
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(25, 1, 8, 'Qualificação de Sistema Aviônico de Teste', 'Produto', 'Executando', '2025-09-09 09:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(54, 25, 7, 'Controladores Lógicos Programáveis Dedicados', 'Equipamentos', 'Direto', 10100.00, 'Unitário', '2026-09-29 16:46:18'),
+(55, 25, 19, 'CLP Siemens S7-1500 + Módulos I/O', 'Equipamentos', 'Direto', 12300.00, 'Unitário', '2026-09-29 16:46:18'),
+(56, 25, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(49, 25, 15, 'Definição do plano de qualificação e requisitos', 80.00, 0.00, 0.00, 'Concluída'),
+(50, 25, 11, 'Desenvolvimento do software de ensaio', 110.00, 0.00, 0.00, 'Executando'),
+(51, 25, 9, 'Integração de hardware e testes funcionais', 70.00, 0.00, 0.00, 'Executando');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(28, 25, 74570.00, 0.00, 0.00, 20.00, 14914.00, 89484.00, 60, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 26: Klabin - Automação de Linha de Corte e Embalagem
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(26, 1, 7, 'Automação de Linha de Corte e Embalagem', 'Produto', 'Executando', '2025-10-06 11:30:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(57, 26, 19, 'CLP Siemens S7-1500 + Módulos I/O', 'Equipamentos', 'Direto', 12300.00, 'Unitário', '2026-09-29 16:46:18'),
+(58, 26, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário', '2026-09-29 16:46:18'),
+(59, 26, 21, 'Bornes de Conexão Push-In Phoenix Contact', 'EPIs/Ferramentas', 'Direto', 1150.00, 'Unitário', '2026-09-29 16:46:18'),
+(60, 26, 7, 'Controladores Lógicos Programáveis Dedicados', 'Equipamentos', 'Direto', 10100.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(52, 26, 2, 'Especificação funcional e arquitetura de automação', 30.00, 0.00, 0.00, 'Concluída'),
+(53, 26, 1, 'Projeto elétrico e dimensionamento de acionamentos', 56.00, 0.00, 0.00, 'Concluída'),
+(54, 26, 10, 'Programação de CLP e telas de operação', 64.00, 0.00, 0.00, 'Executando');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(29, 26, 44340.00, 18.00, 10375.56, 30.00, 13302.00, 68017.56, 45, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 27: Birla Carbon - Inspeção Termográfica de Fornos de Reação
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(27, 1, 10, 'Inspeção Termográfica de Fornos de Reação', 'Serviço', 'Concluído', '2025-11-17 08:30:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(119, 27, 26, 'Termopares de Platina Industriais Tipo S', 'EPIs/Ferramentas', 'Direto', 6800.00, 'Unitário', '2026-09-29 16:52:58'),
+(120, 27, 27, 'Hospedagem e Diárias da Equipe Técnica (Campo)', 'Transporte/Deslocamento', 'Direto', 4500.00, 'Dia', '2026-09-29 16:52:58'),
+(121, 27, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário', '2026-09-29 16:52:58'),
+(122, 27, 30, 'Dutos de Aço Galvanizado Revestidos 1200mm', 'Equipamentos', 'Direto', 14200.00, 'Unitário', '2026-09-29 16:52:58');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(96, 27, 5, 'Inspeção termográfica em campo dos fornos', 32.00, 0.00, 0.00, 'Concluída'),
+(97, 27, 6, 'Análise dos pontos críticos e emissão de laudo', 22.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(30, 27, 33360.00, 12.00, 5004.00, 25.00, 8340.00, 46704.00, 20, '', NULL, '', '2026-09-29 16:46:18');
+
+-- PROJETO 28: Rhodia - Adequação Elétrica de Subestação Auxiliar
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(28, 1, 11, 'Adequação Elétrica de Subestação Auxiliar', 'Serviço', 'Aprovado', '2025-12-09 15:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(64, 28, 10, 'Locação de Analisadores de Segurança e Checklist', 'Aluguel/Estrutura', 'Direto', 2600.00, 'Unitário', '2026-09-29 16:46:18'),
+(65, 28, 21, 'Bornes de Conexão Push-In Phoenix Contact', 'EPIs/Ferramentas', 'Direto', 1150.00, 'Unitário', '2026-09-29 16:46:18'),
+(66, 28, 22, 'Frete Expresso de Componentes Importados', 'Transporte/Deslocamento', 'Direto', 850.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(57, 28, 1, 'Estudo de curto-circuito e seletividade da proteção', 60.00, 0.00, 0.00, 'Concluída'),
+(58, 28, 2, 'Supervisão da adequação dos painéis', 40.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(31, 28, 17900.00, 12.00, 2620.56, 22.00, 3938.00, 24458.56, 30, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 29: Raizen - Diagnóstico Energético de Moenda e Caldeira
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(29, 1, 12, 'Diagnóstico Energético de Moenda e Caldeira', 'Serviço', 'Concluído', '2026-01-20 10:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(67, 29, 12, 'Consumo Energético Dedicado de Gerador a Diesel Móvel', 'Energia Elétrica', 'Direto', 14200.00, 'Unitário', '2026-09-29 16:46:18'),
+(68, 29, 26, 'Termopares de Platina Industriais Tipo S', 'EPIs/Ferramentas', 'Direto', 6800.00, 'Unitário', '2026-09-29 16:46:18'),
+(69, 29, 34, 'Deslocamento Terrestre e Combustível para Coleta em Campo', 'Transporte/Deslocamento', 'Indireto', 1200.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(59, 29, 7, 'Levantamento de consumo e eficiência energética', 48.00, 0.00, 0.00, 'Concluída'),
+(60, 29, 4, 'Análise de perdas térmicas e plano de melhorias', 36.00, 0.00, 0.00, 'Concluída');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(32, 29, 34800.00, 12.00, 5011.20, 20.00, 6960.00, 46771.20, 30, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 30: DCTA - Simulação Aerodinâmica de Fuselagem de VANT
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(30, 1, 13, 'Simulação Aerodinâmica de Fuselagem de VANT', 'Serviço', 'Executando', '2026-02-10 09:20:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(70, 30, 23, 'Licença de Software ANSYS Fluent (Uso Dedicado)', 'Licenças de Software', 'Direto', 15000.00, 'Mês', '2026-09-29 16:46:18'),
+(71, 30, 24, 'Processamento em Cluster de Computação de Alto Performance (HPC)', 'Aluguel/Estrutura', 'Direto', 8500.00, 'Hora', '2026-09-29 16:46:18'),
+(72, 30, 25, 'Consumo Adicional de Energia do Cluster de Processamento', 'Energia Elétrica', 'Direto', 2200.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(61, 30, 15, 'Definição de casos de simulação e condições de contorno', 50.00, 0.00, 0.00, 'Concluída'),
+(62, 30, 12, 'Geração de malha e simulações CFD', 100.00, 0.00, 0.00, 'Executando'),
+(63, 30, 9, 'Pós-processamento e relatório de resultados', 40.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(33, 30, 62700.00, 0.00, 0.00, 22.00, 13794.00, 76494.00, 60, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 31: IAE - Projeto de Bancada de Ensaio de Propulsores
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(31, 1, 9, 'Projeto de Bancada de Ensaio de Propulsores', 'Produto', 'Aprovado', '2026-06-16 14:10:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(73, 31, 8, 'Aquisição de Malhas de Deformação Alta Temperatura', 'EPIs/Ferramentas', 'Direto', 29200.00, 'Unitário', '2026-09-29 16:46:18'),
+(74, 31, 13, 'Barras Metálicas Estruturais Gerdau Extra Rígidas', 'Equipamentos', 'Direto', 3880.00, 'Unitário', '2026-09-29 16:46:18'),
+(75, 31, 31, 'Estrutura Metálica de Suporte e Fixação Externa', 'Aluguel/Estrutura', 'Direto', 5500.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(64, 31, 3, 'Especificação de requisitos de ensaio e instrumentação', 44.00, 0.00, 0.00, 'Concluída'),
+(65, 31, 7, 'Projeto mecânico da bancada e da estrutura de fixação', 72.00, 0.00, 0.00, 'Executando'),
+(66, 31, 9, 'Desenho técnico e lista de materiais', 36.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(34, 31, 62640.00, 0.00, 0.00, 25.00, 15660.00, 78300.00, 45, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 32: EESC - Instrumentação de Túnel de Vento Subsônico
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(32, 1, 4, 'Instrumentação de Túnel de Vento Subsônico', 'Produto', 'Orçado', '2026-07-14 10:40:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(110, 32, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário', '2026-09-29 16:52:29'),
+(111, 32, 1, 'Componentes Eletrônicos de Bancada', 'EPIs/Ferramentas', 'Direto', 1540.00, 'Unitário', '2026-09-29 16:52:29'),
+(112, 32, 18, 'Calibração de Sensores de Vibração Fluke', 'Manutenção', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:52:29'),
+(113, 32, 28, 'Reparo Emergencial em Duto de Combustão', 'Manutenção', 'Direto', 1900.00, 'Unitário', '2026-09-29 16:52:29'),
+(114, 32, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário', '2026-09-29 16:52:29'),
+(115, 32, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:52:29');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(91, 32, 1, 'Projeto do sistema de aquisição de dados', 40.00, 0.00, 0.00, 'Pendente'),
+(92, 32, 8, 'Montagem e calibração dos sensores', 30.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(35, 32, 53610.00, 0.00, 0.00, 30.00, 16083.00, 69693.00, 30, '', NULL, '', '2026-09-29 16:46:18');
+
+-- PROJETO 33: Funcate - Estudo de Confiabilidade de Sistema de Potência
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(33, 1, 1, 'Estudo de Confiabilidade de Sistema de Potência', 'Serviço', 'Executando', '2026-08-04 09:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(116, 33, 2, 'Softwares de Simulação Numérica Estendida', 'Licenças de Software', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:52:40'),
+(117, 33, 34, 'Deslocamento Terrestre e Combustível para Coleta em Campo', 'Transporte/Deslocamento', 'Indireto', 1200.00, 'Unitário', '2026-09-29 16:52:40'),
+(118, 33, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:52:40');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(93, 33, 1, 'Levantamento de dados de falhas e manutenção', 32.00, 0.00, 0.00, 'Concluída'),
+(94, 33, 14, 'Planejamento e gestão do escopo do estudo', 24.00, 0.00, 0.00, 'Executando'),
+(95, 33, 10, 'Modelagem de confiabilidade e relatório', 40.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(36, 33, 50840.00, 12.00, 7931.04, 30.00, 15252.00, 74023.04, 60, '', NULL, '', '2026-09-29 16:46:18');
+
+-- PROJETO 34: Voith - Modernização de Regulador de Velocidade
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(34, 1, 2, 'Modernização de Regulador de Velocidade', 'Serviço', 'Orçado', '2026-09-01 11:00:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(81, 34, 19, 'CLP Siemens S7-1500 + Módulos I/O', 'Equipamentos', 'Direto', 12300.00, 'Unitário', '2026-09-29 16:46:18'),
+(82, 34, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário', '2026-09-29 16:46:18'),
+(83, 34, 17, 'Seguro de Risco de Engenharia', 'Aluguel/Estrutura', 'Indireto', 2500.00, 'Mês', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(72, 34, 3, 'Diagnóstico do regulador de velocidade atual', 40.00, 0.00, 0.00, 'Pendente'),
+(73, 34, 2, 'Especificação e parametrização do novo regulador', 28.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(37, 34, 30980.00, 12.00, 4647.00, 25.00, 7745.00, 43372.00, 45, NULL, NULL, NULL, '2026-09-29 16:46:18');
+
+-- PROJETO 35: Arauco - Projeto de Sistema de Despoeiramento de Linha
+INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
+(35, 1, 3, 'Projeto de Sistema de Despoeiramento de Linha', 'Produto', 'Rascunho', '2026-09-22 16:20:00', NULL);
+INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
+(84, 35, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:46:18'),
+(85, 35, 30, 'Dutos de Aço Galvanizado Revestidos 1200mm', 'Equipamentos', 'Direto', 14200.00, 'Unitário', '2026-09-29 16:46:18'),
+(86, 35, 32, 'Kits de EPI Rígido para Trabalho em Altura (NR-35)', 'EPIs/Ferramentas', 'Indireto', 3800.00, 'Unitário', '2026-09-29 16:46:18');
+INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
+(74, 35, 4, 'Dimensionamento de dutos e perda de carga', 36.00, 0.00, 0.00, 'Pendente'),
+(75, 35, 6, 'Desenho técnico em CAD', 30.00, 0.00, 0.00, 'Pendente');
+INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
+(38, 35, 57900.00, 18.00, 12714.84, 22.00, 12738.00, 83352.84, 20, NULL, NULL, NULL, '2026-09-29 16:46:18');
 
 -- ==============================================================================
 -- FIM DO SCRIPT
+-- ==============================================================================

@@ -4,6 +4,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
@@ -54,6 +55,7 @@ namespace magal.Services
                     page.Footer().BorderTop(1).BorderColor("#E0E0E0").PaddingTop(8).Row(ConstruirRodape);
                 });
             }).GeneratePdf(caminhoArquivo);
+            AbrirPdf(caminhoArquivo);
         }
 
         /// <summary>
@@ -75,6 +77,7 @@ namespace magal.Services
                     page.Footer().BorderTop(1).BorderColor("#E0E0E0").PaddingTop(8).Row(ConstruirRodape);
                 });
             }).GeneratePdf(caminhoArquivo);
+            AbrirPdf(caminhoArquivo);
         }
 
         /// <summary>
@@ -96,6 +99,7 @@ namespace magal.Services
                     page.Footer().BorderTop(1).BorderColor("#E0E0E0").PaddingTop(8).Row(ConstruirRodape);
                 });
             }).GeneratePdf(caminhoArquivo);
+            AbrirPdf(caminhoArquivo);
         }
 
         /// <summary>
@@ -117,6 +121,7 @@ namespace magal.Services
                     page.Footer().BorderTop(1).BorderColor("#E0E0E0").PaddingTop(8).Row(ConstruirRodape);
                 });
             }).GeneratePdf(caminhoArquivo);
+            AbrirPdf(caminhoArquivo);
         }
 
         /// <summary>
@@ -138,6 +143,7 @@ namespace magal.Services
                     page.Footer().BorderTop(1).BorderColor("#E0E0E0").PaddingTop(8).Row(ConstruirRodape);
                 });
             }).GeneratePdf(caminhoArquivo);
+            AbrirPdf(caminhoArquivo);
         }
 
         /// <summary>
@@ -159,6 +165,7 @@ namespace magal.Services
                     page.Footer().BorderTop(1).BorderColor("#E0E0E0").PaddingTop(8).Row(ConstruirRodape);
                 });
             }).GeneratePdf(caminhoArquivo);
+            AbrirPdf(caminhoArquivo);
         }
 
         /// <summary>
@@ -180,11 +187,28 @@ namespace magal.Services
                     page.Footer().BorderTop(1).BorderColor("#E0E0E0").PaddingTop(8).Row(ConstruirRodape);
                 });
             }).GeneratePdf(caminhoArquivo);
+            AbrirPdf(caminhoArquivo);
         }
 
         #endregion
 
         #region Métodos Auxiliares / Privados
+
+        /// <summary>
+        /// Abre o PDF recém-salvo no visualizador padrão do Windows.
+        /// Falhas ao abrir não são propagadas, pois o arquivo já foi gerado com sucesso.
+        /// </summary>
+        private static void AbrirPdf(string caminhoArquivo)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(caminhoArquivo) { UseShellExecute = true });
+            }
+            catch (Exception)
+            {
+                // Sem visualizador de PDF associado ou arquivo bloqueado: o usuário ainda pode abrir manualmente.
+            }
+        }
 
         private void ConstruirCabecalho(ColumnDescriptor col, Projeto projeto)
         {

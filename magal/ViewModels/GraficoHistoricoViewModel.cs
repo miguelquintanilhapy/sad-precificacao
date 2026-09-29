@@ -81,6 +81,12 @@ namespace magal.ViewModels
 
         public Func<LiveCharts.ChartPoint, string> MargemPontoFormatter { get; set; } = point => $"{point.Y:N1}%";
 
+        /// <summary>
+        /// Valor completo em reais, até os centavos (R$ 143.724,00). Usado no tooltip ao passar o mouse sobre a barra.
+        /// </summary>
+        public Func<LiveCharts.ChartPoint, string> ValorCompletoFormatter { get; set; } =
+            point => point.Y.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+
         public List<string> CategoriasMargem { get; set; } = new()
         {
             "Margem média geral",
@@ -436,5 +442,24 @@ namespace magal.ViewModels
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Converte um valor em reais para o formato compacto exibido sobre as barras (R$ 950 / R$ 144 mil / R$ 1,2 mi).
+    /// </summary>
+    public class ValorCompactoConverter : System.Windows.Data.IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double v = System.Convert.ToDouble(value ?? 0d, CultureInfo.InvariantCulture);
+            var ptBR = new CultureInfo("pt-BR");
+
+            if (Math.Abs(v) >= 1_000_000) return $"R$ {(v / 1_000_000).ToString("0.##", ptBR)} mi";
+            if (Math.Abs(v) >= 1_000) return $"R$ {(v / 1_000).ToString("0.#", ptBR)} mil";
+            return $"R$ {v.ToString("0", ptBR)}";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotSupportedException();
     }
 }
