@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="magal.Views.CustoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="clr-namespace:magal"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
@@ -96,7 +97,7 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Content="+ NOVO CUSTO" 
+                    <Button Content="+ NOVO CUSTO" Visibility="{x:Static app:Sessao.VisibilidadeAdmin}" 
                             Style="{StaticResource PrimaryBtn}"
                             Margin="0,0,10,0"
                             Command="{Binding CriarCommand}"/>
@@ -225,7 +226,7 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
-                            <DataGridTemplateColumn Header="AÇÕES" Width="170">
+                            <DataGridTemplateColumn Header="AÇÕES" Visibility="{x:Static app:Sessao.VisibilidadeAdmin}" Width="170">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">

@@ -75,6 +75,26 @@ namespace magal.ViewModels
             set { _quantidadeProjetos = value; OnPropertyChanged(); }
         }
 
+        private int _quantidadeExecucao;
+        /// <summary>
+        /// Quantidade de projetos com status "Executando" entre os visíveis (indicador exibido ao usuário comum).
+        /// </summary>
+        public int QuantidadeExecucao
+        {
+            get => _quantidadeExecucao;
+            set { _quantidadeExecucao = value; OnPropertyChanged(); }
+        }
+
+        private int _quantidadeConcluidos;
+        /// <summary>
+        /// Quantidade de projetos com status "Concluído" entre os visíveis (indicador exibido ao usuário comum).
+        /// </summary>
+        public int QuantidadeConcluidos
+        {
+            get => _quantidadeConcluidos;
+            set { _quantidadeConcluidos = value; OnPropertyChanged(); }
+        }
+
         /// <summary>
         /// Obtém ou define o texto de busca utilizado para filtrar os projetos na tela em tempo real.
         /// </summary>
@@ -239,6 +259,8 @@ namespace magal.ViewModels
             var projetosVisiveis = ProjetosView.Cast<Projeto>().ToList();
 
             QuantidadeProjetos = projetosVisiveis.Count;
+            QuantidadeExecucao = projetosVisiveis.Count(p => string.Equals(p.status, "Executando", StringComparison.OrdinalIgnoreCase));
+            QuantidadeConcluidos = projetosVisiveis.Count(p => string.Equals(p.status, "Concluído", StringComparison.OrdinalIgnoreCase));
 
             //Dados financeiros (Faturamento e Lucro) são exclusivos do Administrador
             if (Sessao.UsuarioLogado != null && Sessao.UsuarioLogado.nivel == "Administrador")
