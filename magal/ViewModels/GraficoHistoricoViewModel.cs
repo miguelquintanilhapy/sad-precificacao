@@ -68,6 +68,14 @@ namespace magal.ViewModels
         public ChartValues<double> ValoresLucroMensal { get; set; } = new();
         public ChartValues<double> ValoresFaturamentoMensal { get; set; } = new();
         public string[] LabelsMeses { get; set; } = Array.Empty<string>();
+
+        /// <summary>
+        /// Acima deste número de barras (meses/dias) os valores sobre as barras são ocultados, pois passam a
+        /// invadir as barras vizinhas. O valor completo continua disponível no tooltip ao passar o mouse.
+        /// </summary>
+        private const int MaxPontosComRotulo = 12;
+
+        public bool MostrarRotulosBarras { get; set; } = true;
         public Func<double, string> Formatter { get; set; }
 
         #endregion
@@ -294,6 +302,8 @@ namespace magal.ViewModels
                 ValoresLucroMensal = new ChartValues<double>();
                 ValoresFaturamentoMensal = new ChartValues<double>();
                 LabelsMeses = Array.Empty<string>();
+                MostrarRotulosBarras = true;
+                OnPropertyChanged(nameof(MostrarRotulosBarras));
                 OnPropertyChanged(nameof(ValoresLucroMensal));
                 OnPropertyChanged(nameof(ValoresFaturamentoMensal));
                 OnPropertyChanged(nameof(LabelsMeses));
@@ -335,6 +345,9 @@ namespace magal.ViewModels
                 LabelsMeses = agrupadoPorMes.Select(x => x.Data.ToString("MMM/yy")).ToArray();
             }
 
+            MostrarRotulosBarras = LabelsMeses.Length <= MaxPontosComRotulo;
+
+            OnPropertyChanged(nameof(MostrarRotulosBarras));
             OnPropertyChanged(nameof(ValoresLucroMensal));
             OnPropertyChanged(nameof(ValoresFaturamentoMensal));
             OnPropertyChanged(nameof(LabelsMeses));

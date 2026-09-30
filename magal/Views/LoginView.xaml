@@ -86,11 +86,12 @@
                         <PasswordBox x:Name="txtSenha" Style="{StaticResource AeroInput}" Padding="12,0,45,0"
                  PreviewKeyDown="TxtSenha_PreviewKeyDown" PreviewKeyUp="TxtSenha_PreviewKeyUp" GotFocus="TxtSenha_GotFocus"/>
 
-                        <TextBox x:Name="txtSenhaVisivel" Style="{StaticResource AeroInput}" Padding="12,0,45,0" Visibility="Collapsed"/>
+                        <TextBox x:Name="txtSenhaVisivel" Style="{StaticResource AeroInput}" Padding="12,0,45,0" Visibility="Collapsed"
+                 PreviewKeyDown="TxtSenha_PreviewKeyDown" PreviewKeyUp="TxtSenha_PreviewKeyUp" GotFocus="TxtSenha_GotFocus"/>
 
                         <Button x:Name="btnMostrarSenha" Width="30" Height="30" HorizontalAlignment="Right" 
             Margin="0,0,10,0" Cursor="Hand"
-            PreviewMouseDown="BtnMostrarSenha_PreviewMouseDown" PreviewMouseUp="BtnMostrarSenha_PreviewMouseUp">
+            Click="BtnMostrarSenha_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="Transparent"/>
@@ -111,7 +112,13 @@
                                     </Style.Triggers>
                                 </Style>
                             </Button.Style>
-                            <TextBlock x:Name="iconOlho" Text="👁️" FontSize="16" Foreground="{StaticResource AeroTextMuted}"/>
+                            <Grid Width="18" Height="18">
+                                <TextBlock x:Name="iconOlho" Text="👁️" FontSize="16" Foreground="{StaticResource AeroTextMuted}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Line x:Name="riscoOlhoFechado" X1="2" Y1="2" X2="15" Y2="18"
+                                      Stroke="{StaticResource AeroTextMuted}" StrokeThickness="1.5"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </Grid>
                         </Button>
                     </Grid>
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0" x:Name="pnlCapsWarning" Visibility="Collapsed">

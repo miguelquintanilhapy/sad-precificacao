@@ -32,28 +32,25 @@ namespace magal.Views
             pnlCapsWarning.Visibility = Keyboard.IsKeyToggled(Key.CapsLock) ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void BtnMostrarSenha_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void BtnMostrarSenha_Click(object sender, RoutedEventArgs e)
         {
-            senhaVisivel = true;
-            txtSenhaVisivel.Text = txtSenha.Password;
-            txtSenha.Visibility = Visibility.Collapsed;
-            txtSenhaVisivel.Visibility = Visibility.Visible;
-            iconOlho.Text = "👁️‍🗨️";
-            txtSenhaVisivel.Focus();
-        }
+            senhaVisivel = !senhaVisivel;
 
-        private void BtnMostrarSenha_PreviewMouseUp(object sender, MouseButtonEventArgs e) => OcultarSenha();
-        private void BtnMostrarSenha_MouseLeave(object sender, MouseEventArgs e) => OcultarSenha();
-
-        private void OcultarSenha()
-        {
             if (senhaVisivel)
             {
-                senhaVisivel = false;
+                txtSenhaVisivel.Text = txtSenha.Password;
+                txtSenha.Visibility = Visibility.Collapsed;
+                txtSenhaVisivel.Visibility = Visibility.Visible;
+                riscoOlhoFechado.Visibility = Visibility.Collapsed;
+                txtSenhaVisivel.Focus();
+                txtSenhaVisivel.CaretIndex = txtSenhaVisivel.Text.Length;
+            }
+            else
+            {
                 txtSenha.Password = txtSenhaVisivel.Text;
                 txtSenhaVisivel.Visibility = Visibility.Collapsed;
                 txtSenha.Visibility = Visibility.Visible;
-                iconOlho.Text = "👁️";
+                riscoOlhoFechado.Visibility = Visibility.Visible;
                 txtSenha.Focus();
             }
         }

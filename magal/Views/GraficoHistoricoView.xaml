@@ -19,6 +19,7 @@
         <SolidColorBrush x:Key="AzulAero" Color="#131C49"/>
         <SolidColorBrush x:Key="AeroAccent" Color="#3B82F6"/>
         <SolidColorBrush x:Key="AeroDanger" Color="#EF4444"/>
+        <SolidColorBrush x:Key="AeroTextDark" Color="#0F172A"/>
         <SolidColorBrush x:Key="AeroTextMuted" Color="#64748B"/>
         <SolidColorBrush x:Key="AeroTextHint" Color="#94A3B8"/>
         <SolidColorBrush x:Key="AeroBorder" Color="#E2E8F0"/>
@@ -67,7 +68,12 @@
         <Grid Grid.Row="0" Height="80" Margin="0,0,0,10">
             <TextBlock Text="Dashboard Financeiro" FontSize="28" FontWeight="Bold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Command="{Binding AtualizarCommand}" Style="{StaticResource PrimaryBtn}">
+                <!-- Período: afeta o dashboard inteiro (indicadores e gráficos) -->
+                <StackPanel Margin="0,0,16,0" VerticalAlignment="Center">
+                    <TextBlock Text="PERÍODO" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" Margin="0,0,0,4"/>
+                    <ComboBox ItemsSource="{Binding Periodos}" SelectedItem="{Binding PeriodoSelecionado}" Width="180" Height="40" BorderThickness="0" VerticalContentAlignment="Center" FontWeight="SemiBold" Background="White" Foreground="{StaticResource AzulAero}"/>
+                </StackPanel>
+                <Button Command="{Binding AtualizarCommand}" Style="{StaticResource PrimaryBtn}" VerticalAlignment="Bottom">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <TextBlock Text="ATUALIZAR GRÁFICOS" VerticalAlignment="Center"/>
@@ -105,10 +111,6 @@
                 <Border Background="White" CornerRadius="16" Padding="20" Margin="0,0,0,20" BorderBrush="{StaticResource AeroBorder}" BorderThickness="1">
                     <StackPanel>
                         <Grid Margin="0,0,0,15">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="220"/>
-                            </Grid.ColumnDefinitions>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="LUCRO / FATURAMENTO" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AzulAero}" VerticalAlignment="Center"/>
 
@@ -124,22 +126,18 @@
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="PERÍODO" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextHint}" Margin="0,-4,0,6"/>
-                                <ComboBox ItemsSource="{Binding Periodos}" SelectedItem="{Binding PeriodoSelecionado}" Height="40" BorderThickness="0" VerticalContentAlignment="Center" FontWeight="SemiBold" Background="White" Foreground="{StaticResource AzulAero}"/>
-                            </StackPanel>
                         </Grid>
 
                         <lvc:CartesianChart Height="340" LegendLocation="None" Margin="0,0,25,0" AnimationsSpeed="0">
                             <lvc:CartesianChart.Series>
-                                <lvc:ColumnSeries Title="Lucro" Values="{Binding ValoresLucroMensal}" Fill="{StaticResource VerdeAero}" DataLabels="True" LabelPoint="{Binding ValorCompletoFormatter}" FontSize="10" ColumnPadding="2" MaxColumnWidth="70">
+                                <lvc:ColumnSeries Title="Lucro" Values="{Binding ValoresLucroMensal}" Fill="{StaticResource VerdeAero}" DataLabels="{Binding MostrarRotulosBarras}" LabelPoint="{Binding ValorCompletoFormatter}" FontSize="10" ColumnPadding="2" MaxColumnWidth="70">
                                     <lvc:ColumnSeries.DataLabelsTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Point.Y, Converter={StaticResource ValorCompacto}}" FontSize="10" FontWeight="SemiBold" Foreground="#334155"/>
                                         </DataTemplate>
                                     </lvc:ColumnSeries.DataLabelsTemplate>
                                 </lvc:ColumnSeries>
-                                <lvc:ColumnSeries Title="Faturamento" Values="{Binding ValoresFaturamentoMensal}" Fill="{StaticResource AzulAero}" DataLabels="True" LabelPoint="{Binding ValorCompletoFormatter}" FontSize="10" ColumnPadding="2" MaxColumnWidth="70">
+                                <lvc:ColumnSeries Title="Faturamento" Values="{Binding ValoresFaturamentoMensal}" Fill="{StaticResource AzulAero}" DataLabels="{Binding MostrarRotulosBarras}" LabelPoint="{Binding ValorCompletoFormatter}" FontSize="10" ColumnPadding="2" MaxColumnWidth="70">
                                     <lvc:ColumnSeries.DataLabelsTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Point.Y, Converter={StaticResource ValorCompacto}}" FontSize="10" FontWeight="SemiBold" Foreground="#334155"/>
