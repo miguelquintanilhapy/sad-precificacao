@@ -4,7 +4,7 @@
 -- DATA: 29/09/2026
 -- STATUS: ALINHADO COM O BANCO REAL (ESTRUTURA E DADOS). REEXECUTÁVEL (IF NOT EXISTS / INSERT IGNORE)
 -- OBS: custo/hora do funcionário é calculado no app: base do cargo (Pleno) x nível
---      (Júnior /1,75 | Pleno x1 | Sênior x1,5 | Especialista x2). A coluna funcionario.custo_hora não é usada.
+--      (Júnior /1,75 | Pleno x1 | Sênior x1,5 | Especialista x2).
 -- ==============================================================================
 
 CREATE DATABASE IF NOT EXISTS sad_precificacao;
@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS funcionario (
     id_funcionario INT AUTO_INCREMENT PRIMARY KEY,
     id_cargo INT NOT NULL,
     nome VARCHAR(255) NOT NULL,
-    custo_hora DECIMAL(18, 2) NULL,
     nivel VARCHAR(50), 
     tipo_vinculo VARCHAR(50), 
     status VARCHAR(50) DEFAULT 'Ativo',
@@ -135,22 +134,22 @@ INSERT IGNORE INTO cargo (id_cargo, nome, custo_medio_hora) VALUES
 (10, 'Gerente de Projetos', 160.00),
 (11, 'Consultor Especialista PD&I/Eng', 160.00);
 
-INSERT IGNORE INTO funcionario (id_funcionario, id_cargo, nome, custo_hora, nivel, tipo_vinculo, status) VALUES
-(1, 1, 'Paulino Rubião', NULL, 'Sênior', 'CLT', 'Ativo'),
-(2, 2, 'Eduardo Sedano', NULL, 'Pleno', 'CLT', 'Ativo'),
-(3, 3, 'Flavio Natal', NULL, 'Especialista', 'PJ', 'Ativo'),
-(4, 4, 'Antonio Aguida', NULL, 'Sênior', 'CLT', 'Ativo'),
-(5, 4, 'Roberto Souza Costa', NULL, 'Sênior', 'CLT', 'Ativo'),
-(6, 5, 'Luiz Menezes', NULL, 'Pleno', 'CLT', 'Ativo'),
-(7, 6, 'Evandro Lamberti', NULL, 'Sênior', 'CLT', 'Ativo'),
-(8, 7, 'Clayton Sant''ana', NULL, 'Pleno', 'CLT', 'Ativo'),
-(9, 7, 'Igor Alves', NULL, 'Pleno', 'CLT', 'Ativo'),
-(10, 7, 'Victor Hugo Noronha', NULL, 'Pleno', 'CLT', 'Ativo'),
-(11, 8, 'Lucilene Moraes', NULL, 'Sênior', 'CLT', 'Ativo'),
-(12, 8, 'Gerhard Egwarth', NULL, 'Sênior', 'PJ', 'Ativo'),
-(13, 9, 'Daniel Joaquim Pereira', NULL, 'Sênior', 'CLT', 'Ativo'),
-(14, 10, 'Eduard Müller', NULL, 'Sênior', 'CLT', 'Ativo'),
-(15, 11, 'Marco Antônio Carvalho', NULL, 'Especialista', 'PJ', 'Ativo');
+INSERT IGNORE INTO funcionario (id_funcionario, id_cargo, nome, nivel, tipo_vinculo, status) VALUES
+(1, 1, 'Paulino Rubião', 'Sênior', 'CLT', 'Ativo'),
+(2, 2, 'Eduardo Sedano', 'Pleno', 'CLT', 'Ativo'),
+(3, 3, 'Flavio Natal', 'Especialista', 'PJ', 'Ativo'),
+(4, 4, 'Antonio Aguida', 'Sênior', 'CLT', 'Ativo'),
+(5, 4, 'Roberto Souza Costa', 'Sênior', 'CLT', 'Ativo'),
+(6, 5, 'Luiz Menezes', 'Pleno', 'CLT', 'Ativo'),
+(7, 6, 'Evandro Lamberti', 'Sênior', 'CLT', 'Ativo'),
+(8, 7, 'Clayton Sant''ana', 'Pleno', 'CLT', 'Ativo'),
+(9, 7, 'Igor Alves', 'Pleno', 'CLT', 'Ativo'),
+(10, 7, 'Victor Hugo Noronha', 'Pleno', 'CLT', 'Ativo'),
+(11, 8, 'Lucilene Moraes', 'Sênior', 'CLT', 'Ativo'),
+(12, 8, 'Gerhard Egwarth', 'Sênior', 'PJ', 'Ativo'),
+(13, 9, 'Daniel Joaquim Pereira', 'Sênior', 'CLT', 'Ativo'),
+(14, 10, 'Eduard Müller', 'Sênior', 'CLT', 'Ativo'),
+(15, 11, 'Marco Antônio Carvalho', 'Especialista', 'PJ', 'Ativo');
 
 -- Senhas armazenadas como hash PBKDF2/SHA256 via magal.Services.PasswordHasher
 -- Admin: "admin123"
@@ -219,13 +218,13 @@ INSERT IGNORE INTO catalogo_custo (id_catalogo_custo, nome, categoria, valor) VA
 
 -- PROJETO 01: Funcate - Projeto Antigo Teste A
 INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
-(1, 1, 1, 'Projeto Antigo Teste A', 'Produto', 'Em Aberto', '2025-01-10 00:00:00', NULL);
+(1, 1, 1, 'Projeto Antigo Teste A', 'Serviço', 'Em Aberto', '2025-01-10 00:00:00', NULL);
 INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
-(89, 1, 1, 'Componentes Eletrônicos de Bancada', 'EPIs/Ferramentas', 'Direto', 1540.00, 'Unitário', '2026-09-29 16:49:23'),
-(90, 1, 13, 'Barras Metálicas Estruturais Gerdau Extra Rígidas', 'Equipamentos', 'Direto', 3880.00, 'Unitário', '2026-09-29 16:49:23'),
-(91, 1, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:49:23');
+(134, 1, 1, 'Componentes Eletrônicos de Bancada', 'EPIs/Ferramentas', 'Direto', 1540.00, 'Unitário', '2026-09-30 13:04:31'),
+(135, 1, 13, 'Barras Metálicas Estruturais Gerdau Extra Rígidas', 'Equipamentos', 'Direto', 3880.00, 'Unitário', '2026-09-30 13:04:31'),
+(136, 1, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-30 13:04:31');
 INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
-(77, 1, 6, 'Desenho preliminar de circuitos e placas', 20.00, 0.00, 0.00, 'Concluída');
+(105, 1, 6, 'Desenho preliminar de circuitos e placas', 20.00, 0.00, 0.00, 'Concluída');
 INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
 (1, 1, 39220.00, 0.00, 0.00, 43.60, 17099.92, 56319.92, 30, '', NULL, '', '2026-07-20 13:46:46');
 
@@ -298,13 +297,13 @@ INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_i
 
 -- PROJETO 08: Arauco - Sistema de Exaustão de Resíduos Térmicos
 INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
-(8, 1, 3, 'Sistema de Exaustão de Resíduos Térmicos', 'Produto', 'Rascunho', '2026-03-12 16:45:00', NULL);
+(8, 1, 3, 'Sistema de Exaustão de Resíduos Térmicos', 'Serviço', 'Rascunho', '2026-03-12 16:45:00', NULL);
 INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
-(9, 8, 9, 'Dutos Industriais de Exaustão Revestidos 800mm', 'Equipamentos', 'Direto', 15280.00, 'Unitário', '2026-07-20 13:46:46');
+(133, 8, 9, 'Dutos Industriais de Exaustão Revestidos 800mm', 'Equipamentos', 'Direto', 15280.00, 'Unitário', '2026-09-30 13:04:23');
 INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
-(10, 8, 4, 'Cálculo de dimensionamento de exaustão e fluxo', 27.03, 0.00, 0.00, 'Pendente');
+(104, 8, 4, 'Cálculo de dimensionamento de exaustão e fluxo', 27.03, 0.00, 0.00, 'Pendente');
 INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
-(8, 8, 19334.50, 18.00, 4245.86, 22.00, 4253.59, 27833.95, 15, NULL, NULL, NULL, '2026-07-20 13:46:46');
+(8, 8, 19334.50, 18.00, 4245.86, 22.00, 4253.59, 27833.95, 15, '', NULL, '', '2026-07-20 13:46:46');
 
 -- PROJETO 09: International Paper - Laudo Técnico de Conformidade NR-12
 INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
@@ -550,17 +549,17 @@ INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_i
 
 -- PROJETO 32: EESC - Instrumentação de Túnel de Vento Subsônico
 INSERT IGNORE INTO projeto (id_projeto, id_usuario, id_cliente, nome, tipo, status, data_criacao, data_conclusao_prevista) VALUES
-(32, 1, 4, 'Instrumentação de Túnel de Vento Subsônico', 'Produto', 'Orçado', '2026-07-14 10:40:00', NULL);
+(32, 1, 4, 'Instrumentação de Túnel de Vento Subsônico', 'Serviço', 'Orçado', '2026-07-14 10:40:00', NULL);
 INSERT IGNORE INTO custo (id_custo, id_projeto, id_catalogo_custo, nome, categoria, tipo, valor, unidade, data_cadastro) VALUES
-(110, 32, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário', '2026-09-29 16:52:29'),
-(111, 32, 1, 'Componentes Eletrônicos de Bancada', 'EPIs/Ferramentas', 'Direto', 1540.00, 'Unitário', '2026-09-29 16:52:29'),
-(112, 32, 18, 'Calibração de Sensores de Vibração Fluke', 'Manutenção', 'Direto', 3200.00, 'Unitário', '2026-09-29 16:52:29'),
-(113, 32, 28, 'Reparo Emergencial em Duto de Combustão', 'Manutenção', 'Direto', 1900.00, 'Unitário', '2026-09-29 16:52:29'),
-(114, 32, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário', '2026-09-29 16:52:29'),
-(115, 32, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-29 16:52:29');
+(127, 32, 3, 'Instrumentação e ferramentas de medição portátil', 'EPIs/Ferramentas', 'Direto', 1520.00, 'Unitário', '2026-09-30 13:04:09'),
+(128, 32, 1, 'Componentes Eletrônicos de Bancada', 'EPIs/Ferramentas', 'Direto', 1540.00, 'Unitário', '2026-09-30 13:04:09'),
+(129, 32, 18, 'Calibração de Sensores de Vibração Fluke', 'Manutenção', 'Direto', 3200.00, 'Unitário', '2026-09-30 13:04:09'),
+(130, 32, 28, 'Reparo Emergencial em Duto de Combustão', 'Manutenção', 'Direto', 1900.00, 'Unitário', '2026-09-30 13:04:09'),
+(131, 32, 20, 'Gabinete Metálico Rittal com Climatizador', 'Equipamentos', 'Direto', 4200.00, 'Unitário', '2026-09-30 13:04:09'),
+(132, 32, 29, 'Exaustor Centrífugo Industrial Anti-Fagulha 50HP', 'Equipamentos', 'Direto', 32400.00, 'Unitário', '2026-09-30 13:04:09');
 INSERT IGNORE INTO tarefa (id_tarefa, id_projeto, id_funcionario, descricao, horas_estimadas, horas_reais, custo_real, status) VALUES
-(91, 32, 1, 'Projeto do sistema de aquisição de dados', 40.00, 0.00, 0.00, 'Pendente'),
-(92, 32, 8, 'Montagem e calibração dos sensores', 30.00, 0.00, 0.00, 'Pendente');
+(102, 32, 1, 'Projeto do sistema de aquisição de dados', 40.00, 0.00, 0.00, 'Pendente'),
+(103, 32, 8, 'Montagem e calibração dos sensores', 30.00, 0.00, 0.00, 'Pendente');
 INSERT IGNORE INTO orcamento (id_orcamento, id_projeto, custo_base, percentual_impostos, valor_impostos, margem_percentual, valor_margem, valor_final, validade_dias, forma_pagamento, prazo_entrega, observacoes, data_criacao) VALUES
 (35, 32, 53610.00, 0.00, 0.00, 30.00, 16083.00, 69693.00, 30, '', NULL, '', '2026-09-29 16:46:18');
 

@@ -248,6 +248,8 @@ namespace magal.ViewModels
                 AtualizarFinanceiro();
                 OnPropertyChanged(nameof(ProjetoAtual));
                 IsLoading = false;
+
+                AvisarSeOrcamentoDesatualizado();
                 await System.Threading.Tasks.Task.Delay(50);
 
                 if (this.CustosExtras != null)
@@ -269,6 +271,32 @@ namespace magal.ViewModels
         #endregion
 
         #region Métodos Auxiliares / Privados
+
+        /// <summary>
+        /// O orçamento é gravado com os valores da época em que foi salvo. Se os custos de mão de obra (cargos)
+        /// mudaram desde então, a tela já recalcula com os valores atuais: avisa a diferença em vez de deixar
+        /// o usuário descobrir pelo aviso de "alterações não salvas".
+        /// </summary>
+        private void AvisarSeOrcamentoDesatualizado()
+        {
+            if (ProjetoAtual?.Orcamento == null) return;
+
+            decimal valorSalvo = _valorFinalOriginal;
+            decimal valorAtual = ProjetoAtual.Orcamento.valor_final;
+
+            if (Math.Abs(valorAtual - valorSalvo) < 0.01m) return;
+
+            var ptBR = new System.Globalization.CultureInfo("pt-BR");
+            MessageBox.Show(
+                "Os custos de mão de obra mudaram desde que este orçamento foi salvo.\n\n" +
+                $"Valor salvo: {valorSalvo.ToString("C2", ptBR)}\n" +
+                $"Valor atual: {valorAtual.ToString("C2", ptBR)}\n\n" +
+                "A tela já está exibindo o valor atual. Salve o projeto para atualizar o orçamento, " +
+                "ou descarte as alterações para manter o valor salvo.",
+                "Orçamento desatualizado",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
 
         public bool TemAlteracoes()
         {

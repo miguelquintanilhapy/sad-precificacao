@@ -15,6 +15,9 @@ namespace magal
         private HistoricoView _historicoView;
         private OrcamentoView _orcamentoView;
 
+        // Evita perguntar duas vezes quando a saída já foi confirmada (ex.: logoff)
+        private bool _saidaConfirmada;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -22,6 +25,12 @@ namespace magal
 
             CarregarDadosUsuario();
             AbrirHome();
+
+            // Fechar o app pelo X também pergunta se há alterações não salvas na tela de orçamento
+            Closing += (_, e) =>
+            {
+                if (!_saidaConfirmada && !ConfirmarSaidaDaTela()) e.Cancel = true;
+            };
         }
 
         private void CarregarDadosUsuario()
@@ -230,6 +239,7 @@ namespace magal
             if (resultado == MessageBoxResult.Yes)
             {
                 if (!ConfirmarSaidaDaTela()) return;
+                _saidaConfirmada = true;
 
                 Sessao.UsuarioLogado = null; 
                 LoginView login = new LoginView();
