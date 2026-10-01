@@ -18,12 +18,7 @@ namespace magal.Views
         private void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             // Validação dos campos obrigatórios
-            if (string.IsNullOrWhiteSpace(TxtNome.Text) ||
-                ComboTipo.SelectedItem == null ||
-                string.IsNullOrWhiteSpace(TxtCpfCnpj.Text) ||
-                string.IsNullOrWhiteSpace(TxtCidade.Text) ||
-                string.IsNullOrWhiteSpace(TxtEstado.Text) ||
-                string.IsNullOrWhiteSpace(TxtContato.Text))
+            if (CampoGuia.MarcarPendentes(TxtNome, ComboTipo, TxtCpfCnpj, TxtCidade, TxtEstado, TxtContato))
             {
                 MessageBox.Show(
                     "Preencha todos os campos.",

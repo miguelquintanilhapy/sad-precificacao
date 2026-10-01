@@ -157,6 +157,11 @@ namespace magal.ViewModels
         /// </summary>
         public RelayCommand ExportarPdfCommand { get; }
 
+        /// <summary>
+        /// Gera e abre o PDF da proposta de um projeto direto da lista, sem precisar abrir a tela de edição.
+        /// </summary>
+        public RelayCommand GerarPropostaPdfCommand { get; }
+
         #endregion
 
         #region Construtores
@@ -177,6 +182,7 @@ namespace magal.ViewModels
             EditarCommand = new RelayCommand(p => ExecutarEdicao(p as Projeto));
             AtualizarCommand = new RelayCommand(async _ => await CarregarHistorico());
             ExportarPdfCommand = new RelayCommand(_ => ExecutarExportacaoPdf());
+            GerarPropostaPdfCommand = new RelayCommand(p => ExecutarGeracaoPropostaPdf(p as Projeto));
              }
 
         #endregion
@@ -360,6 +366,47 @@ namespace magal.ViewModels
         /// <summary>
         /// Carrega a estrutura de dados profunda do projeto selecionado e aciona a navegação da janela principal para a tela de edição.
         /// </summary>
+        private async void ExecutarGeracaoPropostaPdf(Projeto projeto)
+        {
+            if (projeto == null) return;
+
+            var sfd = new SaveFileDialog { Filter = "PDF|*.pdf", FileName = $"Proposta_{projeto.nome}" };
+            if (sfd.ShowDialog() != true) return;
+
+            try
+            {
+                IsLoading = true;
+
+                var completo = await _repository.CarregarProjetoCompleto(projeto.id_projeto);
+                if (completo == null)
+                {
+                    MessageBox.Show("Não foi possível carregar os detalhes deste projeto.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // O carregamento completo traz só os ids: resolve cliente e funcionários, que o PDF exibe pelo nome.
+                var clientes = await new ClienteRepository().ListarTodos();
+                var funcionarios = await new FuncionarioRepository().ListarTodos();
+
+                completo.Cliente = clientes?.FirstOrDefault(c => c.id_cliente == completo.id_cliente);
+                foreach (var t in completo.Tarefas)
+                    t.Funcionario = funcionarios?.FirstOrDefault(f => f.id_funcionario == t.id_funcionario);
+
+                var custos = completo.Custos.ToList();
+                await Task.Run(() => new PdfService().GerarPropostaTecnica(completo, custos, sfd.FileName));
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(sfd.FileName) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao gerar PDF: {ex.Message}", "Aviso de Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
         private async void ExecutarEdicao(Projeto projeto)
         {
             if (projeto == null) return;

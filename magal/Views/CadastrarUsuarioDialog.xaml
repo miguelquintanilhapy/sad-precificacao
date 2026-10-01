@@ -1,6 +1,7 @@
 ﻿<Window x:Class="magal.Views.CadastrarUsuarioDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:g="clr-namespace:magal.Views"
         Title="Criar Usuário"
         Height="590" Width="460"
         WindowStartupLocation="CenterOwner"
@@ -112,25 +113,25 @@
                    Foreground="{StaticResource AzulAero}"
                    Margin="0,0,0,24"/>
 
-        <TextBlock Text="NOME COMPLETO" Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtNome" Style="{StaticResource InputStyle}" Margin="0,0,0,14"/>
+        <TextBlock Style="{StaticResource LabelStyle}"><Run Text="NOME COMPLETO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtNome" g:CampoGuia.Texto="Ex.: João Silva" Style="{StaticResource InputStyle}" Margin="0,0,0,14"/>
 
-        <TextBlock Text="E-MAIL" Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtEmail" Style="{StaticResource InputStyle}" Margin="0,0,0,14"/>
+        <TextBlock Style="{StaticResource LabelStyle}"><Run Text="E-MAIL"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtEmail" g:CampoGuia.Texto="Ex.: joao@aeroconcepts.com.br" Style="{StaticResource InputStyle}" Margin="0,0,0,14"/>
 
-        <TextBlock Text="NÍVEL DE ACESSO" Style="{StaticResource LabelStyle}"/>
+        <TextBlock Style="{StaticResource LabelStyle}"><Run Text="NÍVEL DE ACESSO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
         <ComboBox x:Name="ComboNivel" Style="{StaticResource ComboStyle}" Margin="0,0,0,14" FontWeight="SemiBold">
             <ComboBoxItem Content="Operador" IsSelected="True"/>
             <ComboBoxItem Content="Administrador"/>
         </ComboBox>
 
-        <TextBlock Text="SENHA" Style="{StaticResource LabelStyle}"/>
-        <PasswordBox x:Name="TxtSenha" 
+        <TextBlock Style="{StaticResource LabelStyle}"><Run Text="SENHA"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <PasswordBox x:Name="TxtSenha" g:CampoGuia.Texto="Digite a senha" 
                      Style="{StaticResource PasswordStyle}"
                      Margin="0,0,0,14"/>
 
-        <TextBlock Text="CONFIRMAR SENHA" Style="{StaticResource LabelStyle}"/>
-        <PasswordBox x:Name="TxtConfirmarSenha" 
+        <TextBlock Style="{StaticResource LabelStyle}"><Run Text="CONFIRMAR SENHA"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <PasswordBox x:Name="TxtConfirmarSenha" g:CampoGuia.Texto="Repita a senha" 
                      Style="{StaticResource PasswordStyle}"
                      Margin="0,0,0,24"/>
 

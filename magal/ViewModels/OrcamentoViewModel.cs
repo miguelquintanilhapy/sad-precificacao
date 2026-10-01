@@ -126,6 +126,7 @@ namespace magal.ViewModels
         public RelayCommand DeletarCustoCommand { get; }
         public RelayCommand GerarPdfCommand { get; }
         public RelayCommand DescartarCommand { get; }
+        public RelayCommand VisualizarPdfCommand { get; }
 
         #endregion
 
@@ -145,6 +146,7 @@ namespace magal.ViewModels
             DeletarCustoCommand = new RelayCommand(param => DeletarCustoExtra(param as CustoItemViewModel));
             GerarPdfCommand = new RelayCommand(_ => ExecutarFluxoFinal());
             DescartarCommand = new RelayCommand(_ => ExecutarDescarte());
+            VisualizarPdfCommand = new RelayCommand(_ => ExecutarGeracaoPdfDireta());
 
             CarregarDadosIniciais();
             NovoProjeto();
@@ -298,12 +300,35 @@ namespace magal.ViewModels
                 MessageBoxImage.Information);
         }
 
+        // O ComboBox de cliente altera ProjetoAtual.Cliente, não o id_cliente; o que vale é o cliente selecionado.
+        private int ClienteAtualId() => ProjetoAtual.Cliente?.id_cliente ?? 0;
+
         public bool TemAlteracoes()
         {
-            if (_projetoOriginal == null) return !string.IsNullOrWhiteSpace(ProjetoAtual.nome) || ProjetoAtual.Tarefas.Count > 0;
+            if (_projetoOriginal == null)
+            {
+                // Novo orçamento: NovoProjeto() já cria uma tarefa e um custo vazios, então só conta o que o usuário preencheu.
+                bool tarefaPreenchida = ProjetoAtual.Tarefas.Any(t =>
+                    !string.IsNullOrWhiteSpace(t.descricao) || t.horas_estimadas != 0 || t.Funcionario != null);
+                bool custoPreenchido = CustosExtras.Any(c =>
+                    !string.IsNullOrWhiteSpace(c.nome) || c.valor != 0 || c.id_catalogo_custo != 0);
+                bool orcamentoAlterado = ProjetoAtual.Orcamento != null &&
+                    (ProjetoAtual.Orcamento.margem_percentual != 20 ||
+                     ProjetoAtual.Orcamento.percentual_impostos != 15 ||
+                     ProjetoAtual.Orcamento.validade_dias != 15 ||
+                     ProjetoAtual.Orcamento.forma_pagamento != "PIX" ||
+                     ProjetoAtual.Orcamento.prazo_entrega != null ||
+                     !string.IsNullOrEmpty(ProjetoAtual.Orcamento.observacoes));
+
+                return !string.IsNullOrWhiteSpace(ProjetoAtual.nome) ||
+                       ClienteAtualId() != 0 ||
+                       ProjetoAtual.tipo != "Serviço" ||
+                       ProjetoAtual.status != "Rascunho" ||
+                       tarefaPreenchida || custoPreenchido || orcamentoAlterado;
+            }
 
             bool basicoAlterado = ProjetoAtual.nome != _projetoOriginal.nome ||
-                                  ProjetoAtual.id_cliente != _projetoOriginal.id_cliente ||
+                                  ClienteAtualId() != _projetoOriginal.id_cliente ||
                                   ProjetoAtual.status != _projetoOriginal.status ||
                                   ProjetoAtual.tipo != _projetoOriginal.tipo ||
                                   ProjetoAtual.Orcamento.margem_percentual != _projetoOriginal.Orcamento.margem_percentual ||
@@ -338,29 +363,71 @@ namespace magal.ViewModels
             }
         }
 
+        /// <summary>
+        /// Disparado quando faltam campos obrigatórios; a View destaca cada um e leva o cursor ao primeiro.
+        /// Recebe os nomes lógicos dos campos pendentes ("nome", "cliente").
+        /// </summary>
+        public event Action<IReadOnlyList<string>> CamposObrigatoriosPendentes;
+
+        /// <summary>
+        /// Verifica nome e cliente de uma só vez: avisa o que falta e sinaliza os campos na tela.
+        /// </summary>
+        private bool ValidarCamposObrigatorios()
+        {
+            var pendentes = new List<string>();
+            var rotulos = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(ProjetoAtual.nome)) { pendentes.Add("nome"); rotulos.Add("Nome do Projeto"); }
+            if (ProjetoAtual.Cliente == null) { pendentes.Add("cliente"); rotulos.Add("Cliente"); }
+
+            if (pendentes.Count == 0) return true;
+
+            MessageBox.Show("Preencha os campos obrigatórios destacados em vermelho:\n\n• " + string.Join("\n• ", rotulos),
+                "Campos obrigatórios", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+            CamposObrigatoriosPendentes?.Invoke(pendentes);
+            return false;
+        }
+
+        /// <summary>
+        /// Gera e abre o PDF com os dados atuais da tela, sem salvar nada no banco (disponível ao editar um projeto salvo).
+        /// </summary>
+        private async void ExecutarGeracaoPdfDireta()
+        {
+            if (_processando) return;
+
+            if (!ValidarCamposObrigatorios()) return;
+
+            try
+            {
+                _processando = true;
+                OnPropertyChanged(nameof(BotaoAtivo));
+
+                var caminho = await GerarRelatorioPdfAsync();
+                if (caminho != null)
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(caminho) { UseShellExecute = true });
+            }
+            finally
+            {
+                _processando = false;
+                OnPropertyChanged(nameof(BotaoAtivo));
+            }
+        }
+
         private async void ExecutarFluxoFinal()
         {
             if (_processando) return;
 
-            if (!TemAlteracoes())
+            if (!ValidarCamposObrigatorios()) return;
+
+            // Projeto salvo e sem alterações: não há o que gravar. O PDF sai pelo ícone na lista do histórico.
+            if (_projetoOriginal != null && !TemAlteracoes())
             {
-                MessageBox.Show("Nenhuma alteração foi detectada no projeto.", "Informação", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Nenhuma alteração foi feita neste projeto.\n\nPara baixar o PDF da proposta, use o botão \"Baixar proposta em PDF\" no canto superior direito.",
+                    "Sem alterações", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(ProjetoAtual.nome))
-            {
-                MessageBox.Show("O campo 'Nome do Projeto' deve ser preenchido.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (ProjetoAtual.Cliente == null)
-            {
-                MessageBox.Show("Selecione um cliente antes de finalizar.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-    
             var activeWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
             var dialog = new magal.Views.FinalizarPropostaDialog(this.ProjetoAtual.Orcamento);
             dialog.Owner = activeWindow;
@@ -675,7 +742,8 @@ namespace magal.ViewModels
                 return false;
             }
         }
-        private async Task<bool> GerarRelatorioPdfAsync()
+        /// <summary>Retorna o caminho do PDF gerado, ou null se o usuário cancelou ou ocorreu erro.</summary>
+        private async Task<string> GerarRelatorioPdfAsync()
         {
             var sfd = new SaveFileDialog { Filter = "PDF|*.pdf", FileName = $"Proposta_{ProjetoAtual.nome}" };
 
@@ -696,14 +764,14 @@ namespace magal.ViewModels
                     }).ToList();
 
                     await Task.Run(() => new PdfService().GerarPropostaTecnica(ProjetoAtual, listaCustosBase, sfd.FileName));
-                    return true;
+                    return sfd.FileName;
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Erro ao gerar PDF: " + ex.Message, "Aviso de Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
-            return false;
+            return null;
         }
 
         #endregion

@@ -27,8 +27,7 @@ namespace magal.Views
 
         private void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtNome.Text) ||
-                string.IsNullOrWhiteSpace(TxtCustoHora.Text))
+            if (CampoGuia.MarcarPendentes(TxtNome, TxtCustoHora))
             {
                 MessageBox.Show(
                     "Preencha todos os campos obrigatórios.",

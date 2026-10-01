@@ -213,6 +213,22 @@
                    Foreground="{StaticResource AzulAero}"
                    VerticalAlignment="Center"/>
 
+            <Button Command="{Binding VisualizarPdfCommand}"
+                    IsEnabled="{Binding BotaoAtivo}"
+                    Visibility="{Binding VisibilidadeBotaoDescartar}"
+                    Style="{StaticResource PrimaryBtn}"
+                    Background="{StaticResource AzulAero}"
+                    HorizontalAlignment="Right" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE896;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0"/>
+                    <TextBlock Text="BAIXAR PROPOSTA EM PDF"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
@@ -246,9 +262,9 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                                <TextBlock Text="NOME DO PROJETO" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" Margin="0,-4,0,6" />
+                                <TextBlock FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" Margin="0,-4,0,6"><Run Text="NOME DO PROJETO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
 
-                                <Border BorderThickness="1.5" Height="40" Background="Transparent">
+                                <Border x:Name="NomeBorder" BorderThickness="1.5" Height="40" Background="Transparent">
                                     <Border.Style>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="BorderBrush" Value="{StaticResource AeroBorder}"/>
@@ -260,29 +276,61 @@
                                         </Style>
                                     </Border.Style>
 
-                                    <TextBox Text="{Binding ProjetoAtual.nome, UpdateSourceTrigger=PropertyChanged}" 
-                                        FontWeight="SemiBold" 
-                                        BorderThickness="0" 
-                                        Padding="10,0"
-                                        VerticalContentAlignment="Center"
-                                        Background="Transparent"/>
+                                    <Grid>
+                                        <TextBox x:Name="NomeTextBox" TextChanged="NomeTextBox_TextChanged" MaxLength="255" Text="{Binding ProjetoAtual.nome, UpdateSourceTrigger=PropertyChanged}"
+                                            FontWeight="SemiBold"
+                                            BorderThickness="0"
+                                            Padding="10,0"
+                                            VerticalContentAlignment="Center"
+                                            Background="Transparent"/>
+                                        <TextBlock Text="Ex.: Análise estrutural de fuselagem" Margin="12,0,10,0">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ProjetoAtual.nome}" Value="">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ProjetoAtual.nome}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
                                 </Border>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Margin="0,0,15,0">
-                                <TextBlock Text="CLIENTE" 
-               FontSize="12" 
-               FontWeight="Bold" 
-               Foreground="{StaticResource AeroTextDark}" 
-               Margin="0,-4,0,6"/>
+                                <TextBlock FontSize="12"
+               FontWeight="Bold"
+               Foreground="{StaticResource AeroTextDark}"
+               Margin="0,-4,0,6"><Run Text="CLIENTE"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
 
-                                <ComboBox ItemsSource="{Binding Clientes}" 
-              SelectedItem="{Binding ProjetoAtual.Cliente, Mode=TwoWay}" 
-              DisplayMemberPath="nome" 
-              Height="40"  
-              BorderThickness="0" 
-              FontWeight="SemiBold" 
-              VerticalContentAlignment="Center"/>
+                                <Grid>
+                                    <ComboBox x:Name="ClienteCombo" SelectionChanged="ClienteCombo_SelectionChanged"
+                  ItemsSource="{Binding Clientes}"
+                  SelectedItem="{Binding ProjetoAtual.Cliente, Mode=TwoWay}"
+                  DisplayMemberPath="nome"
+                  Height="40"
+                  BorderThickness="0"
+                  FontWeight="SemiBold"
+                  VerticalContentAlignment="Center"/>
+                                    <TextBlock Text="Selecione o cliente" Margin="10,0,30,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ProjetoAtual.Cliente}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <!-- Contorno de erro: sobreposto ao combo (sem alterar o layout), só aparece quando o cliente é obrigatório e falta -->
+                                    <Border x:Name="ClienteErroBorder" BorderBrush="#DC2626" BorderThickness="1.5" CornerRadius="4"
+                                            IsHitTestVisible="False" Visibility="Collapsed"/>
+                                </Grid>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2" Margin="0,0,15,0">
@@ -357,7 +405,7 @@
                                                         </Style>
                                                     </Border.Style>
 
-                                                    <TextBox Text="{Binding horas_estimadas, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}" 
+                                                    <TextBox MaxLength="8" Text="{Binding horas_estimadas, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}" 
                                                         FontSize="18" 
                                                         FontWeight="Black" 
                                                         Foreground="{StaticResource AeroPrimary}"
@@ -385,40 +433,69 @@
                                                         </Style>
                                                     </Border.Style>
 
-                                                    <TextBox Text="{Binding descricao, UpdateSourceTrigger=PropertyChanged}"
-                                                         FontSize="15" 
-                                                         FontWeight="SemiBold" 
-                                                         Foreground="{StaticResource AeroTextDark}"
-                                                         Background="Transparent" 
-                                                         BorderThickness="0" 
-                                                         Padding="8,0" 
-                                                         VerticalContentAlignment="Center"/>    
+                                                    <Grid>
+                                                        <TextBox MaxLength="255" Text="{Binding descricao, UpdateSourceTrigger=PropertyChanged}"
+                                                             FontSize="15"
+                                                             FontWeight="SemiBold"
+                                                             Foreground="{StaticResource AeroTextDark}"
+                                                             Background="Transparent"
+                                                             BorderThickness="0"
+                                                             Padding="8,0"
+                                                             VerticalContentAlignment="Center"/>
+                                                        <TextBlock Text="Descreva a atividade a ser realizada" FontSize="14" Margin="10,0,8,0">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding descricao}" Value="">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding descricao}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </Grid>
                                                 </Border>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2" VerticalAlignment="Bottom" Margin="10,0">
                                                 <TextBlock Text="RESPONSÁVEL" FontSize="12" FontWeight="Bold" 
                Foreground="{StaticResource AeroTextDark}" Margin="0,0,0,4"/>
 
-                                                <ComboBox ItemsSource="{Binding DataContext.Funcionarios, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-              SelectedItem="{Binding Funcionario, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue={x:Null}}" 
-              DisplayMemberPath="nome" 
-              FontSize="12" 
-              Height="40" 
-              FontWeight="SemiBold" 
-              Cursor="Hand" 
-              VerticalContentAlignment="Center" 
-              BorderThickness="0" 
-              BorderBrush="{StaticResource AeroBorder}" 
-              Background="#F8FAFC"/>
+                                                <Grid>
+                                                    <ComboBox ItemsSource="{Binding DataContext.Funcionarios, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                  SelectedItem="{Binding Funcionario, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue={x:Null}}"
+                  DisplayMemberPath="nome"
+                  FontSize="12"
+                  Height="40"
+                  FontWeight="SemiBold"
+                  Cursor="Hand"
+                  VerticalContentAlignment="Center"
+                  BorderThickness="0"
+                  BorderBrush="{StaticResource AeroBorder}"
+                  Background="#F8FAFC"/>
+                                                    <TextBlock Text="Selecione o responsável" FontSize="12" Margin="10,0,30,0">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Funcionario}" Value="{x:Null}">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
                                             </StackPanel>
 
-                                            <StackPanel Grid.Column="3" VerticalAlignment="Bottom" Margin="10,0,10,0">
-                                                <TextBlock Text="SUBTOTAL" FontSize="12" FontWeight="Bold" 
-                   Foreground="{StaticResource AeroTextDark}" Margin="0,0,0,4" HorizontalAlignment="Right"/>
-                                                <Border Height="40" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding custo_real, StringFormat=C}" 
-                       FontSize="16" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" 
-                       VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                            <StackPanel Grid.Column="3" VerticalAlignment="Bottom" Margin="22,0,10,0">
+                                                <TextBlock Text="SUBTOTAL" FontSize="12" FontWeight="Bold"
+                   Foreground="{StaticResource AeroTextDark}" Margin="9.5,0,0,4" HorizontalAlignment="Left"/>
+                                                <Border Height="40" VerticalAlignment="Center" Margin="9.5,0,0,0">
+                                                    <TextBlock Text="{Binding custo_real, StringFormat=C}"
+                       FontSize="16" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                                 </Border>
                                             </StackPanel>
 
@@ -469,18 +546,31 @@
                FontWeight="Bold" 
                Foreground="{StaticResource AeroTextDark}" 
                Margin="0,0,0,4"/>
-                                                        <ComboBox ItemsSource="{Binding ItensFiltrados}" 
-          SelectedItem="{Binding ItemSelecionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-          DisplayMemberPath="nome" 
-          FontSize="14"  
-          Height="40"  
-          FontWeight="SemiBold" 
-          Validation.ErrorTemplate="{x:Null}" 
-          VerticalContentAlignment="Center" 
-          Cursor="Hand"  
-          BorderThickness="0.4"  
-          BorderBrush="{StaticResource AeroBorder}" 
-          Background="#F8FAFC"/>
+                                                        <Grid>
+                                                            <ComboBox ItemsSource="{Binding ItensFiltrados}"
+              SelectedItem="{Binding ItemSelecionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+              DisplayMemberPath="nome"
+              FontSize="14"
+              Height="40"
+              FontWeight="SemiBold"
+              Validation.ErrorTemplate="{x:Null}"
+              VerticalContentAlignment="Center"
+              Cursor="Hand"
+              BorderThickness="0.4"
+              BorderBrush="{StaticResource AeroBorder}"
+              Background="#F8FAFC"/>
+                                                            <TextBlock Text="Selecione o item de custo" FontSize="14" Margin="10,0,30,0">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItemSelecionado}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+                                                        </Grid>
                                                     </StackPanel>
 
                                                     <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Margin="10,0">
@@ -498,13 +588,13 @@
                                                                   Background="#F8FAFC"/>
                                                     </StackPanel>
 
-                                                    <StackPanel Grid.Column="2" VerticalAlignment="Bottom" Margin="10,0">
+                                                    <StackPanel Grid.Column="2" VerticalAlignment="Bottom" Margin="22,0,10,0">
                                                         <TextBlock Text="VALOR (R$)" 
                                                                  FontSize="12" 
                                                                  FontWeight="Bold" 
                                                                  Foreground="{StaticResource AeroTextDark}" 
-                                                                 HorizontalAlignment="Right" 
-                                                                 Margin="0,0,0,4"/>
+                                                                 HorizontalAlignment="Left"
+                                                                 Margin="9.5,0,0,4"/>
 
                                                         <Border BorderThickness="1.5" Height="40" Background="Transparent">
                                                             <Border.Style>
@@ -518,14 +608,14 @@
                                                                 </Style>
                                                             </Border.Style>
 
-                                                            <TextBox Text="{Binding valor, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:N2}'}"
+                                                            <TextBox MaxLength="15" Text="{Binding valor, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:N2}'}"
                                                                  FontSize="15" 
                                                                  FontWeight="Bold" 
                                                                  Foreground="{StaticResource AeroTextDark}"
                                                                  Background="Transparent" 
                                                                  BorderThickness="0" 
-                                                                 HorizontalContentAlignment="Right" 
-                                                                 VerticalContentAlignment="Center" 
+                                                                 HorizontalContentAlignment="Left"
+                                                                 VerticalContentAlignment="Center"
                                                                  Padding="8,0"
                                                                  PreviewTextInput="ValidarEntradaSemNegativo"/>
                                                         </Border>
@@ -587,7 +677,7 @@
                             </Border.Style>
 
                             <Grid>
-                                <TextBox Text="{Binding ProjetoAtual.Orcamento.margem_percentual, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}"
+                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.margem_percentual, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}"
                      PreviewTextInput="ValidarEntradaSemNegativo"
                      FontWeight="Bold" FontSize="15" Padding="15,0,35,0" MinWidth="100"
                      VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent">
@@ -618,7 +708,7 @@
                             </Border.Style>
 
                             <Grid>
-                                <TextBox Text="{Binding ProjetoAtual.Orcamento.percentual_impostos, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}"
+                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.percentual_impostos, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}"
                      PreviewTextInput="ValidarEntradaSemNegativo"
                      FontWeight="Bold" FontSize="15" Padding="15,0,35,0" MinWidth="100"
                      VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent">
@@ -649,7 +739,7 @@
                             </Border.Style>
 
                             <Grid>
-                                <TextBox Text="{Binding ProjetoAtual.Orcamento.validade_dias, UpdateSourceTrigger=PropertyChanged}"
+                                <TextBox MaxLength="4" Text="{Binding ProjetoAtual.Orcamento.validade_dias, UpdateSourceTrigger=PropertyChanged}"
                      PreviewTextInput="ValidarEntradaSemNegativo"
                      FontWeight="Bold" FontSize="15" Padding="15,0,45,0" MinWidth="110"
                      VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent">

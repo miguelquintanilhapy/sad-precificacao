@@ -1,6 +1,7 @@
 ﻿<Window x:Class="magal.Views.EditarFuncionarioDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:g="clr-namespace:magal.Views"
         Title="Editar Funcionário"
         Height="640"
         Width="460"
@@ -97,25 +98,25 @@
                    Foreground="{StaticResource AzulAero}"
                    Margin="0,0,0,24"/>
 
-        <TextBlock Text="NOME"
-                   Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtNome"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="NOME"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtNome" g:CampoGuia.Texto="Ex.: Maria Silva"
                  Style="{StaticResource InputStyle}"
                  FontWeight="SemiBold"
                  Margin="0,0,0,14"/>
 
-        <TextBlock Text="CARGO"
-                   Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="ComboCargo"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="CARGO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <ComboBox x:Name="ComboCargo" g:CampoGuia.Texto="Selecione o cargo"
                   Style="{StaticResource ComboStyle}"
                   DisplayMemberPath="nome"
                   SelectedValuePath="id_cargo"
                   Margin="0,0,0,14"
                   FontWeight="SemiBold"/>
 
-        <TextBlock Text="NÍVEL"
-                   Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="ComboNivel"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="NÍVEL"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <ComboBox x:Name="ComboNivel" g:CampoGuia.Texto="Selecione o nível"
                   Style="{StaticResource ComboStyle}"
                   Margin="0,0,0,14"
                   FontWeight="SemiBold">
@@ -125,9 +126,9 @@
             <ComboBoxItem Content="Especialista"/>
         </ComboBox>
 
-        <TextBlock Text="TIPO VÍNCULO"
-                   Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="ComboTipoVinculo"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="TIPO VÍNCULO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <ComboBox x:Name="ComboTipoVinculo" g:CampoGuia.Texto="Selecione o vínculo"
                   Style="{StaticResource ComboStyle}"
                   Margin="0,0,0,14"
                   FontWeight="SemiBold">
@@ -136,9 +137,9 @@
             <ComboBoxItem Content="Autônomo"/>
         </ComboBox>
 
-        <TextBlock Text="STATUS"
-                   Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="ComboStatus"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="STATUS"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <ComboBox x:Name="ComboStatus" g:CampoGuia.Texto="Selecione o status"
                   Style="{StaticResource ComboStyle}"
                   Margin="0,0,0,24"
                   FontWeight="SemiBold">

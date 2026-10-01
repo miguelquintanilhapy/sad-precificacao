@@ -1,6 +1,7 @@
 ﻿<Window x:Class="magal.Views.EditarUsuarioDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:g="clr-namespace:magal.Views"
         Title="Editar Usuário"
         Height="620"
         Width="460"
@@ -119,27 +120,27 @@
                    Foreground="{StaticResource AzulAero}"
                    Margin="0,0,0,24"/>
 
-        <TextBlock Text="NOME COMPLETO"
-                   Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtNome"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="NOME COMPLETO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtNome" g:CampoGuia.Texto="Ex.: João Silva"
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,14"/>
 
-        <TextBlock Text="E-MAIL DE ACESSO"
-                   Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtEmail"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="E-MAIL DE ACESSO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtEmail" g:CampoGuia.Texto="Ex.: joao@aeroconcepts.com.br"
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,14"/>
 
         <TextBlock Text="REDEFINIR SENHA (DEIXE EM BRANCO PARA NÃO ALTERAR)"
                    Style="{StaticResource LabelStyle}"/>
-        <PasswordBox x:Name="TxtSenhaNova"
+        <PasswordBox x:Name="TxtSenhaNova" g:CampoGuia.Texto="Digite apenas se quiser trocar a senha"
                      Style="{StaticResource PasswordInputStyle}"
                      Margin="0,0,0,14"/>
 
-        <TextBlock Text="NÍVEL DE ACESSO"
-                   Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="ComboNivel"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="NÍVEL DE ACESSO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <ComboBox x:Name="ComboNivel" g:CampoGuia.Texto="Selecione o nível"
                   Style="{StaticResource ComboStyle}"
                   Margin="0,0,0,14"
                   FontWeight="SemiBold">
@@ -147,9 +148,9 @@
             <ComboBoxItem Content="Administrador"/>
         </ComboBox>
 
-        <TextBlock Text="STATUS DO USUÁRIO"
-                   Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="ComboStatus"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="STATUS DO USUÁRIO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <ComboBox x:Name="ComboStatus" g:CampoGuia.Texto="Selecione o status"
                   Style="{StaticResource ComboStyle}"
                   Margin="0,0,0,24"
                   FontWeight="SemiBold">

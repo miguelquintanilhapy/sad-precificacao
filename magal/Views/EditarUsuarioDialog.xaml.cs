@@ -54,10 +54,7 @@ namespace magal.Views
         private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             // Validação de todos os campos obrigatórios na tela
-            if (string.IsNullOrWhiteSpace(TxtNome.Text) ||
-                string.IsNullOrWhiteSpace(TxtEmail.Text) ||
-                ComboStatus.SelectedItem == null ||
-                ComboNivel.SelectedItem == null)
+            if (CampoGuia.MarcarPendentes(TxtNome, TxtEmail, ComboStatus, ComboNivel))
             {
                 MessageBox.Show(
                     "Preencha todos os campos obrigatórios.",

@@ -84,11 +84,7 @@ namespace magal.Views
 
         private void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtNome.Text) ||
-                ComboCargo.SelectedValue == null ||
-                ComboNivel.SelectedItem == null ||                
-                ComboTipoVinculo.SelectedItem == null ||
-                ComboStatus.SelectedItem == null)
+            if (CampoGuia.MarcarPendentes(TxtNome, ComboCargo, ComboNivel, ComboTipoVinculo, ComboStatus))
             {
                 MessageBox.Show(
                     "Preencha todos os campos.",

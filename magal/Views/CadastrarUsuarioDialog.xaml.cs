@@ -20,11 +20,7 @@ namespace magal.Views
         private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             // Verifica se os campos não estão em branco (incluindo o ComboNivel)
-            if (string.IsNullOrWhiteSpace(TxtNome.Text) ||
-                string.IsNullOrWhiteSpace(TxtEmail.Text) ||
-                string.IsNullOrWhiteSpace(TxtSenha.Password) ||
-                string.IsNullOrWhiteSpace(TxtConfirmarSenha.Password) ||
-                ComboNivel.SelectedItem == null)
+            if (CampoGuia.MarcarPendentes(TxtNome, TxtEmail, TxtSenha, TxtConfirmarSenha, ComboNivel))
             {
                 MessageBox.Show(
                     "Por favor, preencha todos os campos.",

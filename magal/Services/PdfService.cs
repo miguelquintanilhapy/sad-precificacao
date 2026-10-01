@@ -446,7 +446,7 @@ namespace magal.Services
                 });
             });
 
-            // 6. BLOCO DE ASSINATURAS 
+            // 6. BLOCO DE ASSINATURAS
             col.Item().PaddingTop(80).Row(row =>
             {
                 // Assinatura da Empresa Emitente

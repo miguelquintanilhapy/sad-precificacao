@@ -137,8 +137,8 @@
 
         <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
             <UniformGrid Columns="2" VerticalAlignment="Top">
-                <Button Style="{StaticResource CardButtonStyle}" Content="👥" Tag="Funcionários" Uid="Gerencie os funcionários, dados pessoais, contratos e informações profissionais." Click="BtnFuncionarios_Click"/>
                 <Button Style="{StaticResource CardButtonStyle}" Content="💼" Tag="Cargos" Uid="Cadastre e gerencie os cargos da empresa, salários e atribuições." Click="BtnCargos_Click"/>
+                <Button Style="{StaticResource CardButtonStyle}" Content="👥" Tag="Funcionários" Uid="Gerencie os funcionários, dados pessoais, contratos e informações profissionais." Click="BtnFuncionarios_Click"/>
                 <Button Style="{StaticResource CardButtonStyle}" Content="🏢" Tag="Clientes" Uid="Gerencie os clientes, contatos, endereços e informações comerciais." Click="BtnClientes_Click"/>
                 <Button Style="{StaticResource CardButtonStyle}" Content="💰" Tag="Custos" Uid="Gerencie os custos diretos e indiretos utilizados nos orçamentos." Click="BtnCustos_Click"/>
             </UniformGrid>

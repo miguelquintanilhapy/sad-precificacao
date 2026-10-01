@@ -1,6 +1,7 @@
 ﻿<Window x:Class="magal.Views.CadastrarCargoDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:g="clr-namespace:magal.Views"
         Title="Novo Cargo"
         Height="550"
         Width="550"
@@ -96,18 +97,18 @@
                    Foreground="{StaticResource AzulAero}"
                    Margin="0,0,0,24"/>
 
-        <TextBlock Text="NOME DO CARGO"
-                   Style="{StaticResource LabelStyle}"/>
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="NOME DO CARGO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
 
-        <TextBox x:Name="TxtNome"
+        <TextBox x:Name="TxtNome" g:CampoGuia.Texto="Ex.: Engenheiro Elétrico"
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,14"/>
 
 
-        <TextBlock Text="CUSTO MÉDIO/HORA (R$)"
-                   Style="{StaticResource LabelStyle}"/>
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="CUSTO MÉDIO/HORA (R$)"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
 
-        <TextBox x:Name="TxtCustoHora"
+        <TextBox x:Name="TxtCustoHora" g:CampoGuia.Texto="Ex.: 85,00"
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,24"/>
         <Button Content="SALVAR CARGO"

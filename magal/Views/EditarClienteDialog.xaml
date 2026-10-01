@@ -1,6 +1,7 @@
 ﻿<Window x:Class="magal.Views.EditarClienteDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:g="clr-namespace:magal.Views"
         Title="Editar Cliente"
         Height="640"
         Width="460"
@@ -93,15 +94,15 @@
                    Foreground="{StaticResource AzulAero}"
                    Margin="0,0,0,24"/>
 
-        <TextBlock Text="NOME / RAZÃO SOCIAL"
-                   Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtNome"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="NOME / RAZÃO SOCIAL"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtNome" g:CampoGuia.Texto="Ex.: Funcate"
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,14"/>
 
-        <TextBlock Text="TIPO"
-                   Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="ComboTipo"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="TIPO"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <ComboBox x:Name="ComboTipo" g:CampoGuia.Texto="Selecione o tipo"
                   Style="{StaticResource ComboStyle}"
                   Margin="0,0,0,14"
                   FontWeight="SemiBold">
@@ -111,9 +112,9 @@
             <ComboBoxItem Content="Governo"/>
         </ComboBox>
 
-        <TextBlock Text="CPF / CNPJ"
-                   Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtCpfCnpj"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="CPF / CNPJ"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtCpfCnpj" g:CampoGuia.Texto="Ex.: 12.345.678/0001-90"
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,14"/>
 
@@ -124,19 +125,19 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                <TextBlock Text="CIDADE" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="TxtCidade" Style="{StaticResource InputStyle}"/>
+                <TextBlock Style="{StaticResource LabelStyle}"><Run Text="CIDADE"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+                <TextBox x:Name="TxtCidade" g:CampoGuia.Texto="Ex.: São José dos Campos" Style="{StaticResource InputStyle}"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1">
-                <TextBlock Text="UF" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="TxtEstado" Style="{StaticResource InputStyle}" MaxLength="2"/>
+                <TextBlock Style="{StaticResource LabelStyle}"><Run Text="UF"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+                <TextBox x:Name="TxtEstado" g:CampoGuia.Texto="Ex.: SP" Style="{StaticResource InputStyle}" MaxLength="2"/>
             </StackPanel>
         </Grid>
 
-        <TextBlock Text="CONTATO / TELEFONE"
-                   Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="TxtContato"
+        <TextBlock
+                   Style="{StaticResource LabelStyle}"><Run Text="CONTATO / TELEFONE"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
+        <TextBox x:Name="TxtContato" g:CampoGuia.Texto="Ex.: (12) 3456-7890"
                  Style="{StaticResource InputStyle}"
                  Margin="0,0,0,24"/>
 

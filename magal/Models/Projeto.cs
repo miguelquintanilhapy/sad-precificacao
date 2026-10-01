@@ -8,8 +8,22 @@ namespace magal.Models
         public int id_projeto { get; set; }
         public int id_usuario { get; set; }
         public int id_cliente { get; set; }
-        public Cliente Cliente { get; set; }
-        public string nome { get; set; }
+
+        // Notificam a mudança para que o texto-guia dos campos (nome/cliente) acompanhe o que o usuário digita ou seleciona.
+        private Cliente _cliente;
+        public Cliente Cliente
+        {
+            get => _cliente;
+            set { if (_cliente == value) return; _cliente = value; OnPropertyChanged(); }
+        }
+
+        private string _nome;
+        public string nome
+        {
+            get => _nome;
+            set { if (_nome == value) return; _nome = value; OnPropertyChanged(); }
+        }
+
         public string tipo { get; set; }   // "Produto/Serviço"
         public string status { get; set; } // "Rascunho/Orçado/Aprovado/Executando/Concluído"
         public DateTime data_criacao { get; set; } = DateTime.Now;
