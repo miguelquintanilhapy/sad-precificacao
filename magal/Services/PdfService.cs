@@ -434,13 +434,12 @@ namespace magal.Services
                         decimal custoBase = projeto.Orcamento?.custo_base ?? 0;
                         decimal pctImpostos = projeto.Orcamento?.percentual_impostos ?? 0;
                         decimal valImpostos = projeto.Orcamento?.valor_impostos ?? 0;
-                        decimal pctMargem = projeto.Orcamento?.margem_percentual ?? 0;
                         decimal valMargem = projeto.Orcamento?.valor_margem ?? 0;
                         decimal valFinal = projeto.Orcamento?.valor_final ?? 0;
 
-                        Linha("Custo Total Base", "", custoBase.ToString("C2", _ptBR));
+                        // A margem não é exibida ao cliente; fica embutida no valor dos serviços
+                        Linha("Valor dos Serviços", "", (custoBase + valMargem).ToString("C2", _ptBR));
                         Linha("Impostos", $"{pctImpostos:0.#}%", valImpostos.ToString("C2", _ptBR));
-                        Linha("Margem de Lucro", $"{pctMargem:0.#}%", valMargem.ToString("C2", _ptBR));
                         Linha("VALOR TOTAL DA PROPOSTA", "", valFinal.ToString("C2", _ptBR), destaque: true);
                     });
                 });

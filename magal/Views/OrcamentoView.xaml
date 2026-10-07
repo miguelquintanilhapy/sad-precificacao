@@ -493,7 +493,7 @@
                                                 <TextBlock Text="SUBTOTAL" FontSize="12" FontWeight="Bold"
                    Foreground="{StaticResource AeroTextDark}" Margin="9.5,0,0,4" HorizontalAlignment="Left"/>
                                                 <Border Height="40" VerticalAlignment="Center" Margin="9.5,0,0,0">
-                                                    <TextBlock Text="{Binding custo_real, StringFormat=C}"
+                                                    <TextBlock Text="{Binding custo_real, StringFormat=C, ConverterCulture=pt-BR}"
                        FontSize="16" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}"
                        VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                                 </Border>
@@ -759,7 +759,7 @@
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <StackPanel VerticalAlignment="Center" Margin="0,0,28,0">
                     <TextBlock Text="TOTAL DA PROPOSTA" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" HorizontalAlignment="Right" Margin="0,0,0,2"/>
-                    <TextBlock Text="{Binding ProjetoAtual.Orcamento.valor_final, StringFormat=C}" FontSize="36" FontWeight="Black" Foreground="{StaticResource AeroPrimary}" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding ProjetoAtual.Orcamento.valor_final, StringFormat=C, ConverterCulture=pt-BR}" FontSize="36" FontWeight="Black" Foreground="{StaticResource AeroPrimary}" HorizontalAlignment="Right"/>
                 </StackPanel>
 
                 <Button Content="DESCARTAR ALTERAÇÕES" Command="{Binding DescartarCommand}" Visibility="{Binding VisibilidadeBotaoDescartar}" Style="{StaticResource DiscardBtn}" Width="240" Height="54" Margin="0,0,12,0"/>
