@@ -384,6 +384,13 @@ namespace magal.ViewModels
             if (ProjetoAtual.Cliente == null) { pendentes.Add("cliente"); rotulos.Add("Cliente"); }
             if (ValidadeEmBranco || (ProjetoAtual.Orcamento?.validade_dias ?? 0) <= 0) { pendentes.Add("validade"); rotulos.Add("Validade (em dias, maior que zero)"); }
 
+            foreach (var t in ProjetoAtual.Tarefas) t.ResponsavelPendente = t.Funcionario == null;
+            int tarefasSemResponsavel = ProjetoAtual.Tarefas.Count(t => t.ResponsavelPendente);
+            if (tarefasSemResponsavel > 0)
+                rotulos.Add(tarefasSemResponsavel == 1
+                    ? "Responsável de 1 tarefa"
+                    : $"Responsável de {tarefasSemResponsavel} tarefas");
+
             // Todo custo precisa apontar para um item do catálogo (FK no banco).
             foreach (var c in CustosExtras) c.ItemPendente = c.id_catalogo_custo == 0;
             int custosSemItem = CustosExtras.Count(c => c.ItemPendente);

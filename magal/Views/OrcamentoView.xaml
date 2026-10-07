@@ -486,6 +486,18 @@
                   BorderThickness="0"
                   BorderBrush="{StaticResource AeroBorder}"
                   Background="#F8FAFC"/>
+                                                    <Border BorderBrush="#DC2626" BorderThickness="1.5" CornerRadius="4" IsHitTestVisible="False">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ResponsavelPendente}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
                                                     <TextBlock Text="Selecione o responsável" FontSize="12" Margin="10,0,30,0">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">

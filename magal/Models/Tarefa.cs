@@ -38,6 +38,14 @@ namespace magal.Models
             }
         }
 
+        private bool _responsavelPendente;
+        /// <summary>Destaca em vermelho o responsável não selecionado ao tentar salvar.</summary>
+        public bool ResponsavelPendente
+        {
+            get => _responsavelPendente;
+            set { if (_responsavelPendente == value) return; _responsavelPendente = value; OnPropertyChanged(); }
+        }
+
         private Funcionario _funcionario;
         public Funcionario Funcionario
         {
@@ -52,6 +60,7 @@ namespace magal.Models
                 if (_funcionario != null)
                 {
                     _id_funcionario = _funcionario.id_funcionario;
+                    ResponsavelPendente = false;
                 }
 
                 OnPropertyChanged();
