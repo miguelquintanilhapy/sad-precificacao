@@ -18,9 +18,10 @@ namespace magal.Data.Repositories
 
                 using (var transaction = await conn.BeginTransactionAsync())
                 {
+                    bool projetoNovo = projeto.id_projeto == 0;
                     try
                     {
-                        if (projeto.id_projeto == 0)
+                        if (projetoNovo)
                         {
                             if (projeto.id_usuario == 0)
                                 throw new InvalidOperationException("Não é possível salvar um projeto sem um usuário autor válido.");
@@ -160,6 +161,11 @@ namespace magal.Data.Repositories
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
+
+                        // O rollback desfaz o INSERT, mas o id gerado ficaria no objeto e a próxima
+                        // tentativa iria para o UPDATE de um projeto inexistente.
+                        if (projetoNovo) projeto.id_projeto = 0;
+
                         throw new Exception("Erro ao processar transação no MySQL: " + ex.Message, ex);
                     }
                 }

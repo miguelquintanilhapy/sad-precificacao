@@ -309,7 +309,10 @@
 
                                 <Grid>
                                     <ComboBox x:Name="ClienteCombo" SelectionChanged="ClienteCombo_SelectionChanged"
-                  ItemsSource="{Binding Clientes}"
+                  Loaded="ClienteCombo_Loaded"
+                  IsEditable="True"
+                  IsTextSearchEnabled="False"
+                  StaysOpenOnEdit="True"
                   SelectedItem="{Binding ProjetoAtual.Cliente, Mode=TwoWay}"
                   DisplayMemberPath="nome"
                   Height="40"
@@ -320,9 +323,13 @@
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ProjetoAtual.Cliente}" Value="{x:Null}">
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ProjetoAtual.Cliente}" Value="{x:Null}"/>
+                                                            <Condition Binding="{Binding Text, ElementName=ClienteCombo}" Value=""/>
+                                                        </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBlock.Style>
@@ -464,9 +471,13 @@
                Foreground="{StaticResource AeroTextDark}" Margin="0,0,0,4"/>
 
                                                 <Grid>
-                                                    <ComboBox ItemsSource="{Binding DataContext.Funcionarios, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    <ComboBox x:Name="ResponsavelCombo"
+                  Loaded="ResponsavelCombo_Loaded"
                   SelectedItem="{Binding Funcionario, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue={x:Null}}"
                   DisplayMemberPath="nome"
+                  IsEditable="True"
+                  IsTextSearchEnabled="False"
+                  StaysOpenOnEdit="True"
                   FontSize="12"
                   Height="40"
                   FontWeight="SemiBold"
@@ -479,9 +490,13 @@
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock" BasedOn="{StaticResource PlaceholderText}">
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding Funcionario}" Value="{x:Null}">
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Funcionario}" Value="{x:Null}"/>
+                                                                            <Condition Binding="{Binding Text, ElementName=ResponsavelCombo}" Value=""/>
+                                                                        </MultiDataTrigger.Conditions>
                                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
+                                                                    </MultiDataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </TextBlock.Style>

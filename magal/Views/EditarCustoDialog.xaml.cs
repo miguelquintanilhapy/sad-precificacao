@@ -92,9 +92,7 @@ namespace magal.Views
                 TxtNome.Text,
                 TxtValor.Text,
                 ComboCategoria.SelectedValue?.ToString(),
-                ComboCategoria.Text,
-                ComboTipo.SelectedValue?.ToString(),
-                ComboTipo.Text
+                ComboCategoria.Text
         });
 
         private void ConfirmarDescarteAlteracoes(object sender, System.ComponentModel.CancelEventArgs e)

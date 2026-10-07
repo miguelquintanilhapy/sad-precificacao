@@ -103,10 +103,9 @@
         <Grid Margin="0,0,0,14">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <StackPanel Grid.Column="0">
                 <TextBlock Style="{StaticResource LabelStyle}"><Run Text="CATEGORIA"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
                 <ComboBox x:Name="ComboCategoria" g:CampoGuia.Texto="Selecione a categoria" Style="{StaticResource ComboStyle}" FontWeight="SemiBold">
                     <ComboBoxItem Content="Equipamentos"/>
@@ -116,16 +115,6 @@
                     <ComboBoxItem Content="Manutenção"/>
                     <ComboBoxItem Content="Aluguel/Estrutura"/>
                     <ComboBoxItem Content="EPIs/Ferramentas"/>
-                </ComboBox>
-            </StackPanel>
-
-            <StackPanel Grid.Column="1">
-                <TextBlock Text="TIPO" Style="{StaticResource LabelStyle}"/>
-                <ComboBox x:Name="ComboTipo" g:CampoGuia.Texto="Selecione o tipo" Style="{StaticResource ComboStyle}" FontWeight="SemiBold">
-                    <ComboBoxItem Content="Direto"/>
-                    <ComboBoxItem Content="Indireto"/>
-                    <ComboBoxItem Content="Fixo"/>
-                    <ComboBoxItem Content="Variável"/>
                 </ComboBox>
             </StackPanel>
         </Grid>
