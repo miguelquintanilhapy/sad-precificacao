@@ -372,6 +372,9 @@ namespace magal.ViewModels
         /// <summary>
         /// Verifica nome e cliente de uma só vez: avisa o que falta e sinaliza os campos na tela.
         /// </summary>
+        /// <summary>Informada pela View: o campo de validade está vazio na tela.</summary>
+        public bool ValidadeEmBranco { get; set; }
+
         private bool ValidarCamposObrigatorios()
         {
             var pendentes = new List<string>();
@@ -379,8 +382,17 @@ namespace magal.ViewModels
 
             if (string.IsNullOrWhiteSpace(ProjetoAtual.nome)) { pendentes.Add("nome"); rotulos.Add("Nome do Projeto"); }
             if (ProjetoAtual.Cliente == null) { pendentes.Add("cliente"); rotulos.Add("Cliente"); }
+            if (ValidadeEmBranco || (ProjetoAtual.Orcamento?.validade_dias ?? 0) <= 0) { pendentes.Add("validade"); rotulos.Add("Validade (em dias, maior que zero)"); }
 
-            if (pendentes.Count == 0) return true;
+            // Todo custo precisa apontar para um item do catálogo (FK no banco).
+            foreach (var c in CustosExtras) c.ItemPendente = c.id_catalogo_custo == 0;
+            int custosSemItem = CustosExtras.Count(c => c.ItemPendente);
+            if (custosSemItem > 0)
+                rotulos.Add(custosSemItem == 1
+                    ? "Item de 1 custo adicional (selecione o item ou remova a linha)"
+                    : $"Item de {custosSemItem} custos adicionais (selecione o item ou remova as linhas)");
+
+            if (rotulos.Count == 0) return true;
 
             MessageBox.Show("Preencha os campos obrigatórios destacados em vermelho:\n\n• " + string.Join("\n• ", rotulos),
                 "Campos obrigatórios", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -801,6 +813,14 @@ namespace magal.ViewModels
         private CatalogoCusto _itemSelecionado;
         private bool _isSuppressingFilter = false; 
 
+        private bool _itemPendente;
+        /// <summary>Destaca em vermelho o item de custo não selecionado ao tentar salvar.</summary>
+        public bool ItemPendente
+        {
+            get => _itemPendente;
+            set { if (_itemPendente != value) { _itemPendente = value; OnRowPropertyChanged(); } }
+        }
+
         public new string categoria
         {
             get => base.categoria;
@@ -827,6 +847,7 @@ namespace magal.ViewModels
                 {
                     base.id_catalogo_custo = value;
                     OnRowPropertyChanged(nameof(id_catalogo_custo));
+                    if (value != 0) ItemPendente = false;
 
                     if (!_isSuppressingFilter)
                     {

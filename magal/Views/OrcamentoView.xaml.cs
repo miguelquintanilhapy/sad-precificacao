@@ -84,9 +84,11 @@ namespace magal.Views
         {
             if (campos.Contains("nome")) NomeBorder.BorderBrush = BrushErro;
             if (campos.Contains("cliente")) ClienteErroBorder.Visibility = Visibility.Visible;
+            if (campos.Contains("validade")) ValidadeBorder.BorderBrush = BrushErro;
 
             if (campos.Contains("nome")) NomeTextBox.Focus();
             else if (campos.Contains("cliente")) ClienteCombo.Focus();
+            else if (campos.Contains("validade")) ValidadeTextBox.Focus();
         }
 
         // O destaque some assim que o usuário corrige o campo.
@@ -94,6 +96,15 @@ namespace magal.Views
         {
             if (!string.IsNullOrWhiteSpace(NomeTextBox.Text))
                 NomeBorder.ClearValue(System.Windows.Controls.Border.BorderBrushProperty);
+        }
+
+        private void ValidadeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Campo apagado não converte para int e o binding manteria o valor anterior; avisa a ViewModel.
+            if (ViewModel != null) ViewModel.ValidadeEmBranco = string.IsNullOrWhiteSpace(ValidadeTextBox.Text);
+
+            if (int.TryParse(ValidadeTextBox.Text, out int dias) && dias > 0)
+                ValidadeBorder.ClearValue(System.Windows.Controls.Border.BorderBrushProperty);
         }
 
         private void ClienteCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
