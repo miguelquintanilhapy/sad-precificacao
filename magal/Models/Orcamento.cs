@@ -84,6 +84,7 @@ namespace magal.Models
         private decimal? _valor_margem_manual;
         public decimal valor_margem
         {
+            // Markup: acréscimo percentual sobre o custo (custo 100 e markup 30% => lucro 30).
             get => _valor_margem_manual ?? (custo_base * (margem_percentual / 100));
             set { _valor_margem_manual = value; OnPropertyChanged(); }
         }
@@ -114,6 +115,12 @@ namespace magal.Models
 
         public DateTime data_criacao { get; set; } = DateTime.Now;
 
+        /// <summary>
+        /// Margem de lucro sobre o preço de venda equivalente ao markup digitado: markup / (100 + markup).
+        /// Ex.: markup 30% => 23,08%. Somente leitura (exibição).
+        /// </summary>
+        public decimal MargemSobreVenda => margem_percentual <= -100 ? 0 : margem_percentual / (100 + margem_percentual) * 100;
+
         private void NotificarMudancasCalculadas()
         {
             _valor_margem_manual = null;
@@ -121,6 +128,7 @@ namespace magal.Models
             _valor_final_manual = null;
 
             OnPropertyChanged(nameof(valor_margem));
+            OnPropertyChanged(nameof(MargemSobreVenda));
             OnPropertyChanged(nameof(valor_impostos));
             OnPropertyChanged(nameof(valor_final));
         }

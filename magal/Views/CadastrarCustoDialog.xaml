@@ -47,6 +47,7 @@
         </Style>
 
         <Style x:Key="ComboStyle" TargetType="ComboBox">
+            <Setter Property="MaxDropDownHeight" Value="102"/>
             <Setter Property="Height" Value="36"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="BorderBrush" Value="{StaticResource AeroBorder}"/>
@@ -107,7 +108,12 @@
 
             <StackPanel Grid.Column="0">
                 <TextBlock Style="{StaticResource LabelStyle}"><Run Text="CATEGORIA"/><Run Text=" *" Foreground="#DC2626"/></TextBlock>
-                <ComboBox x:Name="ComboCategoria" g:CampoGuia.Texto="Selecione a categoria" Style="{StaticResource ComboStyle}" FontWeight="SemiBold">
+                <ComboBox x:Name="ComboCategoria" g:CampoGuia.Texto="Selecione a categoria" Style="{StaticResource ComboStyle}" FontWeight="SemiBold" MaxDropDownHeight="90">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Height" Value="22"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
                     <ComboBoxItem Content="Equipamentos"/>
                     <ComboBoxItem Content="Licenças de Software"/>
                     <ComboBoxItem Content="Energia Elétrica"/>

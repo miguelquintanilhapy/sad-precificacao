@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:magal.Views"
              mc:Ignorable="d"
     d:DesignHeight="900" d:DesignWidth="1200"
              Background="#F0F4FA">
@@ -579,13 +580,20 @@
               DisplayMemberPath="nome"
               FontSize="14"
               Height="40"
+              MaxDropDownHeight="98"
               FontWeight="SemiBold"
               Validation.ErrorTemplate="{x:Null}"
               VerticalContentAlignment="Center"
               Cursor="Hand"
               BorderThickness="0.4"
               BorderBrush="{StaticResource AeroBorder}"
-              Background="#F8FAFC"/>
+              Background="#F8FAFC">
+                                                                <ComboBox.ItemContainerStyle>
+                                                                    <Style TargetType="ComboBoxItem">
+                                                                        <Setter Property="Height" Value="24"/>
+                                                                    </Style>
+                                                                </ComboBox.ItemContainerStyle>
+                                                            </ComboBox>
                                                             <Border BorderBrush="#DC2626" BorderThickness="1.5" CornerRadius="4" IsHitTestVisible="False">
                                                                 <Border.Style>
                                                                     <Style TargetType="Border">
@@ -701,7 +709,7 @@
                     </StackPanel>
 
                     <StackPanel Margin="0,0,10,0">
-                        <TextBlock Text="LUCRO" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" Margin="0,0,0,3" />
+                        <TextBlock Text="MARKUP" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" Margin="0,0,0,3" />
 
                         <Border BorderThickness="1.3" Height="48" Background="Transparent">
                             <Border.Style>
@@ -716,8 +724,9 @@
                             </Border.Style>
 
                             <Grid>
-                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.margem_percentual, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}"
-                     PreviewTextInput="ValidarEntradaSemNegativo"
+                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.margem_percentual, UpdateSourceTrigger=PropertyChanged, Converter={local:PercentualTextConverter}}"
+                     PreviewTextInput="ValidarEntradaDecimal"
+                     GotKeyboardFocus="SelecionarTudoAoFocar" PreviewMouseLeftButtonDown="FocarSelecionandoTudo"
                      FontWeight="Bold" FontSize="15" Padding="15,0,35,0" MinWidth="100"
                      VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent">
                                     <TextBox.Resources>
@@ -727,6 +736,21 @@
                                 </TextBox>
                                 <TextBlock Text="%" Foreground="{StaticResource AeroTextDark}" VerticalAlignment="Center" HorizontalAlignment="Right" 
                        FontWeight="Bold" FontSize="15" Margin="0,0,15,0" IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="MARGEM S/ VENDA" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AeroTextDark}" Margin="0,0,0,3" />
+
+                        <Border BorderThickness="1.3" Height="48" Background="#F1F5F9" BorderBrush="{StaticResource AeroBorder}"
+                                ToolTip="Margem de lucro sobre o preço de venda, calculada a partir do markup (somente leitura)">
+                            <Grid>
+                                <TextBlock Text="{Binding ProjetoAtual.Orcamento.MargemSobreVenda, StringFormat='{}{0:0.00}'}"
+                                           FontWeight="Bold" FontSize="15" Margin="15,0,35,0" MinWidth="100"
+                                           VerticalAlignment="Center" Foreground="{StaticResource AeroTextDark}"/>
+                                <TextBlock Text="%" Foreground="{StaticResource AeroTextDark}" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                           FontWeight="Bold" FontSize="15" Margin="0,0,15,0" IsHitTestVisible="False"/>
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -747,8 +771,9 @@
                             </Border.Style>
 
                             <Grid>
-                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.percentual_impostos, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}"
-                     PreviewTextInput="ValidarEntradaSemNegativo"
+                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.percentual_impostos, UpdateSourceTrigger=PropertyChanged, Converter={local:PercentualTextConverter}}"
+                     PreviewTextInput="ValidarEntradaDecimal"
+                     GotKeyboardFocus="SelecionarTudoAoFocar" PreviewMouseLeftButtonDown="FocarSelecionandoTudo"
                      FontWeight="Bold" FontSize="15" Padding="15,0,35,0" MinWidth="100"
                      VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent">
                                     <TextBox.Resources>

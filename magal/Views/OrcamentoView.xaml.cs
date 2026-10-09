@@ -136,6 +136,9 @@ namespace magal.Views
             if (combo.Tag is ListCollectionView) return;
 
             var view = new ListCollectionView(origem);
+            // Uma view nova já nasce com o 1º item como "atual"; sem isso o ComboBox pode selecioná-lo sozinho
+            // e o orçamento recém-aberto passa a contar como alterado.
+            view.MoveCurrentTo(null);
             combo.Tag = view;
             combo.ItemsSource = view;
 
@@ -258,6 +261,41 @@ namespace magal.Views
 
         #region Validações
 
+        // Seleciona o conteúdo ao entrar no campo: digitar 30 sobre o "0" inicial troca o valor em vez de virar "300".
+        private void SelecionarTudoAoFocar(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (sender is TextBox caixa) caixa.SelectAll();
+        }
+
+        // O primeiro clique só foca (e seleciona); sem isso o clique reposiciona o cursor e desfaz a seleção.
+        private void FocarSelecionandoTudo(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBox caixa && !caixa.IsKeyboardFocusWithin)
+            {
+                caixa.Focus();
+                e.Handled = true;
+            }
+        }
+
+        // Campos de percentual: aceita "." ou "," como separador decimal (vira ","), uma única vez.
+        // O ponto precisa virar vírgula aqui: em pt-BR "12.5" seria lido como 125 (separador de milhar).
+        private void ValidarEntradaDecimal(object sender, TextCompositionEventArgs e)
+        {
+            if ((e.Text == "." || e.Text == ",") && sender is TextBox caixa)
+            {
+                e.Handled = true;
+                string restante = caixa.Text.Remove(caixa.SelectionStart, caixa.SelectionLength);
+                if (restante.Contains(",")) return;
+
+                int pos = caixa.SelectionStart;
+                caixa.SelectedText = ",";
+                caixa.CaretIndex = pos + 1;
+                return;
+            }
+
+            ValidarEntradaSemNegativo(sender, e);
+        }
+
         private void ValidarEntradaSemNegativo(object sender, TextCompositionEventArgs e)
         {
             if (e.Text == "-")
@@ -266,6 +304,9 @@ namespace magal.Views
                 e.Handled = true;
                 return;
             }
+
+            // Enter chega como "\r" no PreviewTextInput; nao e entrada invalida.
+            if (e.Text == "\r" || e.Text == "\n") return;
 
             Regex regex = new Regex("[^0-9,]+");
             bool temCaractereInvalido = regex.IsMatch(e.Text);

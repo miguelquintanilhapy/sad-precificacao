@@ -255,33 +255,33 @@ namespace magal.ViewModels
             switch (CategoriaMargemSelecionada)
             {
                 case "Margem média geral":
-                    double margemGeral = projetosValidos.Any() ? (double)projetosValidos.Average(p => p.Orcamento.margem_percentual) : 0;
+                    double margemGeral = projetosValidos.Any() ? (double)projetosValidos.Average(p => p.Orcamento.MargemSobreVenda) : 0;
                     agrupamento = new List<(string, double)> { ("Geral", margemGeral) };
                     break;
 
                 case "Margem Média por tipo de projeto":
                     agrupamento = projetosValidos
                         .GroupBy(p => p.tipo ?? "Sem Tipo")
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.margem_percentual)));
+                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
                     break;
 
                 case "Margem média por status":
                     agrupamento = projetosValidos
                         .GroupBy(p => p.status ?? "Sem Status")
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.margem_percentual)));
+                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
                     break;
 
                 case "Margem média por cliente":
                     agrupamento = projetosValidos
                         .GroupBy(p => p.Cliente != null ? (p.Cliente.nome ?? "Cliente " + p.id_cliente) : "Cliente " + p.id_cliente)
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.margem_percentual)));
+                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
                     break;
 
                 case "Margem Média por periodo":
                     bool porDia = PeriodoSelecionado == "7 Dias" || PeriodoSelecionado == "30 Dias";
                     agrupamento = projetosValidos
                         .GroupBy(p => porDia ? p.data_criacao.ToString("dd/MM") : p.data_criacao.ToString("MMM/yy"))
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.margem_percentual)));
+                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
                     break;
 
                 default:
