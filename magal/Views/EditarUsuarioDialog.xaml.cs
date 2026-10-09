@@ -65,6 +65,9 @@ namespace magal.Views
                 return;
             }
 
+            var botaoSalvar = sender as System.Windows.Controls.Button;
+            if (botaoSalvar != null) botaoSalvar.IsEnabled = false;
+            var copiaOriginal = EdicaoSegura.Copiar(_usuario);
             try
             {
                 // Atualiza as propriedades do objeto model
@@ -100,11 +103,9 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erro ao salvar: " + ex.Message,
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "salvar os dados");
+                if (botaoSalvar != null) botaoSalvar.IsEnabled = true;
+                EdicaoSegura.Restaurar(_usuario, copiaOriginal);
             }
         }
 

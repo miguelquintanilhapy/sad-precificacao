@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using magal.Models;
 using magal.Data.Repositories;
+using magal.Services;
 
 
 namespace magal.Views
@@ -25,7 +26,7 @@ namespace magal.Views
             Closing += ConfirmarDescarteAlteracoes;
         }
 
-        private void BtnSalvar_Click(object sender, RoutedEventArgs e)
+        private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             if (CampoGuia.MarcarPendentes(TxtNome, TxtCustoHora))
             {
@@ -49,6 +50,8 @@ namespace magal.Views
                 return;
             }
 
+            var botaoSalvar = sender as System.Windows.Controls.Button;
+            if (botaoSalvar != null) botaoSalvar.IsEnabled = false;
             try
             {
                 var cargo = new Cargo
@@ -60,7 +63,7 @@ namespace magal.Views
                 };
 
                 var repo = new CargoRepository();
-                repo.Inserir(cargo);
+                await repo.Inserir(cargo);
 
                 MessageBox.Show(
                     "Cargo cadastrado com sucesso!",
@@ -73,11 +76,8 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erro ao salvar cargo:\n\n" + ex.Message,
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "salvar o cargo");
+                if (botaoSalvar != null) botaoSalvar.IsEnabled = true;
             }
         }
 

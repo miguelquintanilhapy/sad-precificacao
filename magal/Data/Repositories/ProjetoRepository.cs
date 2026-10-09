@@ -166,7 +166,7 @@ namespace magal.Data.Repositories
                         // tentativa iria para o UPDATE de um projeto inexistente.
                         if (projetoNovo) projeto.id_projeto = 0;
 
-                        throw new Exception("Erro ao processar transação no MySQL: " + ex.Message, ex);
+                        throw new Exception("Erro ao processar transação no MySQL", ex);
                     }
                 }
             }

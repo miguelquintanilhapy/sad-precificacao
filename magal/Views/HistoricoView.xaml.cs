@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using magal.ViewModels;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -22,9 +23,16 @@ namespace magal.Views
 
         private async void HistoricoView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (this.DataContext is HistoricoViewModel vm)
+            try
             {
-                await vm.CarregarHistorico();
+                if (this.DataContext is HistoricoViewModel vm)
+                {
+                    await vm.CarregarHistorico();
+                }
+            }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "carregar o histórico");
             }
         }
 

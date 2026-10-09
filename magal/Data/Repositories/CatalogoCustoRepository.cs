@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks; 
 using MySql.Data.MySqlClient;
 using magal.Models;
+using magal.Services;
 using magal.Data;
 
 namespace magal.Data.Repositories
@@ -34,7 +35,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao listar categorias únicas do catálogo: " + ex.Message, ex);
+                throw new Exception("Erro ao listar categorias únicas do catálogo", ex);
             }
             return lista;
         }
@@ -71,7 +72,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao filtrar itens por categoria: " + ex.Message, ex);
+                throw new Exception("Erro ao filtrar itens por categoria", ex);
             }
             return lista;
         }
@@ -103,7 +104,7 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao listar catálogo: " + ex.Message, ex); }
+            catch (Exception ex) { throw new Exception("Erro ao listar catálogo", ex); }
             return lista;
         }
 
@@ -114,6 +115,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorDuplicidade.ItemCatalogo(conn, 0, custo.nome, custo.categoria);
                     string sql = "INSERT INTO catalogo_custo (nome, categoria, valor) VALUES (@nome, @categoria, @valor)";
                     using (var cmd = new MySqlCommand(sql, conn))
                     {
@@ -124,7 +126,8 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao inserir no catálogo: " + ex.Message, ex); }
+            catch (RegraNegocioException) { throw; }
+            catch (Exception ex) { throw new Exception("Erro ao inserir no catálogo", ex); }
         }
 
         public async Task Atualizar(CatalogoCusto custo)
@@ -134,6 +137,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorDuplicidade.ItemCatalogo(conn, custo.id_catalogo_custo, custo.nome, custo.categoria);
                     string sql = "UPDATE catalogo_custo SET nome = @nome, categoria = @categoria, valor = @valor WHERE id_catalogo_custo = @id";
                     using (var cmd = new MySqlCommand(sql, conn))
                     {
@@ -145,7 +149,8 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao atualizar catálogo: " + ex.Message, ex); }
+            catch (RegraNegocioException) { throw; }
+            catch (Exception ex) { throw new Exception("Erro ao atualizar catálogo", ex); }
         }
 
         public async Task Excluir(int idCatalogoCusto)
@@ -155,6 +160,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorVinculos.ItemCatalogo(conn, idCatalogoCusto);
                     string sql = "DELETE FROM catalogo_custo WHERE id_catalogo_custo = @id";
                     using (var cmd = new MySqlCommand(sql, conn))
                     {
@@ -163,7 +169,8 @@ namespace magal.Data.Repositories
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception("Erro ao excluir do catálogo: " + ex.Message, ex); }
+            catch (RegraNegocioException) { throw; }
+            catch (Exception ex) { throw new Exception("Erro ao excluir do catálogo", ex); }
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 using magal.ViewModels;
 using magal.Views;
 
@@ -162,17 +163,24 @@ namespace magal
 
         public async void IrParaEdicao(Projeto projetoSimplificado)
         {
-            var repo = new ProjetoRepository();
-            Projeto projetoCompleto = await repo.CarregarProjetoCompleto(projetoSimplificado.id_projeto);
+            try
+            {
+                var repo = new ProjetoRepository();
+                Projeto projetoCompleto = await repo.CarregarProjetoCompleto(projetoSimplificado.id_projeto);
 
-            var viewModel = new OrcamentoViewModel();
-            viewModel.CarregarProjetoParaEdicao(projetoCompleto);
+                var viewModel = new OrcamentoViewModel();
+                viewModel.CarregarProjetoParaEdicao(projetoCompleto);
 
-            var view = new OrcamentoView();
-            view.DataContext = viewModel;
-            MainContent.Content = view;
+                var view = new OrcamentoView();
+                view.DataContext = viewModel;
+                MainContent.Content = view;
 
-            AtualizarBotaoAtivo(BtnOrcamentos); 
+                AtualizarBotaoAtivo(BtnOrcamentos);
+            }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "abrir o projeto para edição");
+            } 
         }
 
         // --- PERFIL E USUÁRIO ---

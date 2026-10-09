@@ -107,12 +107,7 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Falha de login: {ex}");
-                MessageBox.Show(
-                    "Falha na comunicação com o banco de dados. Tente novamente em instantes ou contate o suporte de TI.",
-                    "Erro Crítico",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Stop);
+                TratadorErros.Mostrar(ex, "entrar no sistema");
             }
         }
 

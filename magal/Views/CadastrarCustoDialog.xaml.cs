@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -15,7 +16,7 @@ namespace magal.Views
             Closing += ConfirmarDescarteAlteracoes;
         }
 
-        private void BtnSalvar_Click(object sender, RoutedEventArgs e)
+        private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             if (CampoGuia.MarcarPendentes(TxtNome, ComboCategoria, TxtValor))
             {
@@ -37,6 +38,8 @@ namespace magal.Views
                 return;
             }
 
+            var botaoSalvar = sender as System.Windows.Controls.Button;
+            if (botaoSalvar != null) botaoSalvar.IsEnabled = false;
             try
             {
                 var novoCustoItem = new CatalogoCusto
@@ -47,7 +50,7 @@ namespace magal.Views
                 };
 
                 var repo = new CatalogoCustoRepository();
-                repo.Inserir(novoCustoItem);
+                await repo.Inserir(novoCustoItem);
 
                 MessageBox.Show(
                     "Item adicionado ao catálogo com sucesso!",
@@ -60,11 +63,8 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erro ao salvar: " + ex.Message,
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "salvar os dados");
+                if (botaoSalvar != null) botaoSalvar.IsEnabled = true;
             }
         }
 

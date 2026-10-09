@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks; // Adicionado para suportar Task
 using magal.Models;
+using magal.Services;
 using MySql.Data.MySqlClient;
 
 namespace magal.Data.Repositories
@@ -91,7 +92,7 @@ namespace magal.Data.Repositories
             catch (Exception ex)
             {
                 throw new Exception(
-                    "Erro no FuncionarioRepository: " + ex.Message, ex);
+                    "Erro no FuncionarioRepository", ex);
             }
 
             return lista;
@@ -193,6 +194,7 @@ namespace magal.Data.Repositories
                    (MySqlConnection)DbConnectionFactory.CreateConnection())
             {
                 await conn.OpenAsync();
+                    await VerificadorVinculos.Funcionario(conn, id_funcionario);
 
                 string sql =
                     "DELETE FROM funcionario WHERE id_funcionario = @id";

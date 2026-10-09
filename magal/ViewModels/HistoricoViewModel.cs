@@ -225,7 +225,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar histórico: {ex.Message}", "Aviso de Sistema", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TratadorErros.Mostrar(ex, "carregar o histórico");
             }
             finally
                 {
@@ -318,7 +318,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao exportar o relatório de projetos: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "exportar o relatório de projetos");
                 }
             }
         }
@@ -358,7 +358,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao excluir: {ex.Message}", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    TratadorErros.Mostrar(ex, "excluir o projeto");
                 }
             }
         }
@@ -399,7 +399,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao gerar PDF: {ex.Message}", "Aviso de Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TratadorErros.Mostrar(ex, "gerar o PDF");
             }
             finally
             {
@@ -429,7 +429,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar edição: {ex.Message}", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TratadorErros.Mostrar(ex, "carregar a edição");
             }
             finally
             {

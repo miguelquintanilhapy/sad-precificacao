@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using magal.Models;
+using magal.Services;
 using magal.Data;
 
 namespace magal.Data.Repositories
@@ -60,7 +61,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no UsuarioRepository ao listar: " + ex.Message, ex);
+                throw new Exception("Erro no UsuarioRepository ao listar", ex);
             }
 
             return lista;
@@ -105,7 +106,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao inserir usuário: " + ex.Message, ex);
+                throw new Exception("Erro ao inserir usuário", ex);
             }
         }
 
@@ -116,6 +117,13 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    if (Sessao.UsuarioLogado != null && Sessao.UsuarioLogado.id_usuario == usuario.id_usuario
+                        && (usuario.status ?? "Ativo") != "Ativo")
+                        throw new RegraNegocioException("Não é possível inativar o usuário com o qual você está logado.");
+
+                    bool continuaAdminAtivo = usuario.nivel == "Administrador" && (usuario.status ?? "Ativo") == "Ativo";
+                    if (!continuaAdminAtivo)
+                        await VerificadorVinculos.GarantirNaoUltimoAdministrador(conn, usuario.id_usuario, "rebaixar nem inativar");
 
                     string sql = @"
                         UPDATE usuario
@@ -140,9 +148,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar usuário: " + ex.Message, ex);
+                throw new Exception("Erro ao atualizar usuário", ex);
             }
         }
 
@@ -192,7 +201,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no UsuarioRepository ao buscar por e-mail: " + ex.Message, ex);
+                throw new Exception("Erro no UsuarioRepository ao buscar por e-mail", ex);
             }
         }
 
@@ -217,7 +226,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar senha do usuário: " + ex.Message, ex);
+                throw new Exception("Erro ao atualizar senha do usuário", ex);
             }
         }
 
@@ -225,9 +234,14 @@ namespace magal.Data.Repositories
         {
             try
             {
+                if (Sessao.UsuarioLogado != null && Sessao.UsuarioLogado.id_usuario == idUsuario)
+                    throw new RegraNegocioException("Não é possível excluir o usuário com o qual você está logado.");
+
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorVinculos.GarantirNaoUltimoAdministrador(conn, idUsuario, "excluir");
+                    await VerificadorVinculos.Usuario(conn, idUsuario);
 
                     string sql = "DELETE FROM usuario WHERE id_usuario = @id";
 
@@ -239,9 +253,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir usuário: " + ex.Message, ex);
+                throw new Exception("Erro ao excluir usuário", ex);
             }
         }
     }

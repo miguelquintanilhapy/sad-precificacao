@@ -60,7 +60,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao listar os custos do projeto: " + ex.Message, ex);
+                throw new Exception("Erro ao listar os custos do projeto", ex);
             }
 
             return lista;
@@ -91,7 +91,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao vincular custo ao projeto: " + ex.Message, ex);
+                throw new Exception("Erro ao vincular custo ao projeto", ex);
             }
         }
 
@@ -115,7 +115,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir custo do projeto: " + ex.Message, ex);
+                throw new Exception("Erro ao excluir custo do projeto", ex);
             }
         }
     }

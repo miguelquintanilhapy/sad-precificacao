@@ -2,6 +2,7 @@
 using System.Windows;
 using magal.Models;
 using magal.Data.Repositories;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -27,7 +28,7 @@ namespace magal.Views
             TxtCustoHora.Text = _cargo.custo_medio_hora.ToString("F2");
         }
 
-        private void BtnSalvar_Click(object sender, RoutedEventArgs e)
+        private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             if (CampoGuia.MarcarPendentes(TxtNome, TxtCustoHora))
             {
@@ -55,6 +56,9 @@ namespace magal.Views
                 return;
             }
 
+            var botaoSalvar = sender as System.Windows.Controls.Button;
+            if (botaoSalvar != null) botaoSalvar.IsEnabled = false;
+            var copiaOriginal = EdicaoSegura.Copiar(_cargo);
             try
             {
                 _cargo.nome = TxtNome.Text.Trim();
@@ -63,7 +67,7 @@ namespace magal.Views
 
                 var repo = new CargoRepository();
 
-                repo.Atualizar(_cargo);
+                await repo.Atualizar(_cargo);
 
                 MessageBox.Show(
                     "Cargo atualizado com sucesso!",
@@ -77,11 +81,9 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erro ao salvar: " + ex.Message,
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "salvar os dados");
+                if (botaoSalvar != null) botaoSalvar.IsEnabled = true;
+                EdicaoSegura.Restaurar(_cargo, copiaOriginal);
             }
         }
 

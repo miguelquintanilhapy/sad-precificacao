@@ -3,6 +3,7 @@ using System.Windows;
 using System.Linq;
 using System.Threading.Tasks;
 using magal.Models;
+using magal.Services;
 using magal.Data.Repositories;
 
 namespace magal.ViewModels
@@ -105,7 +106,7 @@ namespace magal.ViewModels
                 TotalCargos = "00";
                 TotalCustos = "00";
 
-                System.Diagnostics.Debug.WriteLine($"[Erro GerenciamentoVM]: {ex.Message}");
+                TratadorErros.Registrar(ex, "Falha ao carregar os totais do painel de gerenciamento");
             }
             finally
             {

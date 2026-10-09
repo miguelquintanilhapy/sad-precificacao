@@ -115,7 +115,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar clientes: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "carregar os clientes");
             }
             finally
             {
@@ -167,7 +167,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "excluir o cliente");
                 }
             }
         }
@@ -221,8 +221,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao exportar PDF: {ex.Message}", "Erro",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "exportar o PDF");
                 }
             }
         }

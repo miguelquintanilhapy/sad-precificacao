@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -27,11 +28,18 @@ namespace magal.Views
 
         private async void CarregarCargos()
         {
-            var repo = new CargoRepository();
-            ComboCargo.ItemsSource = await repo.ListarTodos();
+            try
+            {
+                var repo = new CargoRepository();
+                ComboCargo.ItemsSource = await repo.ListarTodos();
+            }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "carregar os cargos");
+            }
         }
 
-        private void BtnSalvar_Click(object sender, RoutedEventArgs e)
+        private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             if (CampoGuia.MarcarPendentes(TxtNome, ComboCargo, ComboNivel, ComboTipoVinculo, ComboStatus))
             {
@@ -44,6 +52,8 @@ namespace magal.Views
                 return;
             }
 
+            var botaoSalvar = sender as System.Windows.Controls.Button;
+            if (botaoSalvar != null) botaoSalvar.IsEnabled = false;
             try
             {
                 var cargoSelecionado = (Cargo)ComboCargo.SelectedItem;
@@ -92,7 +102,7 @@ namespace magal.Views
 
                 var repo = new FuncionarioRepository();
 
-                repo.Inserir(funcionario);
+                await repo.Inserir(funcionario);
 
                 MessageBox.Show(
                     "Funcionário cadastrado com sucesso!",
@@ -106,11 +116,8 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erro ao salvar: " + ex.Message,
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "salvar os dados");
+                if (botaoSalvar != null) botaoSalvar.IsEnabled = true;
             }
         }
 

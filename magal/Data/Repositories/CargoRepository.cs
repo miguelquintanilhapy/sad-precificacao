@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks; // Mantido para o async funcionar
 using MySql.Data.MySqlClient;
 using magal.Models;
+using magal.Services;
 using magal.Data;
 
 namespace magal.Data.Repositories
@@ -41,7 +42,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no CargoRepository (Listar): " + ex.Message, ex);
+                throw new Exception("Erro no CargoRepository (Listar)", ex);
             }
 
             return lista;
@@ -55,6 +56,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorDuplicidade.Cargo(conn, 0, cargo.nome);
 
                     string sql = @"
                         INSERT INTO cargo (
@@ -76,9 +78,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao inserir cargo: " + ex.Message, ex);
+                throw new Exception("Erro ao inserir cargo", ex);
             }
         }
 
@@ -90,6 +93,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorDuplicidade.Cargo(conn, cargo.id_cargo, cargo.nome);
 
                     string sql = @"
                         UPDATE cargo
@@ -108,9 +112,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar cargo: " + ex.Message, ex);
+                throw new Exception("Erro ao atualizar cargo", ex);
             }
         }
 
@@ -122,6 +127,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorVinculos.Cargo(conn, idCargo);
 
                     string sql = "DELETE FROM cargo WHERE id_cargo = @id";
 
@@ -133,9 +139,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir cargo: " + ex.Message, ex);
+                throw new Exception("Erro ao excluir cargo", ex);
             }
         }
     }

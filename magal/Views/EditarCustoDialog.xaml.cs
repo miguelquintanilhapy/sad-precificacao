@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -34,7 +35,7 @@ namespace magal.Views
             }
         }
 
-        private void BtnSalvar_Click(object sender, RoutedEventArgs e)
+        private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             if (CampoGuia.MarcarPendentes(TxtNome, ComboCategoria, TxtValor))
             {
@@ -56,6 +57,9 @@ namespace magal.Views
                 return;
             }
 
+            var botaoSalvar = sender as System.Windows.Controls.Button;
+            if (botaoSalvar != null) botaoSalvar.IsEnabled = false;
+            var copiaOriginal = EdicaoSegura.Copiar(_custoItem);
             try
             {
                 _custoItem.nome = TxtNome.Text.Trim();
@@ -63,7 +67,7 @@ namespace magal.Views
                 _custoItem.valor = valorConvertido;
 
                 var repo = new CatalogoCustoRepository();
-                repo.Atualizar(_custoItem);
+                await repo.Atualizar(_custoItem);
 
                 MessageBox.Show(
                     "Item do catálogo atualizado com sucesso!",
@@ -76,11 +80,9 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erro ao salvar: " + ex.Message,
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "salvar os dados");
+                if (botaoSalvar != null) botaoSalvar.IsEnabled = true;
+                EdicaoSegura.Restaurar(_custoItem, copiaOriginal);
             }
         }
 

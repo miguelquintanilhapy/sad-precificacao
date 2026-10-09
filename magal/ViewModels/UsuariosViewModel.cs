@@ -118,8 +118,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar usuários: {ex.Message}", "Aero Concepts",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "carregar os usuários");
             }
             finally
             {
@@ -160,6 +159,13 @@ namespace magal.ViewModels
                 return;
             }
 
+            if (Sessao.UsuarioLogado != null && Sessao.UsuarioLogado.id_usuario == usuario.id_usuario)
+            {
+                MessageBox.Show("Não é possível excluir o usuário com o qual você está logado.",
+                    "Aero Concepts", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             var msg = $"Tem certeza que deseja excluir o usuário '{usuario.nome}'?";
             if (MessageBox.Show(msg, "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
@@ -171,8 +177,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao excluir usuário: {ex.Message}", "Erro",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "excluir o usuário");
                 }
             }
         }
@@ -194,7 +199,10 @@ namespace magal.ViewModels
             var dialog = new magal.Views.CadastrarUsuarioDialog();
             dialog.Owner = Application.Current.Windows.OfType<magal.MainWindow>().FirstOrDefault();
             if (dialog.ShowDialog() == true)
-                await CarregarUsuariosAsync();
+            {
+                try { await CarregarUsuariosAsync(); }
+                catch (Exception ex) { TratadorErros.Mostrar(ex, "carregar os usuários"); }
+            }
         }
 
         private async void ExecutarEdicao(Usuario usuario)
@@ -217,7 +225,10 @@ namespace magal.ViewModels
             var dialog = new magal.Views.EditarUsuarioDialog(usuario);
             dialog.Owner = Application.Current.Windows.OfType<magal.MainWindow>().FirstOrDefault();
             if (dialog.ShowDialog() == true)
-                await CarregarUsuariosAsync();
+            {
+                try { await CarregarUsuariosAsync(); }
+                catch (Exception ex) { TratadorErros.Mostrar(ex, "carregar os usuários"); }
+            }
         }
 
         private async void ExecutarExportacaoPdf()
@@ -253,8 +264,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao exportar PDF: {ex.Message}", "Erro",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "exportar o PDF");
                 }
             }
         }

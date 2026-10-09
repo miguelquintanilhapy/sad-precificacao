@@ -93,7 +93,9 @@ namespace magal.ViewModels
         /// <summary>
         /// Fonte de dados contendo os funcionários ativos para vinculação nas tarefas operacionais.
         /// </summary>
+        // Só funcionários ativos podem ser escolhidos como responsável; os inativos continuam em tarefas já salvas.
         public ObservableCollection<Funcionario> Funcionarios { get; } = new ObservableCollection<Funcionario>();
+        private List<Funcionario> _todosFuncionarios = new List<Funcionario>();
 
         /// <summary>
         /// Lista de custos adicionais e despesas diretas associadas ao projeto atual.
@@ -233,6 +235,7 @@ namespace magal.ViewModels
 
                 foreach (var t in this.ProjetoAtual.Tarefas)
                 {
+                    GarantirFuncionarioNaLista(t.id_funcionario);
                     t.Funcionario = Funcionarios.FirstOrDefault(f => f.id_funcionario == t.id_funcionario);
                     t.PropertyChanged += (s, e) => {
                         if (e.PropertyName == nameof(Tarefa.Funcionario) || e.PropertyName == nameof(Tarefa.horas_estimadas))
@@ -242,7 +245,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar edição: " + ex.Message, "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TratadorErros.Mostrar(ex, "carregar a edição");
             }
             finally
             {
@@ -298,6 +301,18 @@ namespace magal.ViewModels
                 "Orçamento desatualizado",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// Funcionário inativo sai da lista de responsáveis, mas uma tarefa já salva com ele precisa continuar
+        /// exibindo o nome (senão o responsável apareceria vazio e o projeto não poderia ser salvo).
+        /// </summary>
+        private void GarantirFuncionarioNaLista(int idFuncionario)
+        {
+            if (idFuncionario <= 0 || Funcionarios.Any(f => f.id_funcionario == idFuncionario)) return;
+
+            var inativo = _todosFuncionarios.FirstOrDefault(f => f.id_funcionario == idFuncionario);
+            if (inativo != null) Funcionarios.Add(inativo);
         }
 
         // O ComboBox de cliente altera ProjetoAtual.Cliente, não o id_cliente; o que vale é o cliente selecionado.
@@ -426,6 +441,10 @@ namespace magal.ViewModels
                 if (caminho != null)
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(caminho) { UseShellExecute = true });
             }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "gerar o PDF");
+            }
             finally
             {
                 _processando = false;
@@ -479,6 +498,10 @@ namespace magal.ViewModels
                     var mainWindow = Application.Current.Windows.OfType<magal.MainWindow>().FirstOrDefault();
                     mainWindow?.AbrirHistorico();
                 }
+            }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "salvar o projeto");
             }
             finally
             {
@@ -554,8 +577,10 @@ namespace magal.ViewModels
                 Clientes.Clear();
                 foreach (var c in listaClientes) Clientes.Add(c);
 
+                _todosFuncionarios = listaFuncionarios.ToList();
                 Funcionarios.Clear();
-                foreach (var f in listaFuncionarios) Funcionarios.Add(f);
+                foreach (var f in _todosFuncionarios.Where(f => !string.Equals(f.status, "Inativo", StringComparison.OrdinalIgnoreCase)))
+                    Funcionarios.Add(f);
 
                 if (ProjetoAtual != null)
                 {
@@ -575,6 +600,7 @@ namespace magal.ViewModels
                         {
                             if (t.id_funcionario > 0)
                             {
+                                GarantirFuncionarioNaLista(t.id_funcionario);
                                 t.Funcionario = Funcionarios.FirstOrDefault(f => f.id_funcionario == t.id_funcionario);
                             }
                         }
@@ -603,7 +629,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar dados iniciais: " + ex.Message, "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TratadorErros.Mostrar(ex, "carregar os dados da tela");
                 _dadosIniciaisCarregados.TrySetResult(false);
             }
             finally
@@ -724,7 +750,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Erro no cálculo: " + ex.Message);
+                TratadorErros.Registrar(ex, "Falha ao recalcular o financeiro do orçamento");
             }
         }
 
@@ -757,7 +783,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao salvar dados no banco: " + ex.Message, "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TratadorErros.Mostrar(ex, "salvar o projeto");
                 return false;
             }
         }
@@ -787,7 +813,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Erro ao gerar PDF: " + ex.Message, "Aviso de Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    TratadorErros.Mostrar(ex, "gerar o PDF");
                 }
             }
             return null;

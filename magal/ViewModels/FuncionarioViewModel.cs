@@ -131,8 +131,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar funcionários: {ex.Message}", "Aero Concepts",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "carregar os funcionários");
             }
             finally
             {
@@ -183,8 +182,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao excluir funcionário: {ex.Message}", "Erro",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "excluir o funcionário");
                 }
             }
         }
@@ -194,7 +192,10 @@ namespace magal.ViewModels
             var dialog = new magal.Views.CadastrarFuncionarioDialog();
             dialog.Owner = Application.Current.Windows.OfType<magal.MainWindow>().FirstOrDefault();
             if (dialog.ShowDialog() == true)
-                await CarregarFuncionarios();
+            {
+                try { await CarregarFuncionarios(); }
+                catch (Exception ex) { TratadorErros.Mostrar(ex, "carregar os funcionários"); }
+            }
         }
 
         private async void ExecutarEdicao(Funcionario funcionario)
@@ -203,7 +204,10 @@ namespace magal.ViewModels
             var dialog = new magal.Views.EditarFuncionarioDialog(funcionario);
             dialog.Owner = Application.Current.Windows.OfType<magal.MainWindow>().FirstOrDefault();
             if (dialog.ShowDialog() == true)
-                await CarregarFuncionarios();
+            {
+                try { await CarregarFuncionarios(); }
+                catch (Exception ex) { TratadorErros.Mostrar(ex, "carregar os funcionários"); }
+            }
         }
 
         private async void ExecutarExportacaoPdf()
@@ -238,8 +242,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao exportar PDF: {ex.Message}", "Erro",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "exportar o PDF");
                 }
             }
         }

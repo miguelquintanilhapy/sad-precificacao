@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using magal.ViewModels;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -20,7 +21,14 @@ namespace magal.Views
         // ATUALIZADO: Executa a tarefa em segundo plano de forma assíncrona limpa
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            await _viewModel.CarregarIndicadores();
+            try
+            {
+                await _viewModel.CarregarIndicadores();
+            }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "carregar o painel");
+            }
         }
 
         private void BtnFuncionarios_Click(object sender, RoutedEventArgs e)

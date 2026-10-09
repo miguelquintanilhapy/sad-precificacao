@@ -2,6 +2,7 @@
 using LiveCharts.Wpf;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -197,7 +198,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar gráficos:\n\n{ex}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "carregar os gráficos");
             }
             finally
             {
@@ -213,7 +214,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erro ao atualizar margem: {ex.Message}");
+                TratadorErros.Registrar(ex, "Falha ao atualizar o gráfico de margem");
             }
         }
 

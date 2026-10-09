@@ -63,8 +63,7 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao alterar senha: {ex.Message}", "Erro",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "alterar a senha");
             }
         }
     }

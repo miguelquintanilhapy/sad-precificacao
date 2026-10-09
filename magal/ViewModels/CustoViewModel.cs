@@ -130,8 +130,7 @@ namespace magal.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar catálogo de custos: {ex.Message}", "Aero Concepts",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "carregar o catálogo de custos");
             }
             finally
             {
@@ -167,8 +166,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao excluir custo: {ex.Message}", "Erro",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "excluir o custo");
                 }
                 finally
                 {
@@ -260,8 +258,7 @@ namespace magal.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erro ao exportar PDF: {ex.Message}", "Erro",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    TratadorErros.Mostrar(ex, "exportar o PDF");
                 }
                 finally
                 {

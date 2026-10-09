@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using magal.ViewModels;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -23,7 +24,14 @@ namespace magal.Views
         /// </summary>
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            await _viewModel.CarregarUsuariosAsync();
+            try
+            {
+                await _viewModel.CarregarUsuariosAsync();
+            }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "carregar os usuários");
+            }
         }
 
         /// <summary>
@@ -50,8 +58,15 @@ namespace magal.Views
             // Abre como caixa de diálogo modal
             if (dialog.ShowDialog() == true || dialog.DialogResult == null)
             {
-                // Recarrega a lista automaticamente para trazer o usuário recém-criado
-                await _viewModel.CarregarUsuariosAsync();
+                try
+                {
+                    // Recarrega a lista automaticamente para trazer o usuário recém-criado
+                    await _viewModel.CarregarUsuariosAsync();
+                }
+                catch (Exception ex)
+                {
+                    TratadorErros.Mostrar(ex, "carregar os usuários");
+                }
             }
         }
     }

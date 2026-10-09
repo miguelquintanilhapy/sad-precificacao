@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks; 
 using MySql.Data.MySqlClient;
 using magal.Models;
+using magal.Services;
 using magal.Data;
 
 namespace magal.Data.Repositories
@@ -63,7 +64,7 @@ namespace magal.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro no ClienteRepository: " + ex.Message, ex);
+                throw new Exception("Erro no ClienteRepository", ex);
             }
 
             return lista;
@@ -76,6 +77,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorDuplicidade.Cliente(conn, 0, cliente.cpf_cnpj);
 
                     string sql = @"
                         INSERT INTO cliente (
@@ -109,9 +111,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao inserir cliente: " + ex.Message, ex);
+                throw new Exception("Erro ao inserir cliente", ex);
             }
         }
 
@@ -122,6 +125,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorDuplicidade.Cliente(conn, cliente.id_cliente, cliente.cpf_cnpj);
 
                     string sql = @"
                         UPDATE cliente
@@ -148,9 +152,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar cliente: " + ex.Message, ex);
+                throw new Exception("Erro ao atualizar cliente", ex);
             }
         }
 
@@ -161,6 +166,7 @@ namespace magal.Data.Repositories
                 using (var conn = (MySqlConnection)DbConnectionFactory.CreateConnection())
                 {
                     await conn.OpenAsync();
+                    await VerificadorVinculos.Cliente(conn, idCliente);
 
                     string sql = "DELETE FROM cliente WHERE id_cliente = @id";
 
@@ -172,9 +178,10 @@ namespace magal.Data.Repositories
                     }
                 }
             }
+            catch (RegraNegocioException) { throw; }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir cliente: " + ex.Message, ex);
+                throw new Exception("Erro ao excluir cliente", ex);
             }
         }
     }

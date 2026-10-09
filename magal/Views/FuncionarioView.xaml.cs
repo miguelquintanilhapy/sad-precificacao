@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using magal.ViewModels;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -23,7 +24,14 @@ namespace magal.Views
         /// </summary>
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            await _viewModel.CarregarFuncionarios();
+            try
+            {
+                await _viewModel.CarregarFuncionarios();
+            }
+            catch (Exception ex)
+            {
+                TratadorErros.Mostrar(ex, "carregar os funcionários");
+            }
         }
 
         /// <summary>

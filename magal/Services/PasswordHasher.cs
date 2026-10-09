@@ -38,14 +38,23 @@ namespace magal.Services
             string[] partes = valorArmazenado.Split('$');
             if (partes.Length != 4) return false;
 
-            if (!int.TryParse(partes[1], out int iteracoes)) return false;
+            if (!int.TryParse(partes[1], out int iteracoes) || iteracoes <= 0) return false;
 
-            byte[] salt = Convert.FromBase64String(partes[2]);
-            byte[] hashEsperado = Convert.FromBase64String(partes[3]);
+            // Hash malformado (base64 inválido, truncado) é senha incorreta, não erro do sistema.
+            try
+            {
+                byte[] salt = Convert.FromBase64String(partes[2]);
+                byte[] hashEsperado = Convert.FromBase64String(partes[3]);
+                if (salt.Length == 0 || hashEsperado.Length == 0) return false;
 
-            byte[] hashCalculado = Rfc2898DeriveBytes.Pbkdf2(senhaDigitada, salt, iteracoes, HashAlgorithmName.SHA256, hashEsperado.Length);
+                byte[] hashCalculado = Rfc2898DeriveBytes.Pbkdf2(senhaDigitada, salt, iteracoes, HashAlgorithmName.SHA256, hashEsperado.Length);
 
-            return CryptographicOperations.FixedTimeEquals(hashCalculado, hashEsperado);
+                return CryptographicOperations.FixedTimeEquals(hashCalculado, hashEsperado);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
 
         /// <summary>

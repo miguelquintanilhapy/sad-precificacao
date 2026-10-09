@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using magal.Data.Repositories;
 using magal.Models;
+using magal.Services;
 
 namespace magal.Views
 {
@@ -15,7 +16,7 @@ namespace magal.Views
             Closing += ConfirmarDescarteAlteracoes;
         }
 
-        private void BtnSalvar_Click(object sender, RoutedEventArgs e)
+        private async void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
             // Validação dos campos obrigatórios
             if (CampoGuia.MarcarPendentes(TxtNome, ComboTipo, TxtCpfCnpj, TxtCidade, TxtEstado, TxtContato))
@@ -29,6 +30,8 @@ namespace magal.Views
                 return;
             }
 
+            var botaoSalvar = sender as System.Windows.Controls.Button;
+            if (botaoSalvar != null) botaoSalvar.IsEnabled = false;
             try
             {
                 // Instancia o modelo com as informações da tela
@@ -46,7 +49,7 @@ namespace magal.Views
 
                 // Executa a persistência através do repositório de clientes
                 var repo = new ClienteRepository();
-                repo.Inserir(cliente);
+                await repo.Inserir(cliente);
 
                 MessageBox.Show(
                     "Cliente cadastrado com sucesso!",
@@ -59,11 +62,8 @@ namespace magal.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erro ao salvar: " + ex.Message,
-                    "Aero Concepts",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                TratadorErros.Mostrar(ex, "salvar os dados");
+                if (botaoSalvar != null) botaoSalvar.IsEnabled = true;
             }
         }
 
