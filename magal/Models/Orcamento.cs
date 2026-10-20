@@ -116,10 +116,25 @@ namespace magal.Models
         public DateTime data_criacao { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// Margem de lucro sobre o preço de venda equivalente ao markup digitado: markup / (100 + markup).
-        /// Ex.: markup 30% => 23,08%. Somente leitura (exibição).
+        /// Margem de lucro sobre o preço de venda equivalente ao markup: markup / (100 + markup).
+        /// Ex.: markup 30% => 23,08%. Editável: ao digitar a margem, o markup vira margem / (100 - margem).
         /// </summary>
-        public decimal MargemSobreVenda => margem_percentual <= -100 ? 0 : margem_percentual / (100 + margem_percentual) * 100;
+        public decimal MargemSobreVenda
+        {
+            get => margem_percentual <= -100 ? 0 : margem_percentual / (100 + margem_percentual) * 100;
+            set
+            {
+                // Margem de 100% (ou mais) exigiria markup infinito.
+                if (value >= 100) return;
+
+                _editandoMargem = true;
+                try { margem_percentual = Math.Round(value / (100 - value) * 100, 2); }
+                finally { _editandoMargem = false; }
+            }
+        }
+
+        // Evita reescrever o campo de margem enquanto a própria pessoa o digita.
+        private bool _editandoMargem;
 
         private void NotificarMudancasCalculadas()
         {
@@ -128,7 +143,7 @@ namespace magal.Models
             _valor_final_manual = null;
 
             OnPropertyChanged(nameof(valor_margem));
-            OnPropertyChanged(nameof(MargemSobreVenda));
+            if (!_editandoMargem) OnPropertyChanged(nameof(MargemSobreVenda));
             OnPropertyChanged(nameof(valor_impostos));
             OnPropertyChanged(nameof(valor_final));
         }

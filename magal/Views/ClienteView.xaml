@@ -210,6 +210,9 @@
                                 </Setter.Value>
                             </Setter>
                             <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                    <Setter Property="Background" Value="#F1F5F9"/>
+                                </DataTrigger>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Background" Value="#EFF6FF"/>
                                     <Setter Property="Foreground" Value="{StaticResource AzulAero}"/>

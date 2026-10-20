@@ -279,6 +279,13 @@ namespace magal.Views
 
         // Campos de percentual: aceita "." ou "," como separador decimal (vira ","), uma única vez.
         // O ponto precisa virar vírgula aqui: em pt-BR "12.5" seria lido como 125 (separador de milhar).
+        // Campo de percentual apagado vira 0 só ao perder o foco (ver PercentualTextConverter).
+        private void PercentualPerdeuFoco(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox caixa && string.IsNullOrWhiteSpace(caixa.Text))
+                caixa.Text = "0";
+        }
+
         private void ValidarEntradaDecimal(object sender, TextCompositionEventArgs e)
         {
             if ((e.Text == "." || e.Text == ",") && sender is TextBox caixa)

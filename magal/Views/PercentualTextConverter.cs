@@ -22,6 +22,10 @@ namespace magal.Views
         {
             decimal v = value is decimal d ? d : 0;
 
+            // Campo apagado: mantém vazio enquanto a pessoa digita; o "0" entra ao sair do campo (LostFocus).
+            if (v == 0 && _ultimoTexto != null && string.IsNullOrWhiteSpace(_ultimoTexto))
+                return _ultimoTexto;
+
             // Se o texto digitado já representa este valor ("5," ou "5,50"), não reescreve.
             if (_ultimoTexto != null && decimal.TryParse(_ultimoTexto, NumberStyles.Number, PtBR, out var digitado) && digitado == v)
                 return _ultimoTexto;
