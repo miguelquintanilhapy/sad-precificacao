@@ -102,7 +102,7 @@ namespace magal.Data.Repositories
                             cmd.Parameters.AddWithValue("@idProj", projeto.id_projeto);
                             cmd.Parameters.AddWithValue("@custo", projeto.Orcamento.custo_base);
                             cmd.Parameters.AddWithValue("@percImp", projeto.Orcamento.percentual_impostos);
-                            cmd.Parameters.AddWithValue("@margPerc", projeto.Orcamento.margem_percentual);
+                            cmd.Parameters.AddWithValue("@margPerc", projeto.Orcamento.markup_percentual);
                             cmd.Parameters.AddWithValue("@vMarg", projeto.Orcamento.valor_margem);
                             cmd.Parameters.AddWithValue("@vImp", projeto.Orcamento.valor_impostos);
                             cmd.Parameters.AddWithValue("@final", projeto.Orcamento.valor_final);
@@ -219,7 +219,7 @@ namespace magal.Data.Repositories
                             {
                                 custo_base = reader["custo_base"] != DBNull.Value ? Convert.ToDecimal(reader["custo_base"]) : 0,
                                 percentual_impostos = reader["percentual_impostos"] != DBNull.Value ? Convert.ToDecimal(reader["percentual_impostos"]) : 0,
-                                margem_percentual = reader["margem_percentual"] != DBNull.Value ? Convert.ToDecimal(reader["margem_percentual"]) : 0,
+                                markup_percentual = reader["margem_percentual"] != DBNull.Value ? Convert.ToDecimal(reader["margem_percentual"]) : 0,
                                 valor_margem = reader["valor_margem"] != DBNull.Value ? Convert.ToDecimal(reader["valor_margem"]) : 0,
                                 valor_impostos = reader["valor_impostos"] != DBNull.Value ? Convert.ToDecimal(reader["valor_impostos"]) : 0,
                                 valor_final = reader["valor_final"] != DBNull.Value ? Convert.ToDecimal(reader["valor_final"]) : 0,
@@ -366,7 +366,7 @@ namespace magal.Data.Repositories
                                 projeto.Orcamento = new Orcamento
                                 {
                                     custo_base = Convert.ToDecimal(reader["custo_base"]),
-                                    margem_percentual = Convert.ToDecimal(reader["margem_percentual"]),
+                                    markup_percentual = Convert.ToDecimal(reader["margem_percentual"]),
                                     percentual_impostos = Convert.ToDecimal(reader["percentual_impostos"]),
                                     valor_margem = reader["valor_margem"] != DBNull.Value ? Convert.ToDecimal(reader["valor_margem"]) : 0,
                                     valor_impostos = reader["valor_impostos"] != DBNull.Value ? Convert.ToDecimal(reader["valor_impostos"]) : 0,

@@ -47,7 +47,7 @@ namespace magal.Data.Repositories
                     cmd.Parameters.AddWithValue("@idProj", idProjeto);
                     cmd.Parameters.AddWithValue("@custo", orcamento.custo_base);
                     cmd.Parameters.AddWithValue("@percImp", orcamento.percentual_impostos);
-                    cmd.Parameters.AddWithValue("@margPerc", orcamento.margem_percentual); 
+                    cmd.Parameters.AddWithValue("@margPerc", orcamento.markup_percentual); 
                     cmd.Parameters.AddWithValue("@vMarg", orcamento.valor_margem);
                     cmd.Parameters.AddWithValue("@vImp", orcamento.valor_impostos);
                     cmd.Parameters.AddWithValue("@final", orcamento.valor_final);
@@ -94,7 +94,7 @@ namespace magal.Data.Repositories
 
                                 custo_base = reader["custo_base"] != DBNull.Value ? Convert.ToDecimal(reader["custo_base"]) : 0,
                                 percentual_impostos = reader["percentual_impostos"] != DBNull.Value ? Convert.ToDecimal(reader["percentual_impostos"]) : 0,
-                                margem_percentual = reader["margem_percentual"] != DBNull.Value ? Convert.ToDecimal(reader["margem_percentual"]) : 0,
+                                markup_percentual = reader["margem_percentual"] != DBNull.Value ? Convert.ToDecimal(reader["margem_percentual"]) : 0,
                                 valor_margem = reader["valor_margem"] != DBNull.Value ? Convert.ToDecimal(reader["valor_margem"]) : 0,
                                 valor_impostos = reader["valor_impostos"] != DBNull.Value ? Convert.ToDecimal(reader["valor_impostos"]) : 0,
                                 valor_final = reader["valor_final"] != DBNull.Value ? Convert.ToDecimal(reader["valor_final"]) : 0,

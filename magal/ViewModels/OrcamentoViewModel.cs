@@ -186,7 +186,7 @@ namespace magal.ViewModels
                     data_criacao = projetoDoBanco.data_criacao,
                     Orcamento = new Orcamento
                     {
-                        margem_percentual = projetoDoBanco.Orcamento.margem_percentual,
+                        markup_percentual = projetoDoBanco.Orcamento.markup_percentual,
                         percentual_impostos = projetoDoBanco.Orcamento.percentual_impostos,
                         validade_dias = projetoDoBanco.Orcamento.validade_dias,
                         forma_pagamento = projetoDoBanco.Orcamento.forma_pagamento,
@@ -328,7 +328,7 @@ namespace magal.ViewModels
                 bool custoPreenchido = CustosExtras.Any(c =>
                     !string.IsNullOrWhiteSpace(c.nome) || c.valor != 0 || c.id_catalogo_custo != 0);
                 bool orcamentoAlterado = ProjetoAtual.Orcamento != null &&
-                    (ProjetoAtual.Orcamento.margem_percentual != 20 ||
+                    (ProjetoAtual.Orcamento.markup_percentual != 20 ||
                      ProjetoAtual.Orcamento.percentual_impostos != 15 ||
                      ProjetoAtual.Orcamento.validade_dias != 15 ||
                      ProjetoAtual.Orcamento.forma_pagamento != "PIX" ||
@@ -346,7 +346,7 @@ namespace magal.ViewModels
                                   ClienteAtualId() != _projetoOriginal.id_cliente ||
                                   ProjetoAtual.status != _projetoOriginal.status ||
                                   ProjetoAtual.tipo != _projetoOriginal.tipo ||
-                                  ProjetoAtual.Orcamento.margem_percentual != _projetoOriginal.Orcamento.margem_percentual ||
+                                  ProjetoAtual.Orcamento.markup_percentual != _projetoOriginal.Orcamento.markup_percentual ||
                                   ProjetoAtual.Orcamento.percentual_impostos != _projetoOriginal.Orcamento.percentual_impostos ||
                                   ProjetoAtual.Orcamento.validade_dias != _projetoOriginal.Orcamento.validade_dias ||
                                   ProjetoAtual.Orcamento.forma_pagamento != _projetoOriginal.Orcamento.forma_pagamento ||
@@ -517,7 +517,7 @@ namespace magal.ViewModels
             {
                 Orcamento = new Orcamento
                 {
-                    margem_percentual = 20,
+                    markup_percentual = 20,
                     percentual_impostos = 15,
                     validade_dias = 15,
                     forma_pagamento = "PIX", 
@@ -549,7 +549,7 @@ namespace magal.ViewModels
             {
                 ProjetoAtual.Orcamento.PropertyChanged += (s, e) =>
                 {
-                    if (e.PropertyName == nameof(Orcamento.margem_percentual) ||
+                    if (e.PropertyName == nameof(Orcamento.markup_percentual) ||
                         e.PropertyName == nameof(Orcamento.percentual_impostos))
                     {
                         AtualizarFinanceiro();

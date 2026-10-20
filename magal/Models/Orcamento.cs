@@ -15,13 +15,13 @@ namespace magal.Models
             set { _id_orcamento = value; OnPropertyChanged(); }
         }
 
-        private decimal _margem_percentual;
-        public decimal margem_percentual
+        private decimal _markup_percentual;
+        public decimal markup_percentual
         {
-            get => _margem_percentual;
+            get => _markup_percentual;
             set
             {
-                _margem_percentual = value;
+                _markup_percentual = value;
                 OnPropertyChanged();
                 NotificarMudancasCalculadas();
             }
@@ -85,7 +85,7 @@ namespace magal.Models
         public decimal valor_margem
         {
             // Markup: acréscimo percentual sobre o custo (custo 100 e markup 30% => lucro 30).
-            get => _valor_margem_manual ?? (custo_base * (margem_percentual / 100));
+            get => _valor_margem_manual ?? (custo_base * (markup_percentual / 100));
             set { _valor_margem_manual = value; OnPropertyChanged(); }
         }
 
@@ -121,14 +121,14 @@ namespace magal.Models
         /// </summary>
         public decimal MargemSobreVenda
         {
-            get => margem_percentual <= -100 ? 0 : margem_percentual / (100 + margem_percentual) * 100;
+            get => markup_percentual <= -100 ? 0 : markup_percentual / (100 + markup_percentual) * 100;
             set
             {
                 // Margem de 100% (ou mais) exigiria markup infinito.
                 if (value >= 100) return;
 
                 _editandoMargem = true;
-                try { margem_percentual = Math.Round(value / (100 - value) * 100, 2); }
+                try { markup_percentual = Math.Round(value / (100 - value) * 100, 2); }
                 finally { _editandoMargem = false; }
             }
         }

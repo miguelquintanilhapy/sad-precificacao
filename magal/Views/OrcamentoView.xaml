@@ -724,7 +724,7 @@
                             </Border.Style>
 
                             <Grid>
-                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.margem_percentual, UpdateSourceTrigger=PropertyChanged, Converter={local:PercentualTextConverter}}" LostFocus="PercentualPerdeuFoco"
+                                <TextBox MaxLength="6" Text="{Binding ProjetoAtual.Orcamento.markup_percentual, UpdateSourceTrigger=PropertyChanged, Converter={local:PercentualTextConverter}}" LostFocus="PercentualPerdeuFoco"
                      PreviewTextInput="ValidarEntradaDecimal"
                      GotKeyboardFocus="SelecionarTudoAoFocar" PreviewMouseLeftButtonDown="FocarSelecionandoTudo"
                      FontWeight="Bold" FontSize="15" Padding="15,0,35,0" MinWidth="100"
