@@ -90,6 +90,20 @@ namespace magal.ViewModels
 
         public Func<LiveCharts.ChartPoint, string> MargemPontoFormatter { get; set; } = point => $"{point.Y:N1}%";
 
+        // Lucro / faturamento (em %) de cada barra do gráfico Lucro/Faturamento, na mesma ordem dos valores.
+        private double[] _percentuaisLucro = Array.Empty<double>();
+
+        /// <summary>
+        /// Tooltip da barra de lucro: valor completo e porcentagem do lucro sobre o faturamento do período.
+        /// </summary>
+        public Func<LiveCharts.ChartPoint, string> LucroPercentualFormatter => RotuloLucro;
+
+        private string RotuloLucro(LiveCharts.ChartPoint ponto)
+        {
+            double perc = ponto.Key >= 0 && ponto.Key < _percentuaisLucro.Length ? _percentuaisLucro[ponto.Key] : 0;
+            return $"{ponto.Y.ToString("C2", _ptBR)} ({perc.ToString("N1", _ptBR)}%)";
+        }
+
         /// <summary>
         /// Valor completo em reais, até os centavos (R$ 143.724,00). Usado no tooltip ao passar o mouse sobre a barra.
         /// </summary>
@@ -301,6 +315,8 @@ namespace magal.ViewModels
             if (projetos == null || projetos.Count == 0)
             {
                 ValoresLucroMensal = new ChartValues<double>();
+                _percentuaisLucro = Array.Empty<double>();
+                PercentualLucroConverter.Percentuais = _percentuaisLucro;
                 ValoresFaturamentoMensal = new ChartValues<double>();
                 LabelsMeses = Array.Empty<string>();
                 MostrarRotulosBarras = true;
@@ -327,6 +343,7 @@ namespace magal.ViewModels
 
                 ValoresLucroMensal = new ChartValues<double>(agrupadoPorDia.Select(x => (double)x.TotalLucro));
                 ValoresFaturamentoMensal = new ChartValues<double>(agrupadoPorDia.Select(x => (double)x.TotalFaturamento));
+                _percentuaisLucro = agrupadoPorDia.Select(x => x.TotalFaturamento > 0 ? (double)(x.TotalLucro / x.TotalFaturamento * 100) : 0).ToArray();
                 LabelsMeses = agrupadoPorDia.Select(x => x.Data.ToString("dd/MM")).ToArray();
             }
             else
@@ -343,9 +360,11 @@ namespace magal.ViewModels
 
                 ValoresLucroMensal = new ChartValues<double>(agrupadoPorMes.Select(x => (double)x.TotalLucro));
                 ValoresFaturamentoMensal = new ChartValues<double>(agrupadoPorMes.Select(x => (double)x.TotalFaturamento));
+                _percentuaisLucro = agrupadoPorMes.Select(x => x.TotalFaturamento > 0 ? (double)(x.TotalLucro / x.TotalFaturamento * 100) : 0).ToArray();
                 LabelsMeses = agrupadoPorMes.Select(x => x.Data.ToString("MMM/yy")).ToArray();
             }
 
+            PercentualLucroConverter.Percentuais = _percentuaisLucro;
             MostrarRotulosBarras = LabelsMeses.Length <= MaxPontosComRotulo;
 
             OnPropertyChanged(nameof(MostrarRotulosBarras));
@@ -412,6 +431,7 @@ namespace magal.ViewModels
                     Values = new ChartValues<double> { item.Quantidade },
                     DataLabels = true,
                     LabelPoint = PontoPercentualFormatter,
+                    FontSize = 12,
                     Fill = new System.Windows.Media.SolidColorBrush(cor),
                     Foreground = System.Windows.Media.Brushes.White,
                     StrokeThickness = 2,
@@ -440,6 +460,7 @@ namespace magal.ViewModels
                     Values = new ChartValues<double> { item.Quantidade },
                     DataLabels = true,
                     LabelPoint = PontoPercentualFormatter,
+                    FontSize = 12,
                     Fill = new System.Windows.Media.SolidColorBrush(cor),
                     Foreground = System.Windows.Media.Brushes.White,
                     StrokeThickness = 2,
@@ -471,6 +492,24 @@ namespace magal.ViewModels
             if (Math.Abs(v) >= 1_000_000) return $"R$ {(v / 1_000_000).ToString("0.##", ptBR)} mi";
             if (Math.Abs(v) >= 1_000) return $"R$ {(v / 1_000).ToString("0.#", ptBR)} mil";
             return $"R$ {v.ToString("0", ptBR)}";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotSupportedException();
+    }
+
+    /// <summary>
+    /// Porcentagem de lucro sobre faturamento exibida sob o valor de cada barra de lucro (índice da barra -> %).
+    /// </summary>
+    public class PercentualLucroConverter : System.Windows.Data.IValueConverter
+    {
+        public static double[] Percentuais { get; set; } = Array.Empty<double>();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int i = System.Convert.ToInt32(value ?? 0, CultureInfo.InvariantCulture);
+            double perc = i >= 0 && i < Percentuais.Length ? Percentuais[i] : 0;
+            return perc.ToString("N1", new CultureInfo("pt-BR")) + "%";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
