@@ -90,11 +90,11 @@ namespace magal.ViewModels
 
         public Func<LiveCharts.ChartPoint, string> MargemPontoFormatter { get; set; } = point => $"{point.Y:N1}%";
 
-        // Lucro / faturamento (em %) de cada barra do gráfico Lucro/Faturamento, na mesma ordem dos valores.
+        // Margem s/ venda (em %) de cada barra do gráfico Lucro/Faturamento, na mesma ordem dos valores.
         private double[] _percentuaisLucro = Array.Empty<double>();
 
         /// <summary>
-        /// Tooltip da barra de lucro: valor completo e porcentagem do lucro sobre o faturamento do período.
+        /// Tooltip da barra de lucro: valor completo e porcentagem do lucro sobre a venda do período (sem impostos).
         /// </summary>
         public Func<LiveCharts.ChartPoint, string> LucroPercentualFormatter => RotuloLucro;
 
@@ -246,6 +246,23 @@ namespace magal.ViewModels
             TotalLucro = totalLucro.ToString("C2", _ptBR);
         }
 
+        /// <summary>
+        /// Venda do projeto sem impostos (custo + lucro). É a base da margem s/ venda, igual a MargemSobreVenda.
+        /// Os impostos são repassados ao cliente, então não entram na base.
+        /// </summary>
+        private static decimal VendaSemImpostos(Projeto projeto) => projeto.Orcamento.custo_base + projeto.Orcamento.valor_margem;
+
+        /// <summary>
+        /// Margem s/ venda ponderada: Σ lucro ÷ Σ venda. Projetos maiores pesam mais que os menores.
+        /// </summary>
+        private static double MargemPonderada(IEnumerable<Projeto> projetos)
+        {
+            var lista = projetos.ToList();
+            decimal venda = lista.Sum(p => VendaSemImpostos(p));
+            decimal lucro = lista.Sum(p => p.Orcamento.valor_margem);
+            return venda > 0 ? (double)(lucro / venda * 100) : 0;
+        }
+
         private void UpdateMargemValues(IEnumerable<(string Chave, double Margem)> dadosAgrupados)
         {
             var listaFinal = dadosAgrupados.ToList();
@@ -264,39 +281,40 @@ namespace magal.ViewModels
                 return;
             }
 
-            var projetosValidos = projetos.Where(p => p.Orcamento != null);
+            var projetosValidos = projetos.Where(p => p.Orcamento != null && VendaSemImpostos(p) > 0);
             IEnumerable<(string Chave, double Margem)> agrupamento;
 
             switch (CategoriaMargemSelecionada)
             {
                 case "Margem média geral":
-                    double margemGeral = projetosValidos.Any() ? (double)projetosValidos.Average(p => p.Orcamento.MargemSobreVenda) : 0;
+                    double margemGeral = MargemPonderada(projetosValidos);
                     agrupamento = new List<(string, double)> { ("Geral", margemGeral) };
                     break;
 
                 case "Margem Média por tipo de projeto":
                     agrupamento = projetosValidos
                         .GroupBy(p => p.tipo ?? "Sem Tipo")
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
+                        .Select(g => (g.Key, Margem: MargemPonderada(g)));
                     break;
 
                 case "Margem média por status":
                     agrupamento = projetosValidos
                         .GroupBy(p => p.status ?? "Sem Status")
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
+                        .Select(g => (g.Key, Margem: MargemPonderada(g)));
                     break;
 
                 case "Margem média por cliente":
                     agrupamento = projetosValidos
                         .GroupBy(p => p.Cliente != null ? (p.Cliente.nome ?? "Cliente " + p.id_cliente) : "Cliente " + p.id_cliente)
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
+                        .Select(g => (g.Key, Margem: MargemPonderada(g)));
                     break;
 
                 case "Margem Média por periodo":
                     bool porDia = PeriodoSelecionado == "7 Dias" || PeriodoSelecionado == "30 Dias";
                     agrupamento = projetosValidos
-                        .GroupBy(p => porDia ? p.data_criacao.ToString("dd/MM") : p.data_criacao.ToString("MMM/yy"))
-                        .Select(g => (g.Key, Margem: (double)g.Average(p => p.Orcamento.MargemSobreVenda)));
+                        .GroupBy(p => porDia ? p.data_criacao.Date : new DateTime(p.data_criacao.Year, p.data_criacao.Month, 1))
+                        .OrderBy(g => g.Key)
+                        .Select(g => (g.Key.ToString(porDia ? "dd/MM" : "MMM/yy", _ptBR), MargemPonderada(g)));
                     break;
 
                 default:
@@ -338,12 +356,13 @@ namespace magal.ViewModels
                     {
                         Data = g.Key,
                         TotalLucro = g.Sum(p => p.Orcamento?.valor_margem ?? 0),
-                        TotalFaturamento = g.Sum(p => p.Orcamento?.valor_final ?? 0)
+                        TotalFaturamento = g.Sum(p => p.Orcamento?.valor_final ?? 0),
+                        TotalVenda = g.Sum(p => VendaSemImpostos(p))
                     }).ToList();
 
                 ValoresLucroMensal = new ChartValues<double>(agrupadoPorDia.Select(x => (double)x.TotalLucro));
                 ValoresFaturamentoMensal = new ChartValues<double>(agrupadoPorDia.Select(x => (double)x.TotalFaturamento));
-                _percentuaisLucro = agrupadoPorDia.Select(x => x.TotalFaturamento > 0 ? (double)(x.TotalLucro / x.TotalFaturamento * 100) : 0).ToArray();
+                _percentuaisLucro = agrupadoPorDia.Select(x => x.TotalVenda > 0 ? (double)(x.TotalLucro / x.TotalVenda * 100) : 0).ToArray();
                 LabelsMeses = agrupadoPorDia.Select(x => x.Data.ToString("dd/MM")).ToArray();
             }
             else
@@ -355,12 +374,13 @@ namespace magal.ViewModels
                     {
                         Data = new DateTime(g.Key.Ano, g.Key.Mes, 1),
                         TotalLucro = g.Sum(p => p.Orcamento?.valor_margem ?? 0),
-                        TotalFaturamento = g.Sum(p => p.Orcamento?.valor_final ?? 0)
+                        TotalFaturamento = g.Sum(p => p.Orcamento?.valor_final ?? 0),
+                        TotalVenda = g.Sum(p => VendaSemImpostos(p))
                     }).ToList();
 
                 ValoresLucroMensal = new ChartValues<double>(agrupadoPorMes.Select(x => (double)x.TotalLucro));
                 ValoresFaturamentoMensal = new ChartValues<double>(agrupadoPorMes.Select(x => (double)x.TotalFaturamento));
-                _percentuaisLucro = agrupadoPorMes.Select(x => x.TotalFaturamento > 0 ? (double)(x.TotalLucro / x.TotalFaturamento * 100) : 0).ToArray();
+                _percentuaisLucro = agrupadoPorMes.Select(x => x.TotalVenda > 0 ? (double)(x.TotalLucro / x.TotalVenda * 100) : 0).ToArray();
                 LabelsMeses = agrupadoPorMes.Select(x => x.Data.ToString("MMM/yy")).ToArray();
             }
 
