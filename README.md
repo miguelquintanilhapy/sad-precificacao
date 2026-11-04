@@ -16,7 +16,7 @@ Orçamentos precisos, projetos organizados e indicadores financeiros em um só l
 [Como executar](#como-executar) ·
 [Equipe](#equipe)
 
-<img src="docs/screenshots/04-dashboard.png" alt="Dashboard financeiro" width="90%">
+<img src="magal/Imagens/dashboardTCC.jpg" alt="Dashboard financeiro" width="90%">
 
 </div>
 
@@ -56,23 +56,23 @@ Ele centraliza o gerenciamento de **projetos, clientes, funcionários e custos**
 ## Telas
 
 ### Login
-<img src="docs/screenshots/01-login.webp" alt="Tela de login" width="100%">
+<img src="magal/Imagens/loginTCC.jpg" alt="Tela de login" width="100%">
 
 ### Gestão de Orçamentos
-<img src="docs/screenshots/02-orcamento.png" alt="Gestão de orçamentos" width="100%">
+<img src="magal/Imagens/orcamentoTCC.jpg" alt="Gestão de orçamentos" width="100%">
 
 ### Histórico de Projetos
-<img src="docs/screenshots/03-historico.webp" alt="Histórico de projetos" width="100%">
+<img src="magal/Imagens/historicoTCC.jpg" alt="Histórico de projetos" width="100%">
 
 ### Dashboard Financeiro
-<img src="docs/screenshots/04-dashboard.png" alt="Dashboard financeiro" width="100%">
+<img src="magal/Imagens/dashboardTCC.jpg" alt="Dashboard financeiro" width="100%">
 
 ### Central de Gerenciamento
-<img src="docs/screenshots/05-gerenciamento.png" alt="Central de gerenciamento" width="100%">
+<img src="magal/Imagens/gerenciamentoTCC.jpg" alt="Central de gerenciamento" width="100%">
 
 ### Proposta Técnica Comercial (PDF)
 <div align="center">
-  <img src="docs/screenshots/06-proposta-pdf.png" alt="Proposta técnica comercial em PDF" width="60%">
+  <img src="magal/Imagens/pdfTCC.jpg" alt="Proposta técnica comercial em PDF" width="60%">
 </div>
 
 ## Tecnologias
