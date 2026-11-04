@@ -16,7 +16,7 @@ Orçamentos precisos, projetos organizados e indicadores financeiros em um só l
 [Como executar](#como-executar) ·
 [Equipe](#equipe)
 
-<img src="magal/Imagens/dashboardTCC.jpg" alt="Dashboard financeiro" width="90%">
+<img src="magal/Imagens/loginTCC.jpg" alt="Tela de login" width="90%">
 
 </div>
 
