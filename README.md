@@ -72,7 +72,7 @@ Ele centraliza o gerenciamento de **projetos, clientes, funcionários e custos**
 
 ### Proposta Técnica Comercial (PDF)
 <div align="center">
-  <img src="magal/Imagens/pdfTCC.jpg" alt="Proposta técnica comercial em PDF" width="60%">
+  <img src="magal/Imagens/pdfTCC.png" alt="Proposta técnica comercial em PDF" width="60%">
 </div>
 
 ## Tecnologias
