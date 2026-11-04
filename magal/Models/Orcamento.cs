@@ -101,8 +101,7 @@ namespace magal.Models
         {
             get
             {
-                // se o custo base for maior que zero, ele tenta calcular o total atualizado
-                // se for zero (como na lista de histórico), ele usa o valor salvo no banco
+                // O valor final é sempre custo base mais margem mais impostos. se a soma der zero, usa o valor gravado no banco como proteção.
                 decimal calculado = custo_base + valor_margem + valor_impostos;
                 return (calculado > 0) ? calculado : (_valor_final_manual ?? 0);
             }

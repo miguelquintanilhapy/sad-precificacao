@@ -1,54 +1,113 @@
-# ✈️ AERO Concepts - Sistema de Precificação e Gestão de Projetos
+<div align="center">
 
-Sistema desktop para apoio à elaboração de orçamentos, gestão de projetos e análise financeira, desenvolvido como Trabalho de Conclusão de Curso (TCC) do Curso Técnico em Informática.
+# AERO Concepts
+### Sistema de Precificação e Gestão de Projetos
 
-O objetivo é centralizar o gerenciamento de projetos, clientes, funcionários e custos, permitindo orçamentos mais precisos e o acompanhamento de indicadores financeiros por meio de dashboards e relatórios.
+Orçamentos precisos, projetos organizados e indicadores financeiros em um só lugar.
+
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![WPF](https://img.shields.io/badge/UI-WPF%20%2B%20MVVM-0C54C2?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-F59E0B?style=for-the-badge)
+
+[Funcionalidades](#funcionalidades) ·
+[Telas](#telas) ·
+[Tecnologias](#tecnologias) ·
+[Como executar](#como-executar) ·
+[Equipe](#equipe)
+
+<img src="docs/screenshots/04-dashboard.png" alt="Dashboard financeiro" width="90%">
+
+</div>
+
+---
+
+## Sobre o projeto
+
+O **AERO Concepts** é um sistema desktop para apoiar a elaboração de orçamentos, a gestão de projetos e a análise financeira da empresa. Foi desenvolvido como Trabalho de Conclusão de Curso (TCC) do Curso Técnico em Informática.
+
+Ele centraliza o gerenciamento de **projetos, clientes, funcionários e custos**. Com isso, o orçamento é montado com mais precisão e os indicadores financeiros são acompanhados por dashboards e relatórios em PDF.
 
 ## Índice
 
-- [Funcionalidades](#-funcionalidades)
-- [Tecnologias](#️-tecnologias)
-- [Arquitetura](#️-arquitetura)
-- [Como executar](#-como-executar)
-- [Status do projeto](#-status-do-projeto)
-- [Equipe](#-equipe)
+- [Funcionalidades](#funcionalidades)
+- [Telas](#telas)
+- [Tecnologias](#tecnologias)
+- [Arquitetura](#arquitetura)
+- [Integridade e segurança dos dados](#integridade-e-segurança-dos-dados)
+- [Como executar](#como-executar)
+- [Status do projeto](#status-do-projeto)
+- [Equipe](#equipe)
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 | Módulo | Recursos |
 |---|---|
-| 🔐 Login | Autenticação, controle de sessão, cadastro de usuários |
-| 📋 Orçamentos | Criação de projetos, seleção de clientes/funcionários, associação de custos, margem de lucro, impostos, geração de proposta |
-| 📚 Histórico | Consulta, filtros de pesquisa, edição de projetos existentes |
-| 👥 Clientes | Cadastro, edição, exclusão, pesquisa, exportação em PDF |
-| 👨‍💼 Funcionários | Cadastro, edição, exclusão, pesquisa, exportação em PDF |
-| 🏢 Cargos | Cadastro, edição, exclusão |
-| 💰 Custos | Catálogo, categorias, valores de referência, pesquisa, exportação em PDF |
-| 📊 Dashboard | Indicadores (projetos, faturamento, lucro estimado), gráficos (lucro x faturamento, projetos por status/tipo), filtros por período (7d, 30d, 6m, 1a, histórico completo) |
-| 📄 Relatórios | Exportação em PDF de clientes, funcionários, custos e projetos |
+| **Login** | Autenticação, controle de sessão, cadastro de usuários |
+| **Orçamentos** | Criação de projetos, seleção de clientes e funcionários, composição de mão de obra, associação de custos, markup, margem, impostos e geração da proposta |
+| **Histórico** | Consulta, filtros de pesquisa, edição de projetos existentes e download da proposta em PDF |
+| **Clientes** | Cadastro, edição, exclusão, pesquisa e exportação em PDF |
+| **Funcionários** | Cadastro, edição, exclusão, pesquisa e exportação em PDF |
+| **Cargos** | Cadastro, edição e exclusão |
+| **Custos** | Catálogo, categorias, valores de referência, pesquisa e exportação em PDF |
+| **Dashboard** | Indicadores (projetos, faturamento, lucro estimado), gráficos de lucro x faturamento e margem média, filtros por período |
+| **Relatórios** | Exportação em PDF de clientes, funcionários, custos e projetos |
 
-## ⚙️ Tecnologias
+## Telas
 
-- **UI:** WPF (.NET) + XAML, padrão MVVM
-- **Linguagem/Runtime:** C# / .NET 10
-- **Banco de dados:** MySQL (`MySql.Data`)
-- **Gráficos:** LiveCharts.Wpf
-- **Relatórios:** QuestPDF
+### Login
+<img src="docs/screenshots/01-login.webp" alt="Tela de login" width="100%">
 
-## 🏗️ Arquitetura
+### Gestão de Orçamentos
+<img src="docs/screenshots/02-orcamento.png" alt="Gestão de orçamentos" width="100%">
+
+### Histórico de Projetos
+<img src="docs/screenshots/03-historico.webp" alt="Histórico de projetos" width="100%">
+
+### Dashboard Financeiro
+<img src="docs/screenshots/04-dashboard.png" alt="Dashboard financeiro" width="100%">
+
+### Central de Gerenciamento
+<img src="docs/screenshots/05-gerenciamento.png" alt="Central de gerenciamento" width="100%">
+
+### Proposta Técnica Comercial (PDF)
+<div align="center">
+  <img src="docs/screenshots/06-proposta-pdf.png" alt="Proposta técnica comercial em PDF" width="60%">
+</div>
+
+## Tecnologias
+
+| Camada | Tecnologia |
+|---|---|
+| Interface | WPF (.NET) + XAML, padrão MVVM |
+| Linguagem / Runtime | C# / .NET 10 |
+| Banco de dados | MySQL (`MySql.Data`) |
+| Gráficos | LiveCharts.Wpf |
+| Relatórios e propostas | QuestPDF |
+
+## Arquitetura
 
 ```text
 magal/
-├── Models
-├── Views          # XAML + code-behind
-├── ViewModels
+├── Models          # Entidades do domínio
+├── Views           # XAML + code-behind
+├── ViewModels      # Lógica de apresentação (MVVM)
 ├── Data
-│   └── Repositories
-├── Services        # Hash de senha, throttle de login, geração de PDF...
-└── Scripts         # init.sql (schema + carga inicial)
+│   └── Repositories  # Acesso ao banco e regras de integridade
+├── Services        # Hash de senha, throttle de login, geração de PDF, tratamento de erros
+└── Scripts         # init.sql (schema + carga inicial) e scripts de verificação
 ```
 
-## 🖥️ Como executar
+## Integridade e segurança dos dados
+
+- **Senhas** com hash e **limite de tentativas de login** (throttle).
+- **Exclusão com vínculos:** não é possível excluir cargo, cliente, funcionário, usuário ou item de catálogo que esteja em uso. A mensagem informa a quantidade e os nomes dos registros vinculados.
+- **Duplicidade:** cargos por nome, clientes por CPF/CNPJ e itens de catálogo por nome e categoria são validados ao inserir e atualizar.
+- **Último administrador:** o sistema impede excluir, rebaixar ou inativar o único administrador ativo.
+- **Erros amigáveis:** o usuário vê mensagens claras em português. O detalhe técnico vai para um log local, com credenciais mascaradas.
+- **SQL parametrizado** em todas as verificações.
+
+## Como executar
 
 ### Pré-requisitos
 
@@ -59,9 +118,9 @@ magal/
 
 Execute `magal/Scripts/init.sql` em uma instância MySQL para criar o schema `sad_precificacao` e a carga inicial.
 
-### 2. Configuração da connection string
+### 2. Connection string
 
-O arquivo `magal/appsettings.json` fica versionado com a connection string vazia por padrão. Crie um `magal/appsettings.local.json` (ignorado pelo git) com suas credenciais reais — ele sobrescreve o `appsettings.json` em tempo de execução:
+O `magal/appsettings.json` é versionado com a connection string vazia. Crie o arquivo `magal/appsettings.local.json` (ignorado pelo git) com suas credenciais; ele sobrescreve o `appsettings.json` em tempo de execução:
 
 ```json
 {
@@ -71,7 +130,8 @@ O arquivo `magal/appsettings.json` fica versionado com a connection string vazia
 }
 ```
 
-> ⚠️ Nunca commite credenciais reais — use sempre o `appsettings.local.json` para isso.
+> [!WARNING]
+> Nunca faça commit de credenciais reais. Use sempre o `appsettings.local.json`.
 
 ### 3. Build e execução
 
@@ -80,25 +140,38 @@ dotnet build magal/magal.csproj
 dotnet run --project magal/magal.csproj
 ```
 
-## 📌 Status do projeto
+## Status do projeto
 
-Em desenvolvimento. Já implementado:
+Em desenvolvimento.
 
-- ✅ Autenticação com hash de senha e throttle de login
-- ✅ Gestão de clientes, funcionários, cargos e custos
-- ✅ Orçamentos e histórico de projetos
-- ✅ Dashboard financeiro e relatórios em PDF
+**Já implementado**
 
-Próximas melhorias:
+- [x] Autenticação com hash de senha e throttle de login
+- [x] Gestão de clientes, funcionários, cargos e custos
+- [x] Orçamentos e histórico de projetos
+- [x] Dashboard financeiro e relatórios em PDF
+- [x] Verificações de vínculos, duplicidade e tratamento de erros
 
-- Recomendação inteligente de recursos
-- Indicadores avançados e dashboard executivo
-- Relatórios analíticos avançados
+**Próximas melhorias**
 
-## 👨‍💻 Equipe
+- [ ] Recomendação inteligente de recursos
+- [ ] Indicadores avançados e dashboard executivo
+- [ ] Relatórios analíticos avançados
+
+## Equipe
 
 Projeto desenvolvido como Trabalho de Conclusão de Curso (TCC).
 
-- João Guilherme Pereira Mendes
-- Vinícius Brisolla de Vasconcelos
-- Miguel Quintanilha Gomes de Sales
+| Nome |
+|---|
+| João Guilherme Pereira Mendes |
+| Vinícius Brisolla de Vasconcelos |
+| Miguel Quintanilha Gomes de Sales |
+
+---
+
+<div align="center">
+
+**AERO Concepts**, aeroespacial, industrial e defesa.
+
+</div>

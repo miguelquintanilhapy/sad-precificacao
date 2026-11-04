@@ -92,7 +92,7 @@ namespace magal.Data
                     $"Não é possível {acaoImpedida} o único administrador ativo do sistema.\n\n" +
                     "Promova outro usuário a Administrador antes.");
         }
-
+        
         #region Regras por entidade
 
         internal static Task Cargo(MySqlConnection conn, int idCargo) => GarantirSemVinculos(
